@@ -1,0 +1,13 @@
+@import '~antd/dist/antd.css';
+@import 'common.scss';
+@import 'custom.scss';
+
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.wrap {
+    max-width: 1110px;
+    padding: 0 8px;
+    margin: 0 auto;
+}
