@@ -1,5 +1,5 @@
+import { Button, Col, Form, Input, Row, Typography } from 'antd';
 import React from 'react';
-import { Row, Col, Button, Typography, Form, Input } from 'antd';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 

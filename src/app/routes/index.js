@@ -1,15 +1,18 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
-import ENV, { Config, envNameConfig } from 'configs';
-import { ConnectedRouter } from 'connected-react-router';
-import LocalStorageServices from 'app/utils/localStorage';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
-import history from './history';
+import loadWASM from 'app/services/wasm';
+import LocalStorageServices from 'app/utils/localStorage';
+import { Config } from 'configs';
+import { ConnectedRouter } from 'connected-react-router';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { routeAppConfig, routeForAuthConfig } from './config';
 import RouterApp from './consts';
-import { routeForAuthConfig, routeAppConfig } from './config';
+import history from './history';
+
 console.log(Config.API_SERVER);
-const AppRoutes = () => {
+const AppRoutes = ({ wallet }) => {
     const [hasAccountImported, setAccountImported] = useState(true);
+
     const routesMatch = [];
 
     const onceRouter = (route) => {
@@ -51,6 +54,14 @@ const AppRoutes = () => {
     useEffect(() => {
         if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD) && LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD)) {
             setAccountImported(true);
+        }
+
+        const loadWebAssembly = async () => {
+            await loadWASM();
+        };
+
+        if (!wallet) {
+            loadWebAssembly();
         }
     }, []);
 
