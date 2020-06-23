@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
+import ENV, { Config, envNameConfig } from 'configs';
 import { ConnectedRouter } from 'connected-react-router';
 import LocalStorageServices from 'app/utils/localStorage';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import history from './history';
 import RouterApp from './consts';
 import { routeForAuthConfig, routeAppConfig } from './config';
-
+console.log(Config.API_SERVER);
 const AppRoutes = () => {
     const [hasAccountImported, setAccountImported] = useState(true);
     const routesMatch = [];

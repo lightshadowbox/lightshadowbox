@@ -49,14 +49,18 @@
     "build-dev": "cross-env REACT_APP_ENV=development react-scripts build",
     "build-staging": "cross-env REACT_APP_ENV=staging react-scripts build",
     "build-uat": "cross-env REACT_APP_ENV=uat react-scripts build",
-    "build": "cross-env REACT_APP_ENV=production react-scripts build",
+    "build": "cross-env REACT_APP_ENV=production INLINE_RUNTIME_CHUNK=false react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier": "cross-env find . \\( -name node_modules -o -name __generated__ -o -name build \\) -prune -or \\( -name '*.js' -o -name '*.html' -o -name '*.scss' -o -name '*.json' -o -name '*.md' \\) -print | xargs prettier --write"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "browser": true,
+      "webextensions": true
+    }
   },
   "browserslist": {
     "production": [
