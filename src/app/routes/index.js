@@ -47,11 +47,11 @@ const AppRoutes = () => {
         return routesMatch;
     };
 
-    useEffect(() => {
-        if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD) && LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD)) {
-            setAccountImported(true);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD) && LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD)) {
+    //         setAccountImported(true);
+    //     }
+    // }, []);
 
     return (
         <ConnectedRouter history={history}>
@@ -66,7 +66,7 @@ const AppRoutes = () => {
                 <>
                     <Switch>
                         {routerListNav(routeAppConfig)}
-                        <Redirect path="*" to={RouterApp.rAccount} />
+                        <Redirect path="*" to={RouterApp.rOnboarding} />
                     </Switch>
                 </>
             )}
