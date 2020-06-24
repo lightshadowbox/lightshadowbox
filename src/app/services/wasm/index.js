@@ -1,3 +1,4 @@
+import LocalStorageServices from 'app/utils/localStorage';
 import * as incognitoJs from 'incognito-js';
 
 let isWASMRunned = false;
@@ -24,10 +25,14 @@ function loadWASM() {
             wasmPath: 'wasm/privacy.wasm',
         });
         incognitoJs.storageService.implement({
-            setMethod: () => null,
-            getMethod: () => null,
-            removeMethod: () => null,
-            namespace: 'TEST',
+            setMethod: (key, data) => {
+                return LocalStorageServices.setItem(key, data);
+            },
+            getMethod: (key) => {
+                return LocalStorageServices.getItem(key);
+            },
+            removeMethod: (key) => LocalStorageServices.removeItem(key),
+            namespace: 'WALLET',
         });
         await incognitoJs.goServices.implementGoMethodUseWasm();
         isWASMRunned = true;
