@@ -6,9 +6,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl-redux';
 import { Provider } from 'react-redux';
+import init from 'app/services/incognito';
 import * as serviceWorker from './serviceWorker';
 import './styles/index.scss';
 
+init();
 // 69E9FB
 ReactDOM.render(
     <Provider store={store(initialLocalization)}>

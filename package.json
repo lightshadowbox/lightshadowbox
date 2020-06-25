@@ -19,6 +19,7 @@
     "decimal.js": "^10.2.0",
     "faker": "^4.1.0",
     "history": "^4.10.1",
+    "incognito-js": "https://github.com/incognitochain/sdk-v2",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",

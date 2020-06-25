@@ -1,14 +1,12 @@
-import { LOCAL_STORAGE_KEY } from 'app/consts';
-import LocalStorageServices from 'app/utils/localStorage';
-import { Config } from 'configs';
+// import { LOCAL_STORAGE_KEY } from 'app/consts';
+// import LocalStorageServices from 'app/utils/localStorage';
 import { ConnectedRouter } from 'connected-react-router';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { routeAppConfig, routeForAuthConfig } from './config';
 import RouterApp from './consts';
 import history from './history';
 
-console.log(Config.API_SERVER);
 const AppRoutes = () => {
     const [hasAccountImported, setAccountImported] = useState(true);
 

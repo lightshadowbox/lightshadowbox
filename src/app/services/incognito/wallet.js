@@ -1,17 +1,22 @@
-import * as incognitoJs from 'incognito-js';
+import { WalletInstance } from 'incognito-js';
 
 export class Wallet {
+    constructor() {
+        this.walletMaster = new WalletInstance();
+    }
+
     async createWallet(password, walletName) {
-        const walletMaster = new incognitoJs.WalletInstance();
-        return walletMaster.init(password, walletName);
+        return this.walletMaster.init(password, walletName);
     }
 
     async backup(password, wallet) {
-        return wallet.backup(password);
+        this.backupWalletString = wallet.backup(password);
+        return this.backupWalletString;
     }
 
     async restore(password, backupWalletString) {
-        return incognitoJs.WalletInstance.restore(backupWalletString, password);
+        this.wallet = await WalletInstance.restore(backupWalletString, password);
+        return this.wallet;
     }
 }
 

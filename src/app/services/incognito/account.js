@@ -1,4 +1,4 @@
-export class MasterAccount {
+class MasterAccount {
     masterAccount;
 
     constructor(wallet) {
@@ -75,3 +75,5 @@ export class MasterAccount {
         return token.getTxHistories();
     }
 }
+
+export default MasterAccount;
