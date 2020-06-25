@@ -55,17 +55,15 @@ const PrivateLayout = ({ children }) => {
     const { Title } = Typography;
     return (
         <PrivateLayoutStyled>
-            <Layout>
-                <Header>
-                    <div className="logo-box">
-                        <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
-                        <Title className="no-margin" level={3}>
-                            Incognito Web Wallet
-                        </Title>
-                    </div>
-                </Header>
-                <Content>{children}</Content>
-            </Layout>
+            <Header>
+                <div className="logo-box">
+                    <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
+                    <Title className="no-margin" level={3}>
+                        Incognito Web Wallet
+                    </Title>
+                </div>
+            </Header>
+            <Content>{children}</Content>
         </PrivateLayoutStyled>
     );
 };
