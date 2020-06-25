@@ -1,16 +1,26 @@
-export class Account {
-    async createAccount(wallet, accountName, shardId = null) {
+export class MasterAccount {
+    masterAccount;
+
+    constructor(wallet) {
+        this.masterAccount = wallet.masterAccount;
+    }
+
+    getAccounts() {
+        return this.masterAccount.getAccounts();
+    }
+
+    async createAccount(accountName, shardId = null) {
         try {
-            return await wallet.masterAccount.addAccount(accountName, shardId);
+            return await this.masterAccount.addAccount(accountName, shardId);
         } catch (error) {
             console.debug('CREATE ACCOUNT ERROR', error);
             return null;
         }
     }
-    importAccount(wallet, privateKey, accountName) {
+
+    async importAccount(accountName, privateKey) {
         try {
-            const passPhrase = getPassphrase();
-            wallet.importAccount(privateKey, accountName, passPhrase);
+            await this.masterAccount.importAccount(accountName, privateKey);
             return true;
         } catch (error) {
             console.debug('IMPORT ERROR', error);
@@ -18,16 +28,50 @@ export class Account {
         }
     }
 
-    removeAccount(wallet, privateKey, passPhrase) {
-        return wallet.removeAccount(privateKey, passPhrase);
+    async followTokenById(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        account.followTokenById(tokenId);
+        const followingTokens = await account.getFollowingPrivacyToken();
+        return followingTokens;
     }
 
-    getAllAccounts(wallet) {
-        return wallet.listAccount();
+    async unfollowTokenById(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        account.unfollowTokenById(tokenId);
+        const followingTokens = await account.getFollowingPrivacyToken();
+        return followingTokens;
     }
 
-    getBalance(wallet, name, tokenId) {
-        const indexAccount = wallet.getAccountIndexByName(name);
-        return wallet.MasterAccount.child[indexAccount].getBalance(tokenId);
+    async getTotalBalanceCoin(accountName) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        return account.nativeToken.getTotalBalance();
+    }
+
+    async getAvaialbleBalanceCoin(accountName) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        return account.nativeToken.getAvaiableBalance();
+    }
+
+    async getTxHistoriesCoin(accountName) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        return account.nativeToken.getTxHistories();
+    }
+
+    async getTotalBalanceToken(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        const token = await account.getFollowingPrivacyToken(tokenId);
+        return token.getTotalBalance();
+    }
+
+    async getAvaialbleBalanceToken(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        const token = await account.getFollowingPrivacyToken(tokenId);
+        return token.getAvaiableBalance();
+    }
+
+    async getTxHistoriesCoin(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        const token = await account.getFollowingPrivacyToken(tokenId);
+        return token.getTxHistories();
     }
 }

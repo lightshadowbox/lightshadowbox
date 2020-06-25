@@ -4,7 +4,7 @@ export const LOCALE = {
 };
 
 export const NSP_COMMON = 'NSP_COMMON/';
-
+export const NSP_INCOGNITO_DATA = 'NSP_INCOGNITO_DATA/';
 export const LOCAL_STORAGE_KEY = {
     IS_DASHBOARD: 'IS_DASHBOARD',
     DEVICE_TOKEN: 'DEVICE_TOKEN',

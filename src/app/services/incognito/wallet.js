@@ -1,6 +1,6 @@
 import * as incognitoJs from 'incognito-js';
 
-class Wallet {
+export class Wallet {
     async createWallet(password, walletName) {
         const walletMaster = new incognitoJs.WalletInstance();
         return walletMaster.init(password, walletName);
