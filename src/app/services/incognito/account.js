@@ -69,7 +69,7 @@ export class MasterAccount {
         return token.getAvaiableBalance();
     }
 
-    async getTxHistoriesCoin(accountName, tokenId) {
+    async getTxHistoriesToken(accountName, tokenId) {
         const account = this.masterAccount.getAccountByName(accountName);
         const token = await account.getFollowingPrivacyToken(tokenId);
         return token.getTxHistories();
