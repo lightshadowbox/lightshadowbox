@@ -1,14 +1,21 @@
-// import { LOCAL_STORAGE_KEY } from 'app/consts';
-// import LocalStorageServices from 'app/utils/localStorage';
+import React, { Fragment, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import React, { Fragment, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import loadWASM from 'app/services/wasm';
+import LocalStorageServices from 'app/utils/localStorage';
+import { LOCAL_STORAGE_KEY } from 'app/consts';
+import { loadingOpen, loadingClose } from 'app/redux/common/actions';
+import { makeSelectWallet } from 'app/redux/incognito/selector';
+import { onIncognitoLoadWallet } from 'app/redux/incognito/actions';
 import { routeAppConfig, routeForAuthConfig } from './config';
 import RouterApp from './consts';
 import history from './history';
 
 const AppRoutes = () => {
-    const [hasAccountImported, setAccountImported] = useState(true);
+    const dispatch = useDispatch();
+    const wallet = useSelector(makeSelectWallet());
+    const [hasWalletBackup, setWalletBackup] = useState(false);
 
     const routesMatch = [];
 
@@ -48,15 +55,29 @@ const AppRoutes = () => {
         return routesMatch;
     };
 
-    // useEffect(() => {
-    //     if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD) && LocalStorageServices.getItem(LOCAL_STORAGE_KEY.IS_DASHBOARD)) {
-    //         setAccountImported(true);
-    //     }
-    // }, []);
+    useEffect(() => {
+        const loadWebAssembly = async () => {
+            dispatch(loadingOpen());
+            await loadWASM();
+            dispatch(loadingClose());
+            dispatch(onIncognitoLoadWallet());
+        };
+        loadWebAssembly();
+    }, [dispatch]);
+
+    useEffect(() => {
+        const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
+        if (!walletBackup) {
+            history.push(RouterApp.rOnboarding);
+        }
+        if (wallet) {
+            setWalletBackup(true);
+        }
+    }, [wallet]);
 
     return (
         <ConnectedRouter history={history}>
-            {!hasAccountImported ? (
+            {!hasWalletBackup ? (
                 <>
                     <Switch>
                         {routerListNav(routeForAuthConfig)}
@@ -67,7 +88,7 @@ const AppRoutes = () => {
                 <>
                     <Switch>
                         {routerListNav(routeAppConfig)}
-                        <Redirect path="*" to={RouterApp.rOnboarding} />
+                        <Redirect path="*" to={RouterApp.rDetailAccount} />
                     </Switch>
                 </>
             )}

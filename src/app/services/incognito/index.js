@@ -1,31 +1,36 @@
+import { Config } from 'configs';
 import LocalStorageServices from 'app/utils/localStorage';
-import { LOCAL_STORAGE_KEY } from 'app/consts';
-import loadWASM from '../wasm';
-import MasterAccount from './account';
+import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
+import RouterApp from 'app/routes/consts';
+import history from 'app/routes/history';
 import { walletInstance } from './wallet';
 
-const init = async () => {
+const loadWallet = async () => {
     try {
-        console.log('loadWASM');
-        await loadWASM();
         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
-        let wallet = null;
-        if (walletBackup) {
-            wallet = await walletInstance.restore('1234', walletBackup);
-            console.log(wallet);
-        } else {
-            wallet = await walletInstance.createWallet('WALLET_ABC', '1234');
-            const strWallet = await walletInstance.backup('1234', wallet);
-            LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, strWallet);
+        if (!walletBackup) {
+            history.push(RouterApp.rOnboarding);
+            return null;
         }
-        return {
-            wallet,
-            masterAccount: new MasterAccount(wallet),
-        };
+        const wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
+        return wallet;
     } catch (err) {
-        console.debug(err);
-        return { error: err };
+        return { error: MSG.RESTORED_WALLET_FAILED };
     }
 };
 
-export default init;
+const createWallet = async (encryptedWallet, password = Config.WALLET_PASS) => {
+    try {
+        const wallet = await walletInstance.createWallet(encryptedWallet, password);
+        if (!wallet) {
+            return null;
+        }
+        const strWallet = await walletInstance.backup(password, wallet);
+        LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, strWallet);
+        return wallet;
+    } catch (err) {
+        return { error: MSG.CREATED_WALLET_FAILED };
+    }
+};
+
+export { loadWallet, createWallet };

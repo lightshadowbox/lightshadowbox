@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import * as nameConst from './consts';
 
-export const onIncognitoInit = createAction(nameConst.INCOGNITO_INIT, () => {});
-export const onIncognitoInitFailed = createAction(nameConst.INCOGNITO_INIT_FAILED, (error) => ({ payload: error }));
-export const onIncognitoInitSucceeded = createAction(nameConst.INCOGNITO_INIT_SUCCESSED, (data) => ({ payload: data }));
+export const onIncognitoLoadWallet = createAction(nameConst.INCOGNITO_LOAD_WALLET, (data) => ({ payload: data }));
+export const onIncognitoCreateWallet = createAction(nameConst.INCOGNITO_CREATE_WALLET, (data) => ({ payload: data }));
+export const onIncognitoLoadWalletFailed = createAction(nameConst.INCOGNITO_LOAD_WALLET_FAILED, (error) => ({ payload: error }));
+export const onIncognitoLoadWalletSucceeded = createAction(nameConst.INCOGNITO_LOAD_WALLET_SUCCEEDED, (data) => ({ payload: data }));

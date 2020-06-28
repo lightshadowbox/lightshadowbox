@@ -1,24 +1,38 @@
-import { loadingClose, loadingOpen } from 'app/redux/common/actions';
-import initIcognito from 'app/services/incognito';
 import { all, call, fork, put, take } from 'redux-saga/effects';
+import { MSG } from 'app/consts';
+import { loadingCloseAction, loadingOpenAction } from 'app/redux/common/actions';
+import { loadWallet, createWallet } from 'app/services/incognito';
 import * as nameEvents from './actions';
 import * as nameConst from './consts';
 
-function* incognitoSage() {
+function* loadWalletSaga() {
     while (true) {
-        console.log('asdas');
-        yield take(nameConst.INCOGNITO_INIT);
-        yield put(loadingOpen());
-        const data = yield call(initIcognito());
-        if (data && data.error) {
-            yield put(nameEvents.onIncognitoInitFailed(data.errorMess));
+        yield take(nameConst.INCOGNITO_LOAD_WALLET);
+        yield put(loadingOpenAction());
+        const result = yield call(loadWallet);
+        if (!result || result?.error) {
+            yield put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED));
         } else {
-            yield put(nameEvents.onIncognitoInitSucceeded(data));
+            yield put(nameEvents.onIncognitoLoadWalletSucceeded(result));
         }
-        yield put(loadingClose());
+        yield put(loadingCloseAction());
+    }
+}
+
+function* createWalletSaga() {
+    while (true) {
+        const data = yield take(nameConst.INCOGNITO_CREATE_WALLET);
+        yield put(loadingOpenAction());
+        const result = yield call(createWallet, data.payload);
+        if (!result || result?.error) {
+            yield put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED));
+        } else {
+            yield put(nameEvents.onIncognitoLoadWalletSucceeded(result));
+        }
+        yield put(loadingCloseAction());
     }
 }
 
 export default function* root() {
-    yield all([fork(incognitoSage)]);
+    yield all([fork(loadWalletSaga), fork(createWalletSaga)]);
 }

@@ -1,3 +1,6 @@
+import WALLET_DEV_CONFIG from './wallet.dev';
+import WALLET_PROD_CONFIG from './wallet.prod';
+
 const env = process.env.REACT_APP_ENV;
 
 export const envNameConfig = {
@@ -10,6 +13,7 @@ export const envNameConfig = {
 const listConfigs = {
     [envNameConfig.DEVELOPMENT]: {
         API_SERVER: 'https://api.dev',
+        ...WALLET_DEV_CONFIG,
     },
     [envNameConfig.STAGING]: {
         API_SERVER: 'https://api.staging',
@@ -19,6 +23,7 @@ const listConfigs = {
     },
     [envNameConfig.PRODUCTION]: {
         API_SERVER: 'https://api.production',
+        ...WALLET_PROD_CONFIG,
     },
 };
 

@@ -1,7 +1,10 @@
-import { Button, Col, Avatar, Row, Layout, Menu, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import { Button, Col, Avatar, Row, Layout, Menu } from 'antd';
+import MasterAccount from 'app/services/incognito/account';
+import { makeSelectWallet } from 'app/redux/incognito/selector';
 import Logo from 'assets/logo.png';
 
 const AccountDetailStyled = styled.div`
@@ -14,8 +17,16 @@ const AccountDetailStyled = styled.div`
 `;
 
 const AccountDetail = () => {
-    const { Title } = Typography;
+    const wallet = useSelector(makeSelectWallet());
     const { Header, Content, Sider } = Layout;
+
+    useEffect(() => {
+        if (wallet) {
+            const walletParsing = new MasterAccount(wallet);
+            const accounts = walletParsing.getAccounts();
+            console.log('Account list', accounts);
+        }
+    }, [wallet]);
 
     return (
         <AccountDetailStyled>

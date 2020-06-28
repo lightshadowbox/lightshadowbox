@@ -1,21 +1,20 @@
-import LoadingApp from 'app/components/loadingApp';
-import store from 'app/redux/store';
-import AppRoutes from 'app/routes';
-import { initialLocalization } from 'app/utils/localization';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl-redux';
 import { Provider } from 'react-redux';
-import init from 'app/services/incognito';
+import { initialLocalization } from 'app/utils/localization';
+import store from 'app/redux/store';
+import AppRoutes from 'app/routes';
+import LoadingApp from 'app/components/loadingApp';
+import LoadingAction from 'app/components/loadingAction';
 import * as serviceWorker from './serviceWorker';
 import './styles/index.scss';
 
-init();
-// 69E9FB
 ReactDOM.render(
     <Provider store={store(initialLocalization)}>
         <IntlProvider>
             <LoadingApp />
+            <LoadingAction />
             <AppRoutes />
         </IntlProvider>
     </Provider>,
