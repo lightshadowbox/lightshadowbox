@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useImmer } from 'use-immer';
 import { isEmpty } from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Button, Col, Avatar, Row, Layout, Menu, Typography, Tooltip, Dropdown } from 'antd';
@@ -66,13 +67,10 @@ const AccountDetailStyled = styled.div`
                     flex-direction: row;
                     align-items: center;
                     .content {
-                        margin-left: 1rem;
+                        margin-left: 0.875rem;
                         min-width: 0;
                         display: flex;
                         flex-direction: column;
-                        .title-value {
-                            line-height: 1.4;
-                        }
                     }
                 }
             }
@@ -85,17 +83,39 @@ const AccountDetail = () => {
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
     const [accountList, setAccountList] = useState(null);
+    const [accountSelected, setAccountSelected] = useState(null);
+    const [accountDetailSelected, setAccountDetailSelected] = useState(null);
+    const [accountDetailState, setAccountDetailState] = useImmer({
+        name: '',
+        paymentAddress: '',
+        totalBalance: null,
+        avaiableBalance: null,
+    });
 
     useEffect(() => {
-        if (masterAccount) {
-            const accounts = masterAccount.getAccounts();
-            setAccountList(accounts);
-        }
+        const loadWebAssembly = async () => {
+            if (masterAccount) {
+                const accounts = masterAccount.getAccounts();
+                const totalBalance = await accounts[0].nativeToken.getTotalBalance();
+                const avBalance = await accounts[0].nativeToken.getAvaiableBalance();
+                console.log('Native token total balance', totalBalance.toNumber());
+                console.log('Native token available balance', avBalance.toNumber());
+                setAccountSelected(accounts[0]);
+                setAccountList(accounts);
+            }
+        };
+        loadWebAssembly();
+        return () => {
+            setAccountSelected(null);
+            setAccountList(null);
+        };
     }, [masterAccount]);
 
-    const onHandleAccoutSelected = (event, account) => {
-        console.log(account);
-        event.preventDefault();
+    const onHandleAccoutSelected = (account) => {
+        if (account) {
+            setAccountSelected(account);
+            setAccountDetailSelected(account?.nativeToken?.accountKeySet);
+        }
     };
 
     return (
@@ -114,7 +134,7 @@ const AccountDetail = () => {
                                         <Menu>
                                             {!isEmpty(accountList) &&
                                                 accountList.map((ac, idx) => (
-                                                    <Menu.Item key={idx} onClick={(event) => onHandleAccoutSelected(event, ac)}>
+                                                    <Menu.Item key={idx} onClick={() => onHandleAccoutSelected(ac)}>
                                                         <span>{ac?.name}</span>
                                                     </Menu.Item>
                                                 ))}
@@ -122,7 +142,7 @@ const AccountDetail = () => {
                                     }
                                     trigger={['click']}>
                                     <Title className="title pointer" level={3}>
-                                        Account 1 <CaretDownOutlined />
+                                        {accountSelected?.name} <CaretDownOutlined />
                                     </Title>
                                 </Dropdown>
 
@@ -136,39 +156,24 @@ const AccountDetail = () => {
                             </Col>
                         </Row>
                         <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-                            <Menu.Item key="1" className="wallet-balance active">
-                                <div className="inner">
-                                    <Avatar size={50} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                    <div className="content">
-                                        <Title className="title-amount no-margin" level={4}>
-                                            0 ETH
-                                        </Title>
-                                        <Text className="title-value no-margin">$0.00 USD</Text>
-                                    </div>
-                                </div>
-                            </Menu.Item>
-                            <Menu.Item key="2" className="wallet-balance">
-                                <div className="inner">
-                                    <Avatar size={50} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                    <div className="content">
-                                        <Title className="title-amount no-margin" level={4}>
-                                            0 ETH
-                                        </Title>
-                                        <Text className="title-value no-margin">$0.00 USD</Text>
-                                    </div>
-                                </div>
-                            </Menu.Item>
-                            <Menu.Item key="53" className="wallet-balance">
-                                <div className="inner">
-                                    <Avatar size={50} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                    <div className="content">
-                                        <Title className="title-amount no-margin" level={4}>
-                                            0 ETH
-                                        </Title>
-                                        <Text className="title-value no-margin">$0.00 USD</Text>
-                                    </div>
-                                </div>
-                            </Menu.Item>
+                            {!isEmpty(accountList) &&
+                                accountList.map((ac, idx) => (
+                                    <Menu.Item key={idx} className="wallet-balance">
+                                        <div className="inner">
+                                            <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                            <div className="content">
+                                                {ac ? (
+                                                    <>
+                                                        <h4 className="title-amount line-height">{ac?.nativeToken?.name}</h4>
+                                                        <Text className="title-value no-margin line-height">{ac?.nativeToken?.symbol}</Text>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Menu.Item>
+                                ))}
                         </Menu>
                     </Sider>
                     <Content>
@@ -177,12 +182,18 @@ const AccountDetail = () => {
                                 <Col span={12} className="text-left">
                                     <div className="wallet-balance title">
                                         <div className="inner">
-                                            <Avatar size={50} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                            <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
                                             <div className="content">
-                                                <Title className="title-amount no-margin" level={4}>
-                                                    0 ETH
-                                                </Title>
-                                                <Text className="title-value no-margin">$0.00 USD</Text>
+                                                {accountSelected ? (
+                                                    <>
+                                                        <h4 className="title-amount line-height">{accountSelected?.nativeToken?.name}</h4>
+                                                        <Text className="title-value no-margin line-height">
+                                                            {accountSelected?.nativeToken?.symbol}
+                                                        </Text>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

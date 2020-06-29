@@ -6,6 +6,7 @@ export const initState = {
     [FIELDS_STATE.WALLET]: null,
     [FIELDS_STATE.MASTER_ACCOUNT]: null,
     [FIELDS_STATE.INCOGNITO_LOADING]: false,
+    [FIELDS_STATE.ACCOUNT_SELECTED]: null,
     [FIELDS_STATE.INCOGNITO_ERROR]: null,
 };
 
@@ -33,9 +34,9 @@ const incognitoDataReducer = createReducer(initState, {
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
     [nameActs.onIncognitoAccountSelected]: (state, action) => {
-        const { payload } = action;
         console.log(action);
-        state[FIELDS_STATE.ACCOUNT_SELECTED] = null;
+        // const { payload } = action;
+        state[FIELDS_STATE.ACCOUNT_SELECTED] = 1;
     },
 });
 
