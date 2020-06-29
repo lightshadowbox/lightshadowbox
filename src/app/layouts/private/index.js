@@ -56,11 +56,13 @@ const PrivateLayout = ({ children }) => {
     return (
         <PrivateLayoutStyled>
             <Header>
-                <div className="logo-box">
-                    <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
-                    <Title className="no-margin" level={3}>
-                        Incognito Web Wallet
-                    </Title>
+                <div className="wrap">
+                    <div className="logo-box">
+                        <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
+                        <Title className="no-margin" level={3}>
+                            Incognito Web Wallet
+                        </Title>
+                    </div>
                 </div>
             </Header>
             <Content>{children}</Content>

@@ -1,5 +1,5 @@
 const rOnboarding = '/welcome';
-const rAccount = '/account';
+const rAccount = '/select-action';
 const rImport = '/import';
 const rDetailAccount = '/detail';
 const rUser = '/user';

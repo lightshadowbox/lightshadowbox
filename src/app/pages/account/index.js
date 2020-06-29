@@ -8,7 +8,8 @@ import RouterApp from 'app/routes/consts';
 
 const AccountStyled = styled.div`
     .wrap {
-        padding-top: 64px;
+        max-width: 742px;
+        padding-top: 3rem;
         .account-card {
             cursor: pointer;
             .anticon {
@@ -45,7 +46,7 @@ const Account = () => {
             </Helmet>
             <div className="wrap">
                 <Row gutter={[30, 30]}>
-                    <Col offset={2} span={10}>
+                    <Col span={12}>
                         <Card
                             className="account-card text-center"
                             onClick={() => history.push(`${RouterApp.rAccount}${RouterApp.rImport}`)}>
@@ -56,7 +57,7 @@ const Account = () => {
                             <Paragraph>Import account from private keys</Paragraph>
                         </Card>
                     </Col>
-                    <Col span={10}>
+                    <Col span={12}>
                         <Card className="account-card text-center">
                             <PlusOutlined />
                             <Title className="no-margin" level={3}>
