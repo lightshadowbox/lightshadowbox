@@ -23,8 +23,8 @@ const AccountDetail = () => {
     useEffect(() => {
         if (wallet) {
             const walletParsing = new MasterAccount(wallet);
-            const accounts = walletParsing.getAccounts();
-            console.log('Account list', accounts);
+            // const accounts = walletParsing.getAccounts();
+            console.log('Account list', walletParsing);
         }
     }, [wallet]);
 

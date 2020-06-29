@@ -36,7 +36,7 @@ function loadWASM() {
         });
         await incognitoJs.goServices.implementGoMethodUseWasm();
         isWASMRunned = true;
-        resolve();
+        return resolve();
     });
 }
 
