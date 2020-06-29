@@ -16,13 +16,6 @@ const LoadingAppStyled = styled.div`
         justify-content: center;
         z-index: 100;
 
-        .ant-spin-text {
-            color: white;
-        }
-
-        .ant-spin-dot-item {
-            background: white;
-        }
         .loading-tip {
             .ant-spin-text {
                 color: #333333;
