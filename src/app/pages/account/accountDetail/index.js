@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Button, Col, Avatar, Row, Layout, Menu, Typography, Tooltip, Dropdown } from 'antd';
 import { CopyOutlined, CaretDownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import MasterAccount from 'app/services/incognito/account';
-import { makeSelectWallet } from 'app/redux/incognito/selector';
+import { makeSelectMasterAccount } from 'app/redux/incognito/selector';
 import Logo from 'assets/logo.png';
 
 const AccountDetailStyled = styled.div`
@@ -80,32 +80,23 @@ const AccountDetailStyled = styled.div`
     }
 `;
 
-const menu = (
-    <Menu>
-        <Menu.Item>
-            <span>Account 1</span>
-        </Menu.Item>
-        <Menu.Item>
-            <span>Account 2</span>
-        </Menu.Item>
-        <Menu.Item>
-            <span>Account 3</span>
-        </Menu.Item>
-    </Menu>
-);
-
 const AccountDetail = () => {
-    const wallet = useSelector(makeSelectWallet());
+    const masterAccount = useSelector(makeSelectMasterAccount());
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
+    const [accountList, setAccountList] = useState(null);
 
     useEffect(() => {
-        if (wallet) {
-            const walletParsing = new MasterAccount(wallet);
-            // const accounts = walletParsing.getAccounts();
-            console.log('Account list', walletParsing);
+        if (masterAccount) {
+            const accounts = masterAccount.getAccounts();
+            setAccountList(accounts);
         }
-    }, [wallet]);
+    }, [masterAccount]);
+
+    const onHandleAccoutSelected = (event, account) => {
+        console.log(account);
+        event.preventDefault();
+    };
 
     return (
         <AccountDetailStyled>
@@ -118,7 +109,18 @@ const AccountDetail = () => {
                         <Row>
                             <Col span={24} className="text-center">
                                 <Avatar size={70} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                <Dropdown overlay={menu} trigger={['click']}>
+                                <Dropdown
+                                    overlay={
+                                        <Menu>
+                                            {!isEmpty(accountList) &&
+                                                accountList.map((ac, idx) => (
+                                                    <Menu.Item key={idx} onClick={(event) => onHandleAccoutSelected(event, ac)}>
+                                                        <span>{ac?.name}</span>
+                                                    </Menu.Item>
+                                                ))}
+                                        </Menu>
+                                    }
+                                    trigger={['click']}>
                                     <Title className="title pointer" level={3}>
                                         Account 1 <CaretDownOutlined />
                                     </Title>

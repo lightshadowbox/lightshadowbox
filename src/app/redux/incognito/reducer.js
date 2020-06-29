@@ -17,16 +17,25 @@ const incognitoDataReducer = createReducer(initState, {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;
     },
     [nameActs.onIncognitoLoadWalletSucceeded]: (state, action) => {
-        const { payload } = action;
-        state[FIELDS_STATE.WALLET] = payload ? JSON.stringify(payload) : null;
+        const {
+            payload: { wallet, masterAccount },
+        } = action;
+        state[FIELDS_STATE.WALLET] = wallet || null;
+        state[FIELDS_STATE.MASTER_ACCOUNT] = masterAccount || null;
         state[FIELDS_STATE.INCOGNITO_ERROR] = initState[FIELDS_STATE.INCOGNITO_ERROR];
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
     [nameActs.onIncognitoLoadWalletFailed]: (state, action) => {
         const { payload } = action;
         state[FIELDS_STATE.WALLET] = initState[FIELDS_STATE.WALLET];
+        state[FIELDS_STATE.MASTER_ACCOUNT] = initState[FIELDS_STATE.MASTER_ACCOUNT];
         state[FIELDS_STATE.INCOGNITO_ERROR] = payload;
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
+    },
+    [nameActs.onIncognitoAccountSelected]: (state, action) => {
+        const { payload } = action;
+        console.log(action);
+        state[FIELDS_STATE.ACCOUNT_SELECTED] = null;
     },
 });
 

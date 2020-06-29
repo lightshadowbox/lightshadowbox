@@ -4,6 +4,7 @@ import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
 import RouterApp from 'app/routes/consts';
 import history from 'app/routes/history';
 import { walletInstance } from './wallet';
+import MasterAccount from './account';
 
 const loadWallet = async () => {
     try {
@@ -13,7 +14,7 @@ const loadWallet = async () => {
             return null;
         }
         const wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
-        return wallet;
+        return { wallet, masterAccount: new MasterAccount(wallet) };
     } catch (err) {
         return { error: MSG.RESTORED_WALLET_FAILED };
     }
@@ -27,7 +28,7 @@ const createWallet = async (encryptedWallet, password = Config.WALLET_PASS) => {
         }
         const strWallet = await walletInstance.backup(password, wallet);
         LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, strWallet);
-        return wallet;
+        return { wallet, masterAccount: new MasterAccount(wallet) };
     } catch (err) {
         return { error: MSG.CREATED_WALLET_FAILED };
     }

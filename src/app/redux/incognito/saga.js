@@ -11,11 +11,13 @@ function* loadWalletSaga() {
         yield put(loadingOpenAction());
         const result = yield call(loadWallet);
         if (!result || result?.error) {
-            yield put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED));
+            yield all([
+                put(loadingCloseAction()),
+                put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED)),
+            ]);
         } else {
-            yield put(nameEvents.onIncognitoLoadWalletSucceeded(result));
+            yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoLoadWalletSucceeded(result))]);
         }
-        yield put(loadingCloseAction());
     }
 }
 
@@ -25,11 +27,13 @@ function* createWalletSaga() {
         yield put(loadingOpenAction());
         const result = yield call(createWallet, data.payload);
         if (!result || result?.error) {
-            yield put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED));
+            yield all([
+                put(loadingCloseAction()),
+                put(nameEvents.onIncognitoLoadWalletFailed(result?.error || MSG.RESTORED_WALLET_FAILED)),
+            ]);
         } else {
-            yield put(nameEvents.onIncognitoLoadWalletSucceeded(result));
+            yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoLoadWalletSucceeded(result))]);
         }
-        yield put(loadingCloseAction());
     }
 }
 

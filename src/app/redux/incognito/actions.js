@@ -5,3 +5,4 @@ export const onIncognitoLoadWallet = createAction(nameConst.INCOGNITO_LOAD_WALLE
 export const onIncognitoCreateWallet = createAction(nameConst.INCOGNITO_CREATE_WALLET, (data) => ({ payload: data }));
 export const onIncognitoLoadWalletFailed = createAction(nameConst.INCOGNITO_LOAD_WALLET_FAILED, (error) => ({ payload: error }));
 export const onIncognitoLoadWalletSucceeded = createAction(nameConst.INCOGNITO_LOAD_WALLET_SUCCEEDED, (data) => ({ payload: data }));
+export const onIncognitoAccountSelected = createAction(nameConst.INCOGNITO_LOAD_WALLET);

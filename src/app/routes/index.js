@@ -77,21 +77,12 @@ const AppRoutes = () => {
 
     return (
         <ConnectedRouter history={history}>
-            {!hasWalletBackup ? (
-                <>
-                    <Switch>
-                        {routerListNav(routeForAuthConfig)}
-                        <Redirect to={RouterApp.rOnboarding} />
-                    </Switch>
-                </>
-            ) : (
-                <>
-                    <Switch>
-                        {routerListNav(routeAppConfig)}
-                        <Redirect path="*" to={RouterApp.rDetailAccount} />
-                    </Switch>
-                </>
-            )}
+            <>
+                <Switch>
+                    {routerListNav(routeAppConfig)}
+                    <Redirect path="*" to={RouterApp.rDetailAccount} />
+                </Switch>
+            </>
         </ConnectedRouter>
     );
 };
