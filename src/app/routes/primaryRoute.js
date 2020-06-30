@@ -1,6 +1,6 @@
 import { PrivateLayout } from 'app/layouts';
-import { AsyncDetailAccount } from './primarySync';
 import RouterApp from './consts';
+import { AsyncDetailAccount, AsyncListAccount } from './primarySync';
 
 const PrimaryRouteConfig = [
     {
@@ -8,6 +8,12 @@ const PrimaryRouteConfig = [
         path: RouterApp.rDetailAccount,
         layout: PrivateLayout,
         component: AsyncDetailAccount,
+    },
+    {
+        title: 'List account',
+        path: RouterApp.rListAccount,
+        layout: PrivateLayout,
+        component: AsyncListAccount,
     },
     // {
     //     title: 'Account',
