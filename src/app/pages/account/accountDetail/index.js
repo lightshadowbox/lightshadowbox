@@ -96,10 +96,10 @@ const AccountDetail = () => {
         const loadWebAssembly = async () => {
             if (masterAccount) {
                 const accounts = masterAccount.getAccounts();
-                const totalBalance = await accounts[0].nativeToken.getTotalBalance();
-                const avBalance = await accounts[0].nativeToken.getAvaiableBalance();
-                console.log('Native token total balance', totalBalance.toNumber());
-                console.log('Native token available balance', avBalance.toNumber());
+                // const totalBalance = await accounts[0].nativeToken.getTotalBalance();
+                // const avBalance = await accounts[0].nativeToken.getAvaiableBalance();
+                // console.log('Native token total balance', totalBalance.toNumber());
+                // console.log('Native token available balance', avBalance.toNumber());
                 setAccountSelected(accounts[0]);
                 setAccountList(accounts);
             }
