@@ -1,20 +1,15 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
 import loadWASM from 'app/services/wasm';
-import LocalStorageServices from 'app/utils/localStorage';
-import { LOCAL_STORAGE_KEY } from 'app/consts';
-import { loadingOpen, loadingClose } from 'app/redux/common/actions';
-import { makeSelectWallet } from 'app/redux/incognito/selector';
-import { onIncognitoLoadWallet } from 'app/redux/incognito/actions';
-import { routeAppConfig, routeForAuthConfig } from './config';
+import { ConnectedRouter } from 'connected-react-router';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { routeAppConfig } from './config';
 import RouterApp from './consts';
 import history from './history';
 
 const AppRoutes = () => {
     const dispatch = useDispatch();
-    const wallet = useSelector(makeSelectWallet());
     const [hasWalletBackup, setWalletBackup] = useState(false);
 
     const routesMatch = [];
@@ -57,23 +52,23 @@ const AppRoutes = () => {
 
     useEffect(() => {
         const loadWebAssembly = async () => {
-            dispatch(loadingOpen());
+            // dispatch(loadingOpen());
             await loadWASM();
-            dispatch(loadingClose());
-            dispatch(onIncognitoLoadWallet());
+            // dispatch(loadingClose());
+            dispatch(onIncognitoGetAccounts());
         };
         loadWebAssembly();
     }, [dispatch]);
 
-    useEffect(() => {
-        const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
-        if (!walletBackup) {
-            history.push(RouterApp.rOnboarding);
-        }
-        if (wallet) {
-            setWalletBackup(true);
-        }
-    }, [wallet]);
+    // useEffect(() => {
+    //     const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
+    //     if (!walletBackup) {
+    //         history.push(RouterApp.rOnboarding);
+    //     }
+    //     if (wallet) {
+    //         setWalletBackup(true);
+    //     }
+    // }, [wallet]);
 
     return (
         <ConnectedRouter history={history}>

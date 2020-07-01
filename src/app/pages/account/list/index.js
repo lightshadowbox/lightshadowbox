@@ -1,5 +1,5 @@
 import { Avatar, List } from 'antd';
-import { makeSelectMasterAccount } from 'app/redux/incognito/selector';
+import { makeSelectAccounts } from 'app/redux/incognito/selector';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ const AccountListStyled = styled.div`
 `;
 
 const AccountList = () => {
-    const masterAccount = useSelector(makeSelectMasterAccount());
+    const masterAccount = useSelector(makeSelectAccounts());
     const [accountList, setAccountList] = useState([]);
 
     useEffect(() => {

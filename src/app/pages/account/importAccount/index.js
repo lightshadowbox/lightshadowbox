@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
 import { Button, Col, Form, Input, Row, Typography } from 'antd';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { onIncognitoCreateWallet } from 'app/redux/incognito/actions';
 
 const ImportAccountStyled = styled.div`
     .wrap {
@@ -23,8 +22,8 @@ const ImportAccount = () => {
     const onFinish = (values) => {
         if (values) {
             const { encryptedWallet } = values;
-            setLoading(true);
-            dispatch(onIncognitoCreateWallet(encryptedWallet));
+            // setLoading(true);
+            // dispatch(onIncognitoCreateWallet(encryptedWallet));
         }
     };
 

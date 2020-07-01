@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useImmer } from 'use-immer';
-import { isEmpty } from 'lodash';
-import { Helmet } from 'react-helmet';
-import { Button, Col, Avatar, Row, Layout, Menu, Typography, Tooltip, Dropdown } from 'antd';
-import { CopyOutlined, CaretDownOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-import { makeSelectMasterAccount } from 'app/redux/incognito/selector';
+import { CaretDownOutlined, CopyOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
+import { makeSelectAccounts } from 'app/redux/incognito/selector';
 import Logo from 'assets/logo.png';
+import { isEmpty } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { useImmer } from 'use-immer';
 
 const AccountDetailStyled = styled.div`
     .wrap {
@@ -79,7 +79,7 @@ const AccountDetailStyled = styled.div`
 `;
 
 const AccountDetail = () => {
-    const masterAccount = useSelector(makeSelectMasterAccount());
+    const masterAccount = useSelector(makeSelectAccounts());
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
     const [accountList, setAccountList] = useState(null);
@@ -93,22 +93,22 @@ const AccountDetail = () => {
     });
 
     useEffect(() => {
-        const loadWebAssembly = async () => {
-            if (masterAccount) {
-                const accounts = masterAccount.getAccounts();
-                // const totalBalance = await accounts[0].nativeToken.getTotalBalance();
-                // const avBalance = await accounts[0].nativeToken.getAvaiableBalance();
-                // console.log('Native token total balance', totalBalance.toNumber());
-                // console.log('Native token available balance', avBalance.toNumber());
-                setAccountSelected(accounts[0]);
-                setAccountList(accounts);
-            }
-        };
-        loadWebAssembly();
-        return () => {
-            setAccountSelected(null);
-            setAccountList(null);
-        };
+        // const loadWebAssembly = async () => {
+        //     if (masterAccount) {
+        //         const accounts = masterAccount.getAccounts();
+        //         // const totalBalance = await accounts[0].nativeToken.getTotalBalance();
+        //         // const avBalance = await accounts[0].nativeToken.getAvaiableBalance();
+        //         // console.log('Native token total balance', totalBalance.toNumber());
+        //         // console.log('Native token available balance', avBalance.toNumber());
+        //         setAccountSelected(accounts[0]);
+        //         setAccountList(accounts);
+        //     }
+        // };
+        // loadWebAssembly();
+        // return () => {
+        //     setAccountSelected(null);
+        //     setAccountList(null);
+        // };
     }, [masterAccount]);
 
     const onHandleAccoutSelected = (account) => {
