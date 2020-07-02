@@ -1,6 +1,6 @@
 import { MSG } from 'app/consts';
 import { loadingCloseAction, loadingOpenAction } from 'app/redux/common/actions';
-import getInstance from 'app/services/incognito';
+import { masterAccount } from 'app/services/incognito';
 import { all, call, fork, put, take } from 'redux-saga/effects';
 import * as nameEvents from './actions';
 import * as nameConst from './consts';
@@ -39,9 +39,7 @@ import * as nameConst from './consts';
 function* getAccountsSaga() {
     while (true) {
         yield take(nameConst.INCOGNITO_GET_ACCOUNTS);
-
-        const accounts = yield call(getInstance);
-        console.log(accounts);
+        const accounts = yield masterAccount.getAccounts();
         yield put(nameEvents.onIncognitoGetAccountsSucceeded(accounts));
     }
 }
@@ -50,7 +48,7 @@ function* createAccountSaga() {
     while (true) {
         const data = yield take(nameConst.INCOGNITO_CREATE_ACCOUNT);
         yield put(loadingOpenAction());
-        const result = yield call(getInstance().masterAccount.createAccount, data.payload);
+        const result = yield call(masterAccount.createAccount, data.payload);
         if (!result || result?.error) {
             yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoError(result?.error || MSG.RESTORED_WALLET_FAILED))]);
         } else {

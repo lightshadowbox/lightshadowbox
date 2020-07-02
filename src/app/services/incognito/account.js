@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 class MasterAccount {
     masterAccount;
 
@@ -6,7 +7,19 @@ class MasterAccount {
     }
 
     getAccounts() {
-        return this.masterAccount.getAccounts();
+        const accounts = this.masterAccount.getAccounts().map((data) => ({
+            name: data.name,
+            privacyTokenIds: data.privacyTokenIds,
+            paymentAddressKeySerialized: get(data, 'nativeToken.accountKeySet.paymentAddressKeySerialized', ''),
+            privateKeySerialized: get(data, 'nativeToken.accountKeySet.privateKeySerialized', ''),
+            viewingKeySerialized: get(data, 'nativeToken.accountKeySet.viewingKeySerialized', ''),
+            nativeToken: {
+                name: get(data, 'nativeToken.name', ''),
+                symbol: get(data, 'nativeToken.symbol', ''),
+                tokenId: get(data, 'nativeToken.tokenId', ''),
+            },
+        }));
+        return accounts;
     }
 
     async createAccount(accountName, shardId = null) {

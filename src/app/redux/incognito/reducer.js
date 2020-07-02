@@ -14,9 +14,8 @@ const incognitoDataReducer = createReducer(initState, {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;
     },
     [nameActs.onIncognitoGetAccountsSucceeded]: (state, action) => {
-        const { payload } = action;
-        console.log(action);
-        state[FIELDS_STATE.ACCOUNTS] = payload.accounts;
+        const { payload: accounts } = action;
+        state[FIELDS_STATE.ACCOUNTS] = accounts;
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
     [nameActs.onIncognitoCreateAccountSucceeded]: (state, action) => {

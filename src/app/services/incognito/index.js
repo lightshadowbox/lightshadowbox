@@ -1,6 +1,7 @@
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
 import { Config } from 'configs';
+import loadWASM from '../wasm';
 import MasterAccount from './account';
 import { walletInstance } from './wallet';
 
@@ -32,12 +33,32 @@ import { walletInstance } from './wallet';
 //     }
 // };
 
-let instance = {};
+export let IncognitoInstance = {};
+export let masterAccount = null;
 let semaphore = false;
-const getInstance = async () => {
-    console.log(instance && !semaphore);
+// const getInstance = async () => {
+//     console.log(instance && !semaphore);
 
-    if (instance && !semaphore) {
+//     if (instance && !semaphore) {
+//         semaphore = true; // mark awaited constructor
+//         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
+//         let wallet;
+//         if (!walletBackup) {
+//             wallet = await walletInstance.createWallet(Config.WALLET_PASS, 'ABC');
+//         } else {
+//             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
+//         }
+//         instance.wallet = wallet;
+//         instance.masterAccount = new MasterAccount(wallet);
+//     }
+//     console.log(instance);
+
+//     return { ...instance };
+// };
+
+const loadIncognito = async () => {
+    if (IncognitoInstance && !semaphore) {
+        await loadWASM();
         semaphore = true; // mark awaited constructor
         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
         let wallet;
@@ -46,12 +67,10 @@ const getInstance = async () => {
         } else {
             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
         }
-        instance.wallet = wallet;
-        instance.masterAccount = new MasterAccount(wallet);
+        IncognitoInstance.wallet = wallet;
+        masterAccount = new MasterAccount(wallet);
+        IncognitoInstance.masterAccount = masterAccount;
     }
-    console.log(instance);
-
-    return { ...instance };
 };
 
-export default getInstance;
+export default loadIncognito;

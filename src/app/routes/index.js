@@ -1,5 +1,6 @@
+import { loadingClose, loadingOpen } from 'app/redux/common/actions';
 import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
-import loadWASM from 'app/services/wasm';
+import loadIncognito from 'app/services/incognito';
 import { ConnectedRouter } from 'connected-react-router';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -52,10 +53,10 @@ const AppRoutes = () => {
 
     useEffect(() => {
         const loadWebAssembly = async () => {
-            // dispatch(loadingOpen());
-            await loadWASM();
-            // dispatch(loadingClose());
+            dispatch(loadingOpen());
+            await loadIncognito();
             dispatch(onIncognitoGetAccounts());
+            dispatch(loadingClose());
         };
         loadWebAssembly();
     }, [dispatch]);

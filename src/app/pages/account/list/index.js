@@ -1,6 +1,5 @@
 import { Avatar, List } from 'antd';
 import { makeSelectAccounts } from 'app/redux/incognito/selector';
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,20 +15,17 @@ const AccountListStyled = styled.div`
 `;
 
 const AccountList = () => {
-    const masterAccount = useSelector(makeSelectAccounts());
+    const accounts = useSelector(makeSelectAccounts());
     const [accountList, setAccountList] = useState([]);
 
     useEffect(() => {
-        console.log(accountList);
-
-        if (masterAccount && isEmpty(accountList)) {
-            const accounts = masterAccount.getAccounts();
+        if (isEmpty(accountList)) {
             setAccountList(accounts);
         }
         return () => {
             setAccountList([]);
         };
-    }, []);
+    }, [accounts]);
 
     return (
         <AccountListStyled>
@@ -42,7 +38,7 @@ const AccountList = () => {
                             title={<a href="https://ant.design">{item.name.last}</a>}
                             description={item.email}
                         />
-                        <div>{item.name}</div> <div>{get(item, 'key.keySet.paymentAddressKeySerialized', '')}</div>
+                        <div>{item.name}</div> <div>{item.paymentAddressKeySerialized}</div>
                     </List.Item>
                 )}></List>
         </AccountListStyled>
