@@ -10,7 +10,7 @@ export const initState = {
 };
 
 const incognitoDataReducer = createReducer(initState, {
-    [nameActs.onIncognitoGetAccounts]: (state, action) => {
+    [nameActs.onIncognitoGetAccounts]: (state) => {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;
     },
     [nameActs.onIncognitoGetAccountsSucceeded]: (state, action) => {

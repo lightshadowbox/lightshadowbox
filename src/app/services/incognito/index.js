@@ -1,6 +1,6 @@
+import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
-import { Config } from 'configs';
 import loadWASM from '../wasm';
 import MasterAccount from './account';
 import { walletInstance } from './wallet';
@@ -63,9 +63,13 @@ const loadIncognito = async () => {
         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
         let wallet;
         if (!walletBackup) {
-            wallet = await walletInstance.createWallet(Config.WALLET_PASS, 'ABC');
+            wallet = await walletInstance.createWallet(Config.WALLET_PASS, Config.WALLET_NAME);
+            const backupWalletString = wallet.backup(Config.WALLET_PASS);
+            LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
+            console.log('init wallet');
         } else {
             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
+            console.log('restore wallet');
         }
         IncognitoInstance.wallet = wallet;
         masterAccount = new MasterAccount(wallet);

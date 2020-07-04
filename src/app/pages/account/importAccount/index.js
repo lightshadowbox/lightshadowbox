@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { onIncognitoCreateAccountSucceeded } from 'app/redux/incognito/actions';
 
 const ImportAccountStyled = styled.div`
     .wrap {
@@ -22,8 +23,8 @@ const ImportAccount = () => {
     const onFinish = (values) => {
         if (values) {
             const { encryptedWallet } = values;
-            // setLoading(true);
-            // dispatch(onIncognitoCreateWallet(encryptedWallet));
+            setLoading(true);
+            dispatch(onIncognitoCreateAccountSucceeded(encryptedWallet));
         }
     };
 

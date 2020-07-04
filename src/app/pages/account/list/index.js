@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+
 const AccountListStyled = styled.div`
     .demo-infinite-container {
         border: 1px solid #e8e8e8;
@@ -25,7 +26,7 @@ const AccountList = () => {
         return () => {
             setAccountList([]);
         };
-    }, [accounts]);
+    }, [accounts, accountList]);
 
     return (
         <AccountListStyled>
@@ -40,7 +41,8 @@ const AccountList = () => {
                         />
                         <div>{item.name}</div> <div>{item.paymentAddressKeySerialized}</div>
                     </List.Item>
-                )}></List>
+                )}
+            />
         </AccountListStyled>
     );
 };
