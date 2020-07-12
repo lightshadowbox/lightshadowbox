@@ -1,14 +1,19 @@
 import { PublicLayout, PrivateLayout } from 'app/layouts';
-import { AsyncOnboarding } from './authSync';
-import { AsyncImportAccount, AsyncAccount } from './primarySync';
+import { AsyncOnboarding, AsyncInitWallet } from './authSync';
 import RouterApp from './consts';
 
 const AuthRouteConfig = [
     {
-        title: 'Welcome to Incognito Web Wallet',
+        title: 'Incognito Web Wallet',
         path: RouterApp.rOnboarding,
         layout: PublicLayout,
         component: AsyncOnboarding,
+    },
+    {
+        title: 'Incognito Web Wallet',
+        path: RouterApp.rInitWallet,
+        layout: PrivateLayout,
+        component: AsyncInitWallet,
     },
 ];
 

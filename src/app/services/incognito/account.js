@@ -1,4 +1,5 @@
-import get from 'lodash/get';
+import { get } from 'lodash';
+
 class MasterAccount {
     masterAccount;
 

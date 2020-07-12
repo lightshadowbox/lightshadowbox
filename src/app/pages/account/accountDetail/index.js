@@ -1,15 +1,18 @@
-import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { useImmer } from 'use-immer';
-import { CaretDownOutlined, CopyOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useInjectReducer } from 'redux-injectors';
+import { isEmpty } from 'lodash';
+import { CaretDownOutlined, CopyOutlined, SettingFilled } from '@ant-design/icons';
 import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import history from 'app/routes/history';
-import RouterApp from 'app/routes/consts';
+import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
+import { loadingClose, loadingOpen } from 'app/redux/common/actions';
 import { makeSelectAccounts } from 'app/redux/incognito/selector';
+import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
+import accountReducer, { KEY_REDUCER_SAGA, onSetCreateAccountState, onSetImportAccountState } from 'app/pages/account/redux/slice';
+import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
+import { CreateAccount, ImportAccount } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const AccountDetailStyled = styled.div`
@@ -82,28 +85,46 @@ const AccountDetailStyled = styled.div`
 `;
 
 const AccountDetail = () => {
+    useInjectReducer({ key: KEY_REDUCER_SAGA, reducer: accountReducer });
+    const dispatch = useDispatch();
     const masterAccount = useSelector(makeSelectAccounts());
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
-    // const [accountList, setAccountList] = useState(null);
+    const [accountList, setAccountList] = useState(null);
     const [accountSelected, setAccountSelected] = useState(null);
-    const [accountDetailSelected, setAccountDetailSelected] = useState(null);
-    const [accountDetailState, setAccountDetailState] = useImmer({
-        name: '',
-        paymentAddress: '',
-        totalBalance: null,
-        avaiableBalance: null,
-    });
 
     const onHandleAccoutSelected = (account) => {
         if (account) {
             setAccountSelected(account);
-            setAccountDetailSelected(account?.nativeToken?.accountKeySet);
         }
     };
 
+    const onGetStatusAction = async (backupWalletString) => {
+        if (backupWalletString) {
+            dispatch(loadingOpen());
+            await loadIncognito();
+            dispatch(onIncognitoGetAccounts());
+            dispatch(loadingClose());
+        }
+    };
+
+    const onOpenCreateAccountModal = () => {
+        dispatch(onSetCreateAccountState(true));
+    };
+
+    const onOpenImportAccountModal = () => {
+        dispatch(onSetImportAccountState(true));
+    };
+
     useEffect(() => {
-        if (!isEmpty(masterAccount)) {
+        if (!isEmpty(masterAccount) && MasterAccount) {
+            const data = [];
+            masterAccount.forEach(async (ma) => {
+                data.push({
+                    ...ma,
+                });
+            });
+            setAccountList(data);
             setAccountSelected(masterAccount[0]);
         }
     }, [masterAccount]);
@@ -115,8 +136,23 @@ const AccountDetail = () => {
             </Helmet>
             <div className="wrap">
                 <Layout>
-                    <Sider className="account-sidebar bg-white" width={300}>
-                        <span onClick={() => history.push(`${RouterApp.rAccount}${RouterApp.rImport}`)}>Import </span>
+                    <Sider className="account-sidebar bg-white" width={400}>
+                        <Dropdown
+                            overlay={
+                                <Menu>
+                                    <Menu.Item onClick={onOpenCreateAccountModal}>
+                                        <span>Create Account</span>
+                                    </Menu.Item>
+                                    <Menu.Item onClick={onOpenImportAccountModal}>
+                                        <span>Import Account</span>
+                                    </Menu.Item>
+                                </Menu>
+                            }
+                            trigger={['click']}>
+                            <Title className="title pointer" level={3}>
+                                <SettingFilled />
+                            </Title>
+                        </Dropdown>
                         <Row>
                             <Col span={24} className="text-center">
                                 <Avatar size={70} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
@@ -148,22 +184,23 @@ const AccountDetail = () => {
                             </Col>
                         </Row>
                         <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-                            {!isEmpty(masterAccount) &&
-                                masterAccount.map((ac, idx) => (
+                            {!isEmpty(accountList) &&
+                                accountList.map((ac, idx) => (
                                     <Menu.Item key={idx} className="wallet-balance">
-                                        <div className="inner">
-                                            <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                            <div className="content">
-                                                {ac ? (
-                                                    <>
-                                                        <h4 className="title-amount line-height">{ac?.nativeToken?.name}</h4>
-                                                        <Text className="title-value no-margin line-height">{ac?.nativeToken?.symbol}</Text>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
+                                        {ac ? (
+                                            <div className="inner">
+                                                <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                                <div className="content">
+                                                    <h4 className="title-amount line-height">{ac?.nativeToken?.name}</h4>
+                                                    <Text className="title-value no-margin line-height">{ac?.nativeToken?.symbol}</Text>
+                                                </div>
+                                                <div className="balance">
+                                                    <Text className="title-value no-margin line-height">{ac?.avaiableBalance}</Text>
+                                                </div>
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </Menu.Item>
                                 ))}
                         </Menu>
@@ -203,6 +240,8 @@ const AccountDetail = () => {
                         content
                     </Content>
                 </Layout>
+                <CreateAccount onGetStatusCreated={onGetStatusAction} />
+                <ImportAccount onGetStatusImported={onGetStatusAction} />
             </div>
         </AccountDetailStyled>
     );

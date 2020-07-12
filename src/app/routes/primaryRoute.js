@@ -1,6 +1,6 @@
 import { PrivateLayout } from 'app/layouts';
 import RouterApp from './consts';
-import { AsyncAccount, AsyncDetailAccount, AsyncImportAccount, AsyncListAccount } from './primarySync';
+import { AsyncAccount, AsyncDetailAccount, AsyncListAccount } from './primarySync';
 
 const PrimaryRouteConfig = [
     {
@@ -20,14 +20,6 @@ const PrimaryRouteConfig = [
         path: RouterApp.rAccount,
         layout: PrivateLayout,
         component: AsyncAccount,
-        children: [
-            {
-                title: 'Import account from private keys',
-                path: `${RouterApp.rAccount}${RouterApp.rImport}`,
-                layout: PrivateLayout,
-                component: AsyncImportAccount,
-            },
-        ],
     },
 ];
 

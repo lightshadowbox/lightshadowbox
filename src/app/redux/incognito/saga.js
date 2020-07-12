@@ -57,19 +57,19 @@ function* createAccountSaga() {
     }
 }
 
-function* removeAccountSage() {
-    while (true) {
-        const data = yield take(nameConst.INCOGNITO_CREATE_ACCOUNT);
-        yield put(loadingOpenAction());
-        // const result = yield call(IncognitoInstance.masterAccount.removeAccount, data.payload);
-        // if (!result || result?.error) {
-        //     yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoError(result?.error || MSG.RESTORED_WALLET_FAILED))]);
-        // } else {
-        //     yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoRemoveAccountSucceeded(result))]);
-        // }
-    }
-}
+// function* removeAccountSage() {
+//     while (true) {
+//         const data = yield take(nameConst.INCOGNITO_CREATE_ACCOUNT);
+//         yield put(loadingOpenAction());
+//         // const result = yield call(IncognitoInstance.masterAccount.removeAccount, data.payload);
+//         // if (!result || result?.error) {
+//         //     yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoError(result?.error || MSG.RESTORED_WALLET_FAILED))]);
+//         // } else {
+//         //     yield all([put(loadingCloseAction()), put(nameEvents.onIncognitoRemoveAccountSucceeded(result))]);
+//         // }
+//     }
+// }
 
 export default function* root() {
-    yield all([fork(getAccountsSaga), fork(createAccountSaga), fork(removeAccountSage)]);
+    yield all([fork(getAccountsSaga), fork(createAccountSaga)]);
 }

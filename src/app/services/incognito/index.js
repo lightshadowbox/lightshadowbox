@@ -56,14 +56,15 @@ let semaphore = false;
 //     return { ...instance };
 // };
 
-const loadIncognito = async () => {
+const loadIncognito = async (walletName = '') => {
     if (IncognitoInstance && !semaphore) {
         await loadWASM();
         semaphore = true; // mark awaited constructor
         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
         let wallet;
         if (!walletBackup) {
-            wallet = await walletInstance.createWallet(Config.WALLET_PASS, Config.WALLET_NAME);
+            console.log("don't has wallet", walletName);
+            wallet = await walletInstance.createWallet(Config.WALLET_PASS, walletName || Config.WALLET_NAME);
             const backupWalletString = wallet.backup(Config.WALLET_PASS);
             LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
             console.log('init wallet');
@@ -72,6 +73,7 @@ const loadIncognito = async () => {
             console.log('restore wallet');
         }
         IncognitoInstance.wallet = wallet;
+        console.log('wallet info', wallet);
         masterAccount = new MasterAccount(wallet);
         IncognitoInstance.masterAccount = masterAccount;
     }

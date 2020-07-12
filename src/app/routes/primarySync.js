@@ -2,8 +2,7 @@ import AsyncComponent from 'app/components/asyncComponent';
 
 const AsyncOnboarding = AsyncComponent(() => import('app/pages/onboarding/index'));
 const AsyncAccount = AsyncComponent(() => import('app/pages/account/index'));
-const AsyncImportAccount = AsyncComponent(() => import('app/pages/account/importAccount/index'));
 const AsyncDetailAccount = AsyncComponent(() => import('app/pages/account/accountDetail/index'));
 const AsyncListAccount = AsyncComponent(() => import('app/pages/account/list/index'));
 
-export { AsyncOnboarding, AsyncAccount, AsyncImportAccount, AsyncDetailAccount, AsyncListAccount };
+export { AsyncOnboarding, AsyncAccount, AsyncDetailAccount, AsyncListAccount };
