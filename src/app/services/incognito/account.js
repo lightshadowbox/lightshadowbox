@@ -56,6 +56,18 @@ class MasterAccount {
         return followingTokens;
     }
 
+    async getFollowingPrivacyToken(accountName, tokenId) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        const token = await account.getFollowingPrivacyToken(tokenId);
+        return token;
+    }
+
+    async getFollowingPrivacyTokens(accountName) {
+        const account = this.masterAccount.getAccountByName(accountName);
+        const followingTokens = await account.getFollowingPrivacyToken();
+        return followingTokens;
+    }
+
     async getTotalBalanceCoin(accountName) {
         const account = this.masterAccount.getAccountByName(accountName);
         return account.nativeToken.getTotalBalance();

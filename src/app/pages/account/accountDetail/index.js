@@ -7,7 +7,7 @@ import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography }
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { loadingClose, loadingOpen } from 'app/redux/common/actions';
+import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
 import { makeSelectAccounts } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
 import accountReducer, { KEY_REDUCER_SAGA, onSetCreateAccountState, onSetImportAccountState } from 'app/pages/account/redux/slice';
@@ -72,11 +72,13 @@ const AccountDetailStyled = styled.div`
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    justify-content: space-between;
                     .content {
                         margin-left: 0.875rem;
                         min-width: 0;
                         display: flex;
                         flex-direction: column;
+                        flex: 1;
                     }
                 }
             }
@@ -90,12 +92,22 @@ const AccountDetail = () => {
     const masterAccount = useSelector(makeSelectAccounts());
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
-    const [accountList, setAccountList] = useState(null);
     const [accountSelected, setAccountSelected] = useState(null);
 
-    const onHandleAccoutSelected = (account) => {
+    const onHandleAccoutSelected = async (account) => {
         if (account) {
-            setAccountSelected(account);
+            const { nativeToken, name } = account;
+            dispatch(loadingOpenAction());
+            const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
+            if (nativeToken && nativeToken?.tokenId) {
+                const followingTokens = await MasterAccount.followTokenById(
+                    name,
+                    'b832e5d3b1f01a4f0623f7fe91d6673461e1f5d37d91fe78c5c2e6183ff39696',
+                );
+                console.log(followingTokens);
+            }
+            setAccountSelected({ ...account, balanceBN: balanceBN.toNumber() });
+            dispatch(loadingCloseAction());
         }
     };
 
@@ -124,7 +136,6 @@ const AccountDetail = () => {
                     ...ma,
                 });
             });
-            setAccountList(data);
             setAccountSelected(masterAccount[0]);
         }
     }, [masterAccount]);
@@ -184,7 +195,27 @@ const AccountDetail = () => {
                             </Col>
                         </Row>
                         <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-                            {!isEmpty(accountList) &&
+                            <Menu.Item key="123123" className="wallet-balance">
+                                {accountSelected ? (
+                                    <div className="inner">
+                                        <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                        <div className="content">
+                                            <h4 className="title-amount line-height">{accountSelected?.nativeToken?.name}</h4>
+                                            <Text className="title-value no-margin line-height">
+                                                {accountSelected?.nativeToken?.symbol}
+                                            </Text>
+                                        </div>
+                                        <div className="balance">
+                                            <Text className="title-value no-margin line-height">
+                                                {accountSelected?.balanceBN} {accountSelected?.nativeToken?.symbol}
+                                            </Text>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                            </Menu.Item>
+                            {/* {!isEmpty(accountList) &&
                                 accountList.map((ac, idx) => (
                                     <Menu.Item key={idx} className="wallet-balance">
                                         {ac ? (
@@ -202,7 +233,7 @@ const AccountDetail = () => {
                                             <></>
                                         )}
                                     </Menu.Item>
-                                ))}
+                                ))} */}
                         </Menu>
                     </Sider>
                     <Content>
