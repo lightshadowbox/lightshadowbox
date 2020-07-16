@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-import { Button, Typography, Modal, Form, Input, notification } from 'antd';
+import { Button, Modal, Form, Input, notification } from 'antd';
 import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
@@ -10,10 +11,15 @@ import { masterAccount as MasterAccount, IncognitoInstance } from 'app/services/
 import { onSetImportAccountState } from 'app/pages/account/redux/slice';
 import { makeSelectImportedAccountStatus } from 'app/pages/account/redux/selectors';
 
+const ImportAccountStyled = styled.div`
+    .caption {
+        margin-top: 3em;
+    }
+`;
+
 const ImportAccount = ({ onGetStatusImported }) => {
     const dispatch = useDispatch();
     const visible = useSelector(makeSelectImportedAccountStatus());
-    const { Title, Text } = Typography;
     const onHandleImportCancel = () => {
         dispatch(onSetImportAccountState(false));
     };
@@ -23,23 +29,30 @@ const ImportAccount = ({ onGetStatusImported }) => {
             const { accountName, privateKey } = values;
             const account = await MasterAccount.importAccount(accountName, privateKey);
             if (!isEmpty(account)) {
-                dispatch(onSetImportAccountState(false));
-                notification.open({
-                    message: 'Success',
-                });
-                const backupWalletString = await IncognitoInstance.wallet.backup(Config.WALLET_PASS);
-                LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
-                if (onGetStatusImported && typeof onGetStatusImported === 'function') {
-                    onGetStatusImported(backupWalletString);
+                if (account.status === 'ERROR') {
+                    const { message } = account;
+                    notification.open({
+                        message,
+                    });
+                } else {
+                    dispatch(onSetImportAccountState(false));
+                    notification.open({
+                        message: 'Success',
+                    });
+                    const backupWalletString = await IncognitoInstance.wallet.backup(Config.WALLET_PASS);
+                    LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
+                    if (onGetStatusImported && typeof onGetStatusImported === 'function') {
+                        onGetStatusImported(backupWalletString);
+                    }
                 }
             }
         }
     };
 
     return (
-        <>
-            <Modal footer={null} visible={visible} onCancel={onHandleImportCancel}>
-                <Title>IMPORT ACCOUNT FROM PRIVATE KEYS</Title>
+        <ImportAccountStyled>
+            <Modal footer={null} visible={visible} onCancel={onHandleImportCancel} className="text-center">
+                <h3>IMPORT ACCOUNT FROM PRIVATE KEYS</h3>
                 <Form name="import-account" layout="vertical" onFinish={onImportAccount}>
                     <Form.Item
                         name="privateKey"
@@ -61,12 +74,12 @@ const ImportAccount = ({ onGetStatusImported }) => {
                         Submit
                     </Button>
                 </Form>
-                <Text>
+                <p className="caption">
                     All the wallet & account service will be sent directly to the main chain, we don’t store any data / keys on this
                     website.
-                </Text>
+                </p>
             </Modal>
-        </>
+        </ImportAccountStyled>
     );
 };
 

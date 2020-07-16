@@ -23,22 +23,30 @@ class MasterAccount {
         return accounts;
     }
 
+    getAccountByName(accountName) {
+        return this.masterAccount.child.find((item) => item.name === accountName);
+    }
+
+    getAccountIndexByName(accountName) {
+        return this.masterAccount.child.findIndex((item) => item.name === accountName);
+    }
+
     async createAccount(accountName, shardId = null) {
         try {
             return await this.masterAccount.addAccount(accountName, shardId);
         } catch (error) {
             console.debug('CREATE ACCOUNT ERROR', error);
-            return null;
+            return { status: 'ERROR', ...error };
         }
     }
 
     async importAccount(accountName, privateKey) {
         try {
             await this.masterAccount.importAccount(accountName, privateKey);
-            return true;
+            return { status: 'SUCCESS' };
         } catch (error) {
             console.debug('IMPORT ERROR', error);
-            return false;
+            return { status: 'ERROR', ...error };
         }
     }
 

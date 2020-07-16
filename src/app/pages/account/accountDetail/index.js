@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
 import { isEmpty } from 'lodash';
@@ -8,12 +8,19 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
-import { makeSelectAccounts } from 'app/redux/incognito/selector';
+import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
 import accountReducer, { KEY_REDUCER_SAGA, onSetCreateAccountState, onSetImportAccountState } from 'app/pages/account/redux/slice';
-import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
+import { onIncognitoGetAccounts, onIncognitoPrivacyTokens } from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
+
+const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
+const privacyTokenIds = [
+    'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
+    'cb401a57a9c4a54b13df630513470203fcf8416e218cfe25151a896fde59160b',
+    '6813af655262c8eecb6d58e78311da509607342533f7a710968fab67ff7d63a5',
+];
 
 const AccountDetailStyled = styled.div`
     .wrap {
@@ -90,6 +97,8 @@ const AccountDetail = () => {
     useInjectReducer({ key: KEY_REDUCER_SAGA, reducer: accountReducer });
     const dispatch = useDispatch();
     const masterAccount = useSelector(makeSelectAccounts());
+    const pCustomeTokens = useSelector(makeSelectPCustomeTokens());
+    const privacyTokens = useSelector(makeSelectPrivacyTokens());
     const { Header, Content, Sider } = Layout;
     const { Title, Text } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
@@ -128,6 +137,22 @@ const AccountDetail = () => {
         dispatch(onSetImportAccountState(true));
     };
 
+    const onGetPrivacyTokens = useCallback(
+        (tokenIds) => {
+            const tokenDetails = [];
+            if (!isEmpty(pCustomeTokens)) {
+                tokenIds.forEach((token) => {
+                    const hasIndex = pCustomeTokens.findIndex((item) => item.TokenID === token);
+                    if (hasIndex !== -1) {
+                        tokenDetails.push(pCustomeTokens[hasIndex]);
+                    }
+                });
+            }
+            dispatch(onIncognitoPrivacyTokens(tokenDetails));
+        },
+        [dispatch, pCustomeTokens],
+    );
+
     useEffect(() => {
         if (!isEmpty(masterAccount) && MasterAccount) {
             const data = [];
@@ -137,8 +162,11 @@ const AccountDetail = () => {
                 });
             });
             setAccountSelected(masterAccount[0]);
+            onGetPrivacyTokens(privacyTokenIds);
         }
-    }, [masterAccount]);
+    }, [masterAccount, onGetPrivacyTokens]);
+
+    console.log(privacyTokens);
 
     return (
         <AccountDetailStyled>
@@ -195,7 +223,7 @@ const AccountDetail = () => {
                             </Col>
                         </Row>
                         <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-                            <Menu.Item key="123123" className="wallet-balance">
+                            <Menu.Item key="prv" className="wallet-balance">
                                 {accountSelected ? (
                                     <div className="inner">
                                         <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
@@ -215,25 +243,10 @@ const AccountDetail = () => {
                                     <></>
                                 )}
                             </Menu.Item>
-                            {/* {!isEmpty(accountList) &&
-                                accountList.map((ac, idx) => (
-                                    <Menu.Item key={idx} className="wallet-balance">
-                                        {ac ? (
-                                            <div className="inner">
-                                                <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                                <div className="content">
-                                                    <h4 className="title-amount line-height">{ac?.nativeToken?.name}</h4>
-                                                    <Text className="title-value no-margin line-height">{ac?.nativeToken?.symbol}</Text>
-                                                </div>
-                                                <div className="balance">
-                                                    <Text className="title-value no-margin line-height">{ac?.avaiableBalance}</Text>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </Menu.Item>
-                                ))} */}
+
+                            <Suspense fallback={<h1>Still Loading…</h1>}>
+                                <PrivacyToken data={privacyTokenIds} />
+                            </Suspense>
                         </Menu>
                     </Sider>
                     <Content>

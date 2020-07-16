@@ -7,9 +7,26 @@ export const initState = {
     [FIELDS_STATE.ACCOUNT_SELECTED]: null,
     [FIELDS_STATE.INCOGNITO_ERROR]: null,
     [FIELDS_STATE.INCOGNITO_LOADING]: false,
+    [FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS]: null,
+    [FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS]: null,
+    [FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR]: null,
 };
 
 const incognitoDataReducer = createReducer(initState, {
+    [nameActs.onIncognitoGetPCustomeFailed]: (state, action) => {
+        const { payload } = action;
+        state[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR] = payload;
+        state[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS] = initState[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS];
+    },
+    [nameActs.onIncognitoGetPCustomeSucceeded]: (state, action) => {
+        const { payload } = action;
+        state[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR] = initState[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR];
+        state[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS] = payload;
+    },
+    [nameActs.onIncognitoPrivacyTokens]: (state, action) => {
+        const { payload } = action;
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = payload;
+    },
     [nameActs.onIncognitoGetAccounts]: (state) => {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;
     },

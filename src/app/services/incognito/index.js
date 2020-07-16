@@ -75,6 +75,9 @@ const loadIncognito = async (walletName = '') => {
         IncognitoInstance.wallet = wallet;
         console.log('wallet info', wallet);
         masterAccount = new MasterAccount(wallet);
+        // const tokenId = 'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb';
+        // const tokenFollow = masterAccount.followTokenById('Account 0', tokenId);
+        // console.log(tokenFollow);
         IncognitoInstance.masterAccount = masterAccount;
     }
 };

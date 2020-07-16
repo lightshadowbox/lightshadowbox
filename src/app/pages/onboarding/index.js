@@ -8,7 +8,7 @@ import LocalStorageServices from 'app/utils/localStorage';
 import RouterApp from 'app/routes/consts';
 import history from 'app/routes/history';
 import { loadingClose, loadingOpen } from 'app/redux/common/actions';
-import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
+import { onIncognitoGetAccounts, onIncognitoGetPCustomeToken } from 'app/redux/incognito/actions';
 import loadIncognito from 'app/services/incognito';
 import Logo from 'assets/logo.png';
 
@@ -22,6 +22,7 @@ const Onboarding = () => {
     const dispatch = useDispatch();
     const { Title } = Typography;
     const onAccessWallet = async () => {
+        dispatch(onIncognitoGetPCustomeToken());
         if (!LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
             history.push(RouterApp.rInitWallet);
         } else {
