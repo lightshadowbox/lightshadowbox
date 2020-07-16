@@ -16,11 +16,11 @@ import { CreateAccount, ImportAccount } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
-const privacyTokenIds = [
-    'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
-    'cb401a57a9c4a54b13df630513470203fcf8416e218cfe25151a896fde59160b',
-    '6813af655262c8eecb6d58e78311da509607342533f7a710968fab67ff7d63a5',
-];
+// const privacyTokenIds = [
+//     'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
+//     'cb401a57a9c4a54b13df630513470203fcf8416e218cfe25151a896fde59160b',
+//     '6813af655262c8eecb6d58e78311da509607342533f7a710968fab67ff7d63a5',
+// ];
 
 const AccountDetailStyled = styled.div`
     .wrap {
@@ -30,7 +30,8 @@ const AccountDetailStyled = styled.div`
             padding-top: 2.5rem;
         }
         .ant-layout {
-            height: 82vh;
+            height: 100vh;
+            padding-bottom: 2rem;
             .ant-layout-header {
                 padding: 0 2rem;
                 .btn-send {
@@ -109,13 +110,18 @@ const AccountDetail = () => {
             console.log(account);
             dispatch(loadingOpenAction());
             const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
-            if (nativeToken && nativeToken?.tokenId) {
-                const followingTokens = await MasterAccount.followTokenById(
-                    name,
-                    'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
-                );
-                console.log(followingTokens);
-            }
+            // if (nativeToken && nativeToken?.tokenId) {
+            //     const followingTokens = await MasterAccount.followTokenById(
+            //         name,
+            //         'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
+            //     );
+            //     console.log(followingTokens);
+            // }
+            const followingTokens = await MasterAccount.getFollowingPrivacyToken(
+                name,
+                'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
+            );
+            console.log(followingTokens);
             setAccountSelected({ ...account, balanceBN: balanceBN.toNumber() });
             dispatch(loadingCloseAction());
         }
@@ -162,8 +168,9 @@ const AccountDetail = () => {
                     ...ma,
                 });
             });
-            setAccountSelected(masterAccount[0]);
-            onGetPrivacyTokens(privacyTokenIds);
+            const ac = masterAccount[0];
+            setAccountSelected(ac);
+            ac.privacyTokenIds && onGetPrivacyTokens(ac.privacyTokenIds);
         }
     }, [masterAccount, onGetPrivacyTokens]);
 
@@ -230,13 +237,10 @@ const AccountDetail = () => {
                                         <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
                                         <div className="content">
                                             <h4 className="title-amount line-height">{accountSelected?.nativeToken?.name}</h4>
-                                            <Text className="title-value no-margin line-height">
-                                                {accountSelected?.nativeToken?.symbol}
-                                            </Text>
                                         </div>
                                         <div className="balance">
                                             <Text className="title-value no-margin line-height">
-                                                {accountSelected?.balanceBN} {accountSelected?.nativeToken?.symbol}
+                                                {accountSelected?.balanceBN || 0} {accountSelected?.nativeToken?.symbol}
                                             </Text>
                                         </div>
                                     </div>

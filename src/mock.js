@@ -2,3 +2,49 @@ const privateKey =
     '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';
 
 export default privateKey;
+
+//   async getBalance(tokenID) {
+//     let unspentCoinStrs = await this.getUnspentToken(tokenID, Wallet.RpcClient);
+
+//     let accountBalance = 0;
+//     for (let i = 0; i < unspentCoinStrs.length; i++) {
+//       accountBalance += parseInt(unspentCoinStrs[i].Value)
+//     }
+
+//     return accountBalance
+//   }
+
+//  async getAllPrivacyTokenBalance() {
+//     try {
+//       // get list privacy token
+//       let privacyTokens = await Wallet.RpcClient.listPrivacyCustomTokens();
+//       let pTokenList = privacyTokens.listPrivacyToken;
+
+//       // get balance for each privacy token
+//       let tasks = [];
+//       for (let i = 0; i < pTokenList.length; i++) {
+//         let tokenID = pTokenList[i].ID;
+
+//         const tokenBalanceItemPromise = new Promise((resolve) => {
+//           this.getBalance(tokenID)
+//             .then(balance => {
+
+//               resolve({
+//                 TokenID: tokenID,
+//                 Balance: balance,
+//               });
+//             })
+//             .catch(() => null)
+//         });
+//         tasks.push(tokenBalanceItemPromise);
+//       }
+
+//       const allResult = await Promise.all(tasks);
+//       const hasBalanceResult = allResult && allResult.filter(r => r && r.Balance > 0)
+
+//       return hasBalanceResult;
+//     } catch (e) {
+
+//       throw e;
+//     }
+//   }

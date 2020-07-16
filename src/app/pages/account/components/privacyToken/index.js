@@ -1,11 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Avatar, Menu, Typography } from 'antd';
 
 const PrivacyToken = ({ data }) => {
-    console.log(data);
     const { Text } = Typography;
     return (
         <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
