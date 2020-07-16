@@ -63,21 +63,23 @@ const loadIncognito = async (walletName = '') => {
         const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET);
         let wallet;
         if (!walletBackup) {
-            console.log("don't has wallet", walletName);
             wallet = await walletInstance.createWallet(Config.WALLET_PASS, walletName || Config.WALLET_NAME);
             const backupWalletString = wallet.backup(Config.WALLET_PASS);
             LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
             console.log('init wallet');
         } else {
             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
+            // const t = new MasterAccount(wallet);
+            // const tokenId = 'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb';
+            // const tokenFollow = t.followTokenById('Account 0', tokenId);
+            // console.log(tokenFollow);
+            // const backupWalletString = wallet.backup(Config.WALLET_PASS);
+            // LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
             console.log('restore wallet');
         }
         IncognitoInstance.wallet = wallet;
         console.log('wallet info', wallet);
         masterAccount = new MasterAccount(wallet);
-        // const tokenId = 'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb';
-        // const tokenFollow = masterAccount.followTokenById('Account 0', tokenId);
-        // console.log(tokenFollow);
         IncognitoInstance.masterAccount = masterAccount;
     }
 };

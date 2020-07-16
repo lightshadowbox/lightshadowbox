@@ -106,12 +106,13 @@ const AccountDetail = () => {
     const onHandleAccoutSelected = async (account) => {
         if (account) {
             const { nativeToken, name } = account;
+            console.log(account);
             dispatch(loadingOpenAction());
             const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
             if (nativeToken && nativeToken?.tokenId) {
                 const followingTokens = await MasterAccount.followTokenById(
                     name,
-                    'b832e5d3b1f01a4f0623f7fe91d6673461e1f5d37d91fe78c5c2e6183ff39696',
+                    'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
                 );
                 console.log(followingTokens);
             }
@@ -243,11 +244,10 @@ const AccountDetail = () => {
                                     <></>
                                 )}
                             </Menu.Item>
-
-                            <Suspense fallback={<h1>Still Loading…</h1>}>
-                                <PrivacyToken data={privacyTokenIds} />
-                            </Suspense>
                         </Menu>
+                        <Suspense fallback={<h1>Still Loading…</h1>}>
+                            <PrivacyToken data={privacyTokens} />
+                        </Suspense>
                     </Sider>
                     <Content>
                         <Header className="header">
