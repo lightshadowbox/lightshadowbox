@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { cloneDeep } from 'lodash';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';
 
@@ -37,7 +38,7 @@ const incognitoDataReducer = createReducer(initState, {
     },
     [nameActs.onIncognitoCreateAccountSucceeded]: (state, action) => {
         const { payload } = action;
-        state[FIELDS_STATE.ACCOUNTS] = [...state[FIELDS_STATE.ACCOUNTS], payload.account];
+        state[FIELDS_STATE.ACCOUNTS] = [...state[FIELDS_STATE.ACCOUNTS], cloneDeep(payload.account)];
         state[FIELDS_STATE.INCOGNITO_ERROR] = initState[FIELDS_STATE.INCOGNITO_ERROR];
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
