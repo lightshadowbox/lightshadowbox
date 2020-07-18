@@ -52,7 +52,7 @@ class MasterAccount {
 
     async followTokenById(accountName, tokenId) {
         const account = this.masterAccount.getAccountByName(accountName);
-        console.log('acount');
+        console.log('followTokenById');
         console.log(account);
         account.followTokenById(tokenId);
         const followingTokens = await account.getFollowingPrivacyToken();
@@ -94,16 +94,26 @@ class MasterAccount {
     }
 
     async getTotalBalanceToken(accountName, tokenId) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        console.log('getTotalBalanceToken', accountName, account);
-        const token = await account.getFollowingPrivacyToken(tokenId);
-        return token.getTotalBalance();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            const token = await account.getFollowingPrivacyToken(tokenId);
+            return token && (await token[0]?.getTotalBalance());
+        } catch (error) {
+            return { status: 'ERROR', message: `Can not get total balance of the ${tokenId}` };
+        }
     }
 
     async getAvaialbleBalanceToken(accountName, tokenId) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        const token = await account.getFollowingPrivacyToken(tokenId);
-        return token.getAvaiableBalance();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            const token = await account.getFollowingPrivacyToken(tokenId);
+            return token && (await token[0]?.getAvaiableBalance());
+        } catch (error) {
+            return {
+                status: 'ERROR',
+                message: `Can not get availabel balance of the ${tokenId}`,
+            };
+        }
     }
 
     async getTxHistoriesToken(accountName, tokenId) {

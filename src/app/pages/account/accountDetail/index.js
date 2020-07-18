@@ -16,11 +16,6 @@ import { CreateAccount, ImportAccount } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
-// const privacyTokenIds = [
-//     'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
-//     'cb401a57a9c4a54b13df630513470203fcf8416e218cfe25151a896fde59160b',
-//     '6813af655262c8eecb6d58e78311da509607342533f7a710968fab67ff7d63a5',
-// ];
 
 const AccountDetailStyled = styled.div`
     .wrap {
@@ -149,6 +144,12 @@ const AccountDetail = () => {
         [dispatch, pCustomeTokens],
     );
 
+    const onAddCoin = async () => {
+        const { name } = accountSelected;
+        const tokens = await MasterAccount.followTokenById(name, '8a498fbc9398a09dd7fe840ec9d1c95c7c5c638dfe85b28babcb85ce94503ddd');
+        console.log(tokens);
+    };
+
     useEffect(() => {
         if (!isEmpty(masterAccount) && MasterAccount) {
             const data = [];
@@ -162,8 +163,6 @@ const AccountDetail = () => {
             ac.privacyTokenIds && onGetPrivacyTokens(ac.privacyTokenIds);
         }
     }, [masterAccount, onGetPrivacyTokens]);
-
-    console.log(privacyTokens);
 
     return (
         <AccountDetailStyled>
@@ -241,6 +240,7 @@ const AccountDetail = () => {
                         <Suspense fallback={<h1>Still Loading…</h1>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
+                        <Button onClick={onAddCoin}>+ Add coin</Button>
                     </Sider>
                     <Content>
                         <Header className="header">
