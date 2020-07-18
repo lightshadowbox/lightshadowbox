@@ -70,7 +70,7 @@ const loadIncognito = async (walletName = '') => {
         } else {
             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
             // const t = new MasterAccount(wallet);
-            // const tokenId = 'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb';
+            // const tokenId = 'b832e5d3b1f01a4f0623f7fe91d6673461e1f5d37d91fe78c5c2e6183ff39696';
             // const tokenFollow = t.followTokenById('Account 0', tokenId);
             // console.log(tokenFollow);
             // const backupWalletString = wallet.backup(Config.WALLET_PASS);

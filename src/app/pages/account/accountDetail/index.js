@@ -11,7 +11,7 @@ import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from
 import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
 import accountReducer, { KEY_REDUCER_SAGA, onSetCreateAccountState, onSetImportAccountState } from 'app/pages/account/redux/slice';
-import { onIncognitoGetAccounts, onIncognitoPrivacyTokens } from 'app/redux/incognito/actions';
+import { onIncognitoGetAccounts, onIncognitoPrivacyTokens, onIncognitoAccountSelected } from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
@@ -106,23 +106,12 @@ const AccountDetail = () => {
 
     const onHandleAccoutSelected = async (account) => {
         if (account) {
-            const { nativeToken, name } = account;
-            console.log(account);
+            const { name } = account;
             dispatch(loadingOpenAction());
             const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
-            if (nativeToken && nativeToken?.tokenId) {
-                const followingTokens = await MasterAccount.followTokenById(
-                    name,
-                    'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
-                );
-                console.log(followingTokens);
-            }
-            const followingTokens = await MasterAccount.getFollowingPrivacyToken(
-                name,
-                'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
-            );
-            console.log(followingTokens);
-            setAccountSelected({ ...account, balanceBN: balanceBN.toNumber() });
+            const selected = { ...account, balanceBN: balanceBN.toNumber() };
+            setAccountSelected({ ...selected });
+            dispatch(onIncognitoAccountSelected({ ...selected }));
             dispatch(loadingCloseAction());
         }
     };

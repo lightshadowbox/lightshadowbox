@@ -49,9 +49,8 @@ const incognitoDataReducer = createReducer(initState, {
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
     [nameActs.onIncognitoAccountSelected]: (state, action) => {
-        console.log(action);
-        // const { payload } = action;
-        state[FIELDS_STATE.ACCOUNT_SELECTED] = 1;
+        const { payload } = action;
+        state[FIELDS_STATE.ACCOUNT_SELECTED] = payload;
     },
     [nameActs.onIncognitoError]: (state, action) => {
         const { payload } = action;

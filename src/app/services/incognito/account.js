@@ -52,6 +52,8 @@ class MasterAccount {
 
     async followTokenById(accountName, tokenId) {
         const account = this.masterAccount.getAccountByName(accountName);
+        console.log('acount');
+        console.log(account);
         account.followTokenById(tokenId);
         const followingTokens = await account.getFollowingPrivacyToken();
         return followingTokens;
@@ -93,6 +95,7 @@ class MasterAccount {
 
     async getTotalBalanceToken(accountName, tokenId) {
         const account = this.masterAccount.getAccountByName(accountName);
+        console.log('getTotalBalanceToken', accountName, account);
         const token = await account.getFollowingPrivacyToken(tokenId);
         return token.getTotalBalance();
     }
