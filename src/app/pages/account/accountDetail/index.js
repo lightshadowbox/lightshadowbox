@@ -110,13 +110,13 @@ const AccountDetail = () => {
             console.log(account);
             dispatch(loadingOpenAction());
             const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
-            // if (nativeToken && nativeToken?.tokenId) {
-            //     const followingTokens = await MasterAccount.followTokenById(
-            //         name,
-            //         'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
-            //     );
-            //     console.log(followingTokens);
-            // }
+            if (nativeToken && nativeToken?.tokenId) {
+                const followingTokens = await MasterAccount.followTokenById(
+                    name,
+                    'f4c14af6e8bd471df5c126590b1572f6cf89d9ae5146afbedf66a79ac5cc2196',
+                );
+                console.log(followingTokens);
+            }
             const followingTokens = await MasterAccount.getFollowingPrivacyToken(
                 name,
                 'f11a19ccd45858900f42ee264985526b4aa40c3f5e28d67a4409d8a5ea8908cb',
