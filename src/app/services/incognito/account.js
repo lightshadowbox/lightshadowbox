@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import { MSG } from 'app/consts';
 
 class MasterAccount {
     masterAccount;
@@ -36,27 +37,29 @@ class MasterAccount {
             return await this.masterAccount.addAccount(accountName, shardId);
         } catch (error) {
             console.debug('CREATE ACCOUNT ERROR', error);
-            return { status: 'ERROR', ...error };
+            return { status: MSG.ERROR, ...error };
         }
     }
 
     async importAccount(accountName, privateKey) {
         try {
             await this.masterAccount.importAccount(accountName, privateKey);
-            return { status: 'SUCCESS' };
+            return { status: MSG.SUCCESS };
         } catch (error) {
             console.debug('IMPORT ERROR', error);
-            return { status: 'ERROR', ...error };
+            return { status: MSG.ERROR, ...error };
         }
     }
 
     async followTokenById(accountName, tokenId) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        console.log('followTokenById');
-        console.log(account);
-        account.followTokenById(tokenId);
-        const followingTokens = await account.getFollowingPrivacyToken();
-        return followingTokens;
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            account.followTokenById(tokenId);
+            const followingTokens = await account.getFollowingPrivacyToken();
+            return { status: MSG.SUCCESS, data: followingTokens };
+        } catch (error) {
+            return { status: MSG.ERROR, message: 'Can not follow token' };
+        }
     }
 
     async unfollowTokenById(accountName, tokenId) {
@@ -99,7 +102,7 @@ class MasterAccount {
             const token = await account.getFollowingPrivacyToken(tokenId);
             return token && (await token[0]?.getTotalBalance());
         } catch (error) {
-            return { status: 'ERROR', message: `Can not get total balance of the ${tokenId}` };
+            return { status: MSG.ERROR, message: `Can not get total balance of the ${tokenId}` };
         }
     }
 
@@ -110,7 +113,7 @@ class MasterAccount {
             return token && (await token[0]?.getAvaiableBalance());
         } catch (error) {
             return {
-                status: 'ERROR',
+                status: MSG.ERROR,
                 message: `Can not get availabel balance of the ${tokenId}`,
             };
         }

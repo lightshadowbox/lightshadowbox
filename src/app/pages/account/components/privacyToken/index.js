@@ -22,7 +22,7 @@ const PrivacyToken = ({ data }) => {
     }, [accountSelected, data]);
 
     return (
-        <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
+        <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
             {!isEmpty(data) &&
                 data.map((ac, idx) => {
                     const { Image, Name, Symbol } = ac;

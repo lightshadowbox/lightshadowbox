@@ -13,6 +13,8 @@ export const MSG = {
     RESTORED_WALLET_FAILED: 'Restored wallet failed',
     NETWORK_ERROR: 'Đã có lỗi xảy ra. Vui lòng thử lại',
     SYNC_CANCELLED: 'Sync cancelled',
+    SUCCESS: 'Success',
+    ERROR: 'Error',
 };
 
 export const LOCAL_STORAGE_KEY = {

@@ -33,7 +33,7 @@ const incognitoDataReducer = createReducer(initState, {
     },
     [nameActs.onIncognitoGetAccountsSucceeded]: (state, action) => {
         const { payload: accounts } = action;
-        state[FIELDS_STATE.ACCOUNTS] = accounts;
+        state[FIELDS_STATE.ACCOUNTS] = cloneDeep(accounts);
         state[FIELDS_STATE.INCOGNITO_LOADING] = false;
     },
     [nameActs.onIncognitoCreateAccountSucceeded]: (state, action) => {

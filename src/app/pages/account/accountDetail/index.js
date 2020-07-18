@@ -10,23 +10,52 @@ import styled from 'styled-components';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
 import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
-import accountReducer, { KEY_REDUCER_SAGA, onSetCreateAccountState, onSetImportAccountState } from 'app/pages/account/redux/slice';
+import accountReducer, {
+    KEY_REDUCER_SAGA,
+    onSetCreateAccountState,
+    onSetImportAccountState,
+    onSetAddCointState,
+} from 'app/pages/account/redux/slice';
 import { onIncognitoGetAccounts, onIncognitoPrivacyTokens, onIncognitoAccountSelected } from 'app/redux/incognito/actions';
-import { CreateAccount, ImportAccount } from 'app/pages/account/components';
+import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
 
 const AccountDetailStyled = styled.div`
+    height: 100%;
+    flex: 1;
+    padding-top: 2rem;
+    .header {
+        width: 85vw;
+        margin: 0 auto;
+        background: transparent;
+        height: auto;
+        padding-bottom: 1.5rem;
+        .logo-box {
+            align-items: center;
+            display: flex;
+            > img {
+                margin-right: 14px;
+            }
+        }
+    }
     .wrap {
-        max-width: 1110px;
+        width: 85vw;
         padding-top: 3rem;
+        box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
+        padding: 0;
+        margin-bottom: 10vh;
+        display: flex;
+        flex: 1;
+        min-height: 82vh;
         .account-sidebar {
             padding-top: 2.5rem;
+            padding-bottom: 1.5rem;
         }
         .ant-layout {
-            height: 100vh;
-            padding-bottom: 2rem;
+            background: #fff;
+            border-right: 1px solid #f0f0f0;
             .ant-layout-header {
                 padding: 0 2rem;
                 .btn-send {
@@ -85,6 +114,9 @@ const AccountDetailStyled = styled.div`
                     }
                 }
             }
+            .account-sidebar {
+                border-right: 1px solid #f0f0f0;
+            }
         }
     }
 `;
@@ -128,6 +160,10 @@ const AccountDetail = () => {
         dispatch(onSetImportAccountState(true));
     };
 
+    const onOpenAddCoinModal = () => {
+        dispatch(onSetAddCointState(true));
+    };
+
     const onGetPrivacyTokens = useCallback(
         (tokenIds) => {
             const tokenDetails = [];
@@ -144,12 +180,6 @@ const AccountDetail = () => {
         [dispatch, pCustomeTokens],
     );
 
-    const onAddCoin = async () => {
-        const { name } = accountSelected;
-        const tokens = await MasterAccount.followTokenById(name, '8a498fbc9398a09dd7fe840ec9d1c95c7c5c638dfe85b28babcb85ce94503ddd');
-        console.log(tokens);
-    };
-
     useEffect(() => {
         if (!isEmpty(masterAccount) && MasterAccount) {
             const data = [];
@@ -160,17 +190,26 @@ const AccountDetail = () => {
             });
             const ac = masterAccount[0];
             setAccountSelected(ac);
+            dispatch(onIncognitoAccountSelected(ac));
             ac.privacyTokenIds && onGetPrivacyTokens(ac.privacyTokenIds);
         }
-    }, [masterAccount, onGetPrivacyTokens]);
+    }, [masterAccount, onGetPrivacyTokens, dispatch]);
 
     return (
         <AccountDetailStyled>
             <Helmet>
                 <title>Import account from private keys</title>
             </Helmet>
+            <div className="header">
+                <div className="logo-box">
+                    <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
+                    <Title className="no-margin" level={3}>
+                        Incognito Web Wallet
+                    </Title>
+                </div>
+            </div>
             <div className="wrap">
-                <Layout>
+                <Layout className="full-width">
                     <Sider className="account-sidebar bg-white" width={400}>
                         <Dropdown
                             overlay={
@@ -218,7 +257,7 @@ const AccountDetail = () => {
                                 </CopyToClipboard>
                             </Col>
                         </Row>
-                        <Menu mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
+                        <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
                             <Menu.Item key="prv" className="wallet-balance">
                                 {accountSelected ? (
                                     <div className="inner">
@@ -240,7 +279,9 @@ const AccountDetail = () => {
                         <Suspense fallback={<h1>Still Loading…</h1>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
-                        <Button onClick={onAddCoin}>+ Add coin</Button>
+                        <div className="text-center">
+                            <Button onClick={onOpenAddCoinModal}>Add a coin +</Button>
+                        </div>
                     </Sider>
                     <Content>
                         <Header className="header">
@@ -279,6 +320,7 @@ const AccountDetail = () => {
                 </Layout>
                 <CreateAccount onGetStatusCreated={onGetStatusAction} />
                 <ImportAccount onGetStatusImported={onGetStatusAction} />
+                <AddCoin />
             </div>
         </AccountDetailStyled>
     );
