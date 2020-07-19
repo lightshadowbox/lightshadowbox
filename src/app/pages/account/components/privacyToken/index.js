@@ -14,7 +14,7 @@ const PrivacyToken = ({ data }) => {
     useEffect(() => {
         const fetchBalanceToken = async (name, token) => {
             const balance = await MasterAccount.getTotalBalanceToken(name, token);
-            setBalance(balance.toNumber());
+            setBalance(balance && balance.toNumber());
         };
         if (!isEmpty(accountSelected) && !isEmpty(data)) {
             fetchBalanceToken(accountSelected.name, data.ID);

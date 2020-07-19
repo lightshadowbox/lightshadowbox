@@ -58,7 +58,7 @@ const CreateAccount = ({ onGetStatusCreated }) => {
                         name="accountName"
                         label="Enter your account’s name"
                         rules={[{ required: true, message: 'Enter your account’s name' }]}>
-                        <Input spellCheck="false" />
+                        <Input.TextArea rows={2} spellCheck="false" />
                     </Form.Item>
                     <Button type="primary" size="large" htmlType="submit">
                         Submit

@@ -2,11 +2,12 @@ import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
 import { isEmpty } from 'lodash';
-import { CaretDownOutlined, CopyOutlined, SettingFilled } from '@ant-design/icons';
+import { CaretDownOutlined, CopyOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import { getBackgroundColor } from 'app/utils';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
 import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
@@ -26,7 +27,7 @@ const AccountDetailStyled = styled.div`
     height: 100%;
     flex: 1;
     padding-top: 2rem;
-    .header {
+    .wrap-header {
         width: 85vw;
         margin: 0 auto;
         background: transparent;
@@ -118,6 +119,9 @@ const AccountDetailStyled = styled.div`
                 border-right: 1px solid #f0f0f0;
             }
         }
+        .header {
+            border-bottom: 1px solid #f0f0f0;
+        }
     }
 `;
 
@@ -195,41 +199,87 @@ const AccountDetail = () => {
         }
     }, [masterAccount, onGetPrivacyTokens, dispatch]);
 
+    const menu = (
+        <Menu>
+            {!isEmpty(masterAccount) &&
+                masterAccount.map((ac, idx) => (
+                    <Menu.Item key={idx} onClick={() => onHandleAccoutSelected(ac)}>
+                        <span>
+                            <Avatar
+                                className="spacing-avatar"
+                                size={24}
+                                style={{
+                                    background: getBackgroundColor(accountSelected?.name + accountSelected?.paymentAddressKeySerialized),
+                                }}
+                                alt={accountSelected?.name}
+                            />
+                            {ac?.name}
+                        </span>
+                    </Menu.Item>
+                ))}
+            <Menu.Item onClick={onOpenCreateAccountModal}>
+                <span>
+                    <PlusOutlined />
+                    Create Account
+                </span>
+            </Menu.Item>
+            <Menu.Item onClick={onOpenImportAccountModal}>
+                <span>
+                    <DownloadOutlined />
+                    Import Account
+                </span>
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <AccountDetailStyled>
             <Helmet>
                 <title>Import account from private keys</title>
             </Helmet>
-            <div className="header">
-                <div className="logo-box">
-                    <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
-                    <Title className="no-margin" level={3}>
-                        Incognito Web Wallet
-                    </Title>
-                </div>
+            <div className="wrap-header">
+                <Row>
+                    <Col span={12} className="text-left">
+                        <div className="logo-box">
+                            <img src={Logo} alt="Incognito Web Wallet" width="50" height="50" />
+                            <Title className="no-margin" level={3}>
+                                Incognito Web Wallet
+                            </Title>
+                        </div>
+                    </Col>
+                    <Col span={12} className="text-right">
+                        <div className="account-box">
+                            <Dropdown overlay={menu} placement="bottomRight">
+                                <span className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                                    <Avatar
+                                        size={32}
+                                        style={{
+                                            background: getBackgroundColor(
+                                                accountSelected?.name + accountSelected?.paymentAddressKeySerialized,
+                                            ),
+                                        }}
+                                        alt={accountSelected?.name}
+                                    />
+                                </span>
+                            </Dropdown>
+                        </div>
+                    </Col>
+                </Row>
             </div>
             <div className="wrap">
                 <Layout className="full-width">
                     <Sider className="account-sidebar bg-white" width={400}>
-                        <Dropdown
-                            overlay={
-                                <Menu>
-                                    <Menu.Item onClick={onOpenCreateAccountModal}>
-                                        <span>Create Account</span>
-                                    </Menu.Item>
-                                    <Menu.Item onClick={onOpenImportAccountModal}>
-                                        <span>Import Account</span>
-                                    </Menu.Item>
-                                </Menu>
-                            }
-                            trigger={['click']}>
-                            <Title className="title pointer" level={3}>
-                                <SettingFilled />
-                            </Title>
-                        </Dropdown>
                         <Row>
                             <Col span={24} className="text-center">
-                                <Avatar size={70} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                <Avatar
+                                    size={70}
+                                    style={{
+                                        background: getBackgroundColor(
+                                            accountSelected?.name + accountSelected?.paymentAddressKeySerialized,
+                                        ),
+                                    }}
+                                    alt={accountSelected?.name}
+                                />
                                 <Dropdown
                                     overlay={
                                         <Menu>
@@ -284,7 +334,7 @@ const AccountDetail = () => {
                         </div>
                     </Sider>
                     <Content>
-                        <Header className="header">
+                        <Header className="header bg-white">
                             <Row>
                                 <Col span={12} className="text-left">
                                     <div className="wallet-balance title">

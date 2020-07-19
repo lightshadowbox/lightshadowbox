@@ -55,6 +55,12 @@ const ImportAccount = ({ onGetStatusImported }) => {
                 <h3>IMPORT ACCOUNT FROM PRIVATE KEYS</h3>
                 <Form name="import-account" layout="vertical" onFinish={onImportAccount}>
                     <Form.Item
+                        name="accountName"
+                        label="Enter your account’s name"
+                        rules={[{ required: true, message: 'Enter your account’s name' }]}>
+                        <Input.TextArea rows={2} spellCheck="false" />
+                    </Form.Item>
+                    <Form.Item
                         name="privateKey"
                         label={
                             <span>
@@ -62,13 +68,7 @@ const ImportAccount = ({ onGetStatusImported }) => {
                             </span>
                         }
                         rules={[{ required: true, message: 'Enter your account’s private keys' }]}>
-                        <Input spellCheck="false" />
-                    </Form.Item>
-                    <Form.Item
-                        name="accountName"
-                        label="Enter your account’s name"
-                        rules={[{ required: true, message: 'Enter your account’s name' }]}>
-                        <Input spellCheck="false" />
+                        <Input.TextArea rows={4} spellCheck="false" />
                     </Form.Item>
                     <Button type="primary" size="large" htmlType="submit">
                         Submit
