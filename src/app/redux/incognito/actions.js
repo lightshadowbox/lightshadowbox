@@ -11,3 +11,4 @@ export const onIncognitoAccountSelected = createAction(nameConst.INCOGNITO_ACCOU
 export const onIncognitoCreateAccountSucceeded = createAction(nameConst.INCOGNITO_CREATE_ACCOUNT, (data) => ({ payload: data }));
 export const onIncognitoRemoveAccountSucceeded = createAction(nameConst.INCOGNITO_REMOVE_ACCOUNT, (data) => ({ payload: data }));
 export const onIncognitoError = createAction(nameConst.INCOGNITO_REMOVE_ERROR, (data) => ({ payload: data }));
+export const onIncognitoPrivacyTokenSelected = createAction(nameConst.INCOGNITO_PRIVACY_TOKEN_SELECTED, (data) => ({ payload: data }));

@@ -29,3 +29,5 @@ export const META_TITLE_PAGE = {
     IMPORT_ACCOUNT: 'Incogito Web Wallet',
     CREATE_ACCOUNT: 'Incogito Web Wallet',
 };
+
+export const CRYPTO_ICON_URL = 'https://s3.amazonaws.com/incognito-org/wallet/cryptocurrency-icons/32@2x/color';

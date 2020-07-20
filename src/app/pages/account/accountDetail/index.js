@@ -7,7 +7,9 @@ import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography }
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import { LOCAL_STORAGE_KEY } from 'app/consts';
 import { getBackgroundColor } from 'app/utils';
+import LocalStorageServices from 'app/utils/localStorage';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
 import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
@@ -18,7 +20,7 @@ import accountReducer, {
     onSetAddCointState,
 } from 'app/pages/account/redux/slice';
 import { onIncognitoGetAccounts, onIncognitoPrivacyTokens, onIncognitoAccountSelected } from 'app/redux/incognito/actions';
-import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
+import { CreateAccount, ImportAccount, AddCoin, Transaction } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
@@ -131,7 +133,7 @@ const AccountDetail = () => {
     const masterAccount = useSelector(makeSelectAccounts());
     const pCustomeTokens = useSelector(makeSelectPCustomeTokens());
     const privacyTokens = useSelector(makeSelectPrivacyTokens());
-    const { Header, Content, Sider } = Layout;
+    const { Content, Sider } = Layout;
     const { Title, Text } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
 
@@ -140,10 +142,12 @@ const AccountDetail = () => {
             const { name } = account;
             dispatch(loadingOpenAction());
             const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
+            const history = await MasterAccount.getTxHistoriesCoin(name);
             const selected = { ...account, balanceBN: balanceBN.toNumber() };
             setAccountSelected({ ...selected });
             dispatch(onIncognitoAccountSelected({ ...selected }));
             dispatch(loadingCloseAction());
+            console.log(history);
         }
     };
 
@@ -185,7 +189,8 @@ const AccountDetail = () => {
     );
 
     useEffect(() => {
-        if (!isEmpty(masterAccount) && MasterAccount) {
+        if (!isEmpty(masterAccount) && LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
+            console.log(123213);
             const data = [];
             masterAccount.forEach(async (ma) => {
                 data.push({
@@ -209,7 +214,7 @@ const AccountDetail = () => {
                                 className="spacing-avatar"
                                 size={24}
                                 style={{
-                                    background: getBackgroundColor(accountSelected?.name + accountSelected?.paymentAddressKeySerialized),
+                                    background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
                                 }}
                                 alt={accountSelected?.name}
                             />
@@ -254,9 +259,7 @@ const AccountDetail = () => {
                                     <Avatar
                                         size={32}
                                         style={{
-                                            background: getBackgroundColor(
-                                                accountSelected?.name + accountSelected?.paymentAddressKeySerialized,
-                                            ),
+                                            background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
                                         }}
                                         alt={accountSelected?.name}
                                     />
@@ -274,9 +277,7 @@ const AccountDetail = () => {
                                 <Avatar
                                     size={70}
                                     style={{
-                                        background: getBackgroundColor(
-                                            accountSelected?.name + accountSelected?.paymentAddressKeySerialized,
-                                        ),
+                                        background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
                                     }}
                                     alt={accountSelected?.name}
                                 />
@@ -334,38 +335,7 @@ const AccountDetail = () => {
                         </div>
                     </Sider>
                     <Content>
-                        <Header className="header bg-white">
-                            <Row>
-                                <Col span={12} className="text-left">
-                                    <div className="wallet-balance title">
-                                        <div className="inner">
-                                            <Avatar size={40} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                            <div className="content">
-                                                {accountSelected ? (
-                                                    <>
-                                                        <h4 className="title-amount line-height">{accountSelected?.nativeToken?.name}</h4>
-                                                        <Text className="title-value no-margin line-height">
-                                                            {accountSelected?.nativeToken?.symbol}
-                                                        </Text>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col span={12} className="text-right">
-                                    <Button className="btn-send" type="primary" size="large" htmlType="button">
-                                        Send
-                                    </Button>
-                                    <Button className="btn-receive" type="primary" size="large" htmlType="button">
-                                        Receive
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Header>
-                        content
+                        <Transaction />
                     </Content>
                 </Layout>
                 <CreateAccount onGetStatusCreated={onGetStatusAction} />

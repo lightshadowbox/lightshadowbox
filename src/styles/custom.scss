@@ -1,3 +1,84 @@
 .ant-form-item-explain {
     font-size: 12px;
 }
+
+.ant-avatar {
+    background: #ffffff;
+}
+
+.ant-input {
+    border-radius: 4px;
+}
+
+.custom-modal {
+    width: 408px !important;
+    .ant-modal-content {
+        border-radius: 8px;
+        .ant-modal-header {
+            border-radius: 8px 8px 0 0;
+        }
+        .no-p-modal {
+            .ant-modal-body {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.button-actions {
+    .ant-form-item-control-input-content {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 100%;
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.full-buttons {
+    .ant-modal-footer {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        flex: 0 0 auto;
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.custome-badge {
+    .anticon {
+        background: #0acf97;
+        color: #ffffff;
+        border-radius: 50%;
+        padding: 2px;
+        font-size: 8px;
+        height: 14px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        right: -5px;
+        top: 5px;
+    }
+}
+
+.coin-avatar {
+    border: 1px solid #f0f0f0;
+}

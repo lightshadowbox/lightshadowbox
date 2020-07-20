@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import isEmpty from 'lodash/isEmpty';
 
 const toHue = (value) => {
     let hash = 0;
@@ -36,6 +37,23 @@ const getBackgroundColor = (str) => {
         }
     }
     return '#F25A5A';
+};
+
+export const getName = (name) => {
+    const arrChar = [];
+    if (!isEmpty(name)) {
+        const arrName = name.split(' ');
+        arrChar.push(arrName[0].charAt(0));
+        if (arrName.length > 1) {
+            arrChar.push(
+                [...arrName]
+                    .filter((c) => c && c.length > 0)
+                    .pop()
+                    .charAt(0),
+            );
+        }
+    }
+    return arrChar ? arrChar.join('').toUpperCase() : 'P';
 };
 
 export { getBackgroundColor };

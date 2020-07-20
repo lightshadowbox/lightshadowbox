@@ -3,7 +3,8 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-import { Modal, List, notification, Typography } from 'antd';
+import { VariableSizeList as List } from 'react-window';
+import { Modal, notification, Typography } from 'antd';
 import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
@@ -14,27 +15,34 @@ import { makeSelectAddCoinStatus } from 'app/pages/account/redux/selectors';
 
 const AddCoinStyled = styled.div`
     flex: 1;
-    .ant-modal-body {
-        padding-left: 0;
-        padding-right: 0;
-    }
     .coins {
         max-height: 400px;
         overflow-x: hidden;
         overflow-y: auto;
-        .inner {
-            display: flex;
-            flex: 1;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            .content {
-                margin-left: 0.875rem;
-                min-width: 0;
+        .scroll-coins {
+            width: 100% !important;
+        }
+        .wrap-inner {
+            padding: 5 15px;
+            .inner {
                 display: flex;
-                flex-direction: column;
                 flex: 1;
-                text-align: left;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                border: 2px solid transparent;
+                transition: all 0.3s ease-in;
+                &:hover {
+                    border-color: rgba(122, 201, 253, 0.5);
+                }
+                .content {
+                    margin-left: 0.875rem;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
+                    text-align: left;
+                }
             }
         }
     }
@@ -72,27 +80,39 @@ const CreateAccount = () => {
         [accountSelected, dispatch],
     );
 
+    // eslint-disable-next-line react/prop-types
+    const Row = ({ index, style }) => {
+        const { TokenID, Name, Symbol } = pCustomeTokens[index];
+        return (
+            <div style={style}>
+                <div className="wrap-inner">
+                    <div className="inner pointer" onClick={(event) => onAddCoin(event, TokenID)}>
+                        <div className="content">
+                            <Title level={4}>{Name}</Title>
+                            <Text>{Symbol}</Text>
+                        </div>
+                        <Text>Added</Text>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
-        <Modal footer={null} visible={visible} onCancel={onHandleCancel} className="text-center">
+        <Modal footer={null} title="Coins" visible={visible} onCancel={onHandleCancel} className="text-center custom-modal no-p-modal">
             <AddCoinStyled>
-                <h3>Coins</h3>
                 <div className="coins">
-                    <List
-                        itemLayout="horizontal"
-                        bordered
-                        dataSource={pCustomeTokens}
-                        renderItem={(item) => (
-                            <List.Item key={item?.ID}>
-                                <div className="inner pointer" onClick={(event) => onAddCoin(event, item?.TokenID)}>
-                                    <div className="content">
-                                        <Title level={4}>{item?.Name}</Title>
-                                        <Text>{item?.Symbol}</Text>
-                                    </div>
-                                    <Text>Added</Text>
-                                </div>
-                            </List.Item>
-                        )}
-                    />
+                    {!isEmpty(pCustomeTokens) && (
+                        <List
+                            className="scroll-coins"
+                            useIsScrolling
+                            height={300}
+                            itemCount={pCustomeTokens.length}
+                            itemSize={() => 75}
+                            width={400}>
+                            {Row}
+                        </List>
+                    )}
                 </div>
             </AddCoinStyled>
         </Modal>

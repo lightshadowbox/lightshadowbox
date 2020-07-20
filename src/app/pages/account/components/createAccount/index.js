@@ -11,11 +11,7 @@ import { masterAccount as MasterAccount, IncognitoInstance } from 'app/services/
 import { onSetCreateAccountState } from 'app/pages/account/redux/slice';
 import { makeSelectCreatedAccountStatus } from 'app/pages/account/redux/selectors';
 
-const CreateAccountStyled = styled.div`
-    .caption {
-        margin-top: 3em;
-    }
-`;
+const CreateAccountStyled = styled.div``;
 
 const CreateAccount = ({ onGetStatusCreated }) => {
     const dispatch = useDispatch();
@@ -51,8 +47,12 @@ const CreateAccount = ({ onGetStatusCreated }) => {
 
     return (
         <CreateAccountStyled>
-            <Modal footer={null} visible={visible} onCancel={onHandleCreateCancel} className="text-center">
-                <h3>CREATE ACCOUNT</h3>
+            <Modal
+                footer={null}
+                title="CREATE ACCOUNT"
+                visible={visible}
+                onCancel={onHandleCreateCancel}
+                className="text-center custom-modal">
                 <Form className="form" name="create-account" layout="vertical" onFinish={onCreateAccount}>
                     <Form.Item
                         name="accountName"
@@ -60,9 +60,14 @@ const CreateAccount = ({ onGetStatusCreated }) => {
                         rules={[{ required: true, message: 'Enter your account’s name' }]}>
                         <Input.TextArea rows={2} spellCheck="false" />
                     </Form.Item>
-                    <Button type="primary" size="large" htmlType="submit">
-                        Submit
-                    </Button>
+                    <Form.Item className="button-actions">
+                        <Button type="default" size="large" htmlType="button" onClick={onHandleCreateCancel}>
+                            Cancel
+                        </Button>
+                        <Button type="primary" size="large" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
                 </Form>
                 <p className="caption">
                     All the wallet & account service will be sent directly to the main chain, we don’t store any data / keys on this

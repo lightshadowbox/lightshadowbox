@@ -91,9 +91,39 @@ class MasterAccount {
         return account.nativeToken.getAvaiableBalance();
     }
 
+    async transfer(accountName, data) {
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            const { paymentAddressStr, amount, fee, message } = data;
+            const history = await account.nativeToken.transfer(
+                [
+                    {
+                        paymentAddressStr,
+                        amount,
+                        message,
+                    },
+                ],
+                fee,
+            );
+            return { status: MSG.SUCCESS, data: history };
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Send native token in Incognito chain.',
+            };
+        }
+    }
+
     async getTxHistoriesCoin(accountName) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        return account.nativeToken.getTxHistories();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            return account.nativeToken.getTxHistories();
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Native token -Can not get transaction histories',
+            };
+        }
     }
 
     async getTotalBalanceToken(accountName, tokenId) {
@@ -114,15 +144,22 @@ class MasterAccount {
         } catch (error) {
             return {
                 status: MSG.ERROR,
-                message: `Can not get availabel balance of the ${tokenId}`,
+                message: `Can not get available balance of the ${tokenId}`,
             };
         }
     }
 
     async getTxHistoriesToken(accountName, tokenId) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        const token = await account.getFollowingPrivacyToken(tokenId);
-        return token.getTxHistories();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            const token = await account.getFollowingPrivacyToken(tokenId);
+            return token.getTxHistories();
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Privacy token - Can not get transaction histories',
+            };
+        }
     }
 }
 

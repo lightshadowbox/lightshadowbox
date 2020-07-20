@@ -11,11 +11,7 @@ import { masterAccount as MasterAccount, IncognitoInstance } from 'app/services/
 import { onSetImportAccountState } from 'app/pages/account/redux/slice';
 import { makeSelectImportedAccountStatus } from 'app/pages/account/redux/selectors';
 
-const ImportAccountStyled = styled.div`
-    .caption {
-        margin-top: 3em;
-    }
-`;
+const ImportAccountStyled = styled.div``;
 
 const ImportAccount = ({ onGetStatusImported }) => {
     const dispatch = useDispatch();
@@ -51,8 +47,12 @@ const ImportAccount = ({ onGetStatusImported }) => {
 
     return (
         <ImportAccountStyled>
-            <Modal footer={null} visible={visible} onCancel={onHandleImportCancel} className="text-center">
-                <h3>IMPORT ACCOUNT FROM PRIVATE KEYS</h3>
+            <Modal
+                footer={null}
+                title="IMPORT ACCOUNT FROM PRIVATE KEYS"
+                visible={visible}
+                onCancel={onHandleImportCancel}
+                className="text-center custom-modal">
                 <Form name="import-account" layout="vertical" onFinish={onImportAccount}>
                     <Form.Item
                         name="accountName"
@@ -70,9 +70,14 @@ const ImportAccount = ({ onGetStatusImported }) => {
                         rules={[{ required: true, message: 'Enter your account’s private keys' }]}>
                         <Input.TextArea rows={4} spellCheck="false" />
                     </Form.Item>
-                    <Button type="primary" size="large" htmlType="submit">
-                        Submit
-                    </Button>
+                    <Form.Item className="button-actions">
+                        <Button type="default" size="large" htmlType="button" onClick={onHandleImportCancel}>
+                            Cancel
+                        </Button>
+                        <Button type="primary" size="large" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
                 </Form>
                 <p className="caption">
                     All the wallet & account service will be sent directly to the main chain, we don’t store any data / keys on this

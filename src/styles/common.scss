@@ -58,8 +58,13 @@
 }
 
 .caption {
-    margin-top: 3em;
-    margin-bottom: 0;
+    background-color: #f4f9fc;
+    display: inline-block;
+    align-items: center;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 0;
 }
 
 .spacing-avatar {

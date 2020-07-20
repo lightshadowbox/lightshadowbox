@@ -8,4 +8,6 @@ export const makeSelectIncognitoLoading = () => createSelector(incognitoSelector
 export const makeSelectAccounts = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNTS]);
 export const makeSelectAccountSelected = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNT_SELECTED]);
 export const makeSelectPrivacyTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS]);
+export const makeSelectPrivacyTokenSelected = () =>
+    createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED]);
 export const makeSelectPCustomeTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS]);

@@ -72,7 +72,6 @@ const loadIncognito = async (walletName = '') => {
             console.log('restore wallet');
         }
         IncognitoInstance.wallet = wallet;
-        console.log('wallet info', wallet);
         masterAccount = new MasterAccount(wallet);
         IncognitoInstance.masterAccount = masterAccount;
     }

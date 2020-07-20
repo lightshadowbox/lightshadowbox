@@ -11,6 +11,7 @@ export const initState = {
     [FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS]: null,
     [FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS]: null,
     [FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR]: null,
+    [FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED]: null,
 };
 
 const incognitoDataReducer = createReducer(initState, {
@@ -56,6 +57,10 @@ const incognitoDataReducer = createReducer(initState, {
     [nameActs.onIncognitoError]: (state, action) => {
         const { payload } = action;
         state[FIELDS_STATE.INCOGNITO_ERROR] = payload;
+    },
+    [nameActs.onIncognitoPrivacyTokenSelected]: (state, action) => {
+        const { payload } = action;
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] = payload;
     },
 });
 
