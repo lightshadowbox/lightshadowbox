@@ -58,7 +58,7 @@ const ImportAccount = ({ onGetStatusImported }) => {
                         name="accountName"
                         label="Enter your account’s name"
                         rules={[{ required: true, message: 'Enter your account’s name' }]}>
-                        <Input.TextArea rows={2} spellCheck="false" />
+                        <Input spellCheck="false" />
                     </Form.Item>
                     <Form.Item
                         name="privateKey"

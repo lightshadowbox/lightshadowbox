@@ -87,7 +87,7 @@ const AppRoutes = () => {
                 <>
                     <Switch>
                         {routerListNav(routeAppConfig)}
-                        <Redirect path="*" to={RouterApp.rDetailAccount} />
+                        <Redirect path="*" to={RouterApp.rAccount} />
                     </Switch>
                 </>
             )}

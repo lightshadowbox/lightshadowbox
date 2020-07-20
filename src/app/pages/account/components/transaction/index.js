@@ -12,7 +12,7 @@ const TransactionStyled = styled.div``;
 
 const Transaction = () => {
     const dispatch = useDispatch();
-    const { Text } = Typography;
+    const { Title, Text } = Typography;
     const { Header } = Layout;
     const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
 
@@ -29,25 +29,29 @@ const Transaction = () => {
                             <div className="inner">
                                 <Avatar size={40} icon={<img src={tokenSelected?.Image} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
                                 <div className="content">
-                                    {tokenSelected ? (
-                                        <>
-                                            <h4 className="title-amount line-height">{tokenSelected?.Name}</h4>
-                                            <Text className="title-value no-margin line-height">{tokenSelected?.symbol}</Text>
-                                        </>
-                                    ) : (
-                                        <></>
-                                    )}
+                                    <h4 className="title-amount line-height">{tokenSelected?.Name}</h4>
                                 </div>
                             </div>
                         </div>
                     </Col>
                     <Col span={12} className="text-right">
-                        <Button className="btn-send" type="primary" size="large" htmlType="button" onClick={onOpenSendModal}>
+                        <Button className="btn btn-send" type="primary" size="large" htmlType="button" onClick={onOpenSendModal}>
                             Send
                         </Button>
-                        <Button className="btn-receive" type="primary" size="large" htmlType="button">
+                        <Button className="btn btn-receive" type="primary" size="large" htmlType="button">
                             Receive
                         </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12} className="text-left">
+                        <Text>Transaction History</Text>
+                    </Col>
+                    <Col span={12} className="text-right">
+                        <Title level={3} className="no-margin">
+                            {' '}
+                            {tokenSelected?.Symbol}
+                        </Title>
                     </Col>
                 </Row>
             </Header>

@@ -33,7 +33,7 @@ const PrivacyToken = ({ data }) => {
         <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
             {!isEmpty(data) &&
                 data.map((ac, idx) => {
-                    const { Image, TokenID, Name, Symbol, IsPrivacy } = ac;
+                    const { Image, TokenID, Name, Symbol, Amount, IsPrivacy } = ac;
                     return (
                         <Menu.Item key={idx} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
@@ -67,6 +67,7 @@ const PrivacyToken = ({ data }) => {
                                     )}
                                     <div className="content">
                                         <h4 className="title-amount line-height">{Name}</h4>
+                                        <Text>{Amount}</Text>
                                     </div>
                                     <div className="balance">
                                         <Text className="title-value no-margin line-height">

@@ -57,12 +57,16 @@
     font-weight: 700;
 }
 
+.btn {
+    border-radius: 4px;
+}
+
 .caption {
     background-color: #f4f9fc;
     display: inline-block;
     align-items: center;
-    padding: 10px;
-    font-size: 12px;
+    padding: 0.625rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     margin-top: 0;
 }

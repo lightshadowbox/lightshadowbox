@@ -55,7 +55,7 @@ const InitWallet = () => {
                         <Paragraph>How do you want to call this privacy-first web wallet?</Paragraph>
                         <Form name="import-keys" layout="vertical" onFinish={onFinish}>
                             <Form.Item name="walletName" rules={[{ required: true, message: 'Please enter name wallet' }]}>
-                                <Input.TextArea autoSize={{ minRows: 3, maxRows: 5 }} spellCheck="false" />
+                                <Input.TextArea autoSize={{ minRows: 5, maxRows: 10 }} spellCheck="false" />
                             </Form.Item>
                             <Button type="primary" size="large" htmlType="submit">
                                 Submit
