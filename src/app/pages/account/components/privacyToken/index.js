@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Avatar, Menu, Typography, Badge } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
-import { CRYPTO_ICON_URL } from 'app/consts';
 import { masterAccount as MasterAccount } from 'app/services/incognito';
 import { onIncognitoPrivacyTokenSelected } from 'app/redux/incognito/actions';
 import { makeSelectAccountSelected } from 'app/redux/incognito/selector';
@@ -25,7 +24,7 @@ const PrivacyToken = ({ data }) => {
             setBalance(balance && balance.toNumber());
         };
         if (!isEmpty(accountSelected) && !isEmpty(data)) {
-            fetchBalanceToken(accountSelected.name, data.ID);
+            fetchBalanceToken(accountSelected.name, data.tokenId);
         }
     }, [accountSelected, data]);
 
@@ -33,45 +32,33 @@ const PrivacyToken = ({ data }) => {
         <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
             {!isEmpty(data) &&
                 data.map((ac, idx) => {
-                    const { Image, TokenID, Name, Symbol, Amount, IsPrivacy } = ac;
+                    const { symbol, image, amount, isVerified } = ac;
                     return (
                         <Menu.Item key={idx} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
                                 <div className="inner">
-                                    {IsPrivacy ? (
+                                    {isVerified ? (
                                         <Badge count={<CheckOutlined />} className="custome-badge">
                                             <Avatar
                                                 size={40}
                                                 className="coin-avatar"
-                                                icon={
-                                                    <img
-                                                        src={Image || `${CRYPTO_ICON_URL}/${TokenID}.png`}
-                                                        alt="WELCOME TO INCOGNITO WEB WALLET"
-                                                        width="40"
-                                                    />
-                                                }
+                                                icon={image ? <img src={image} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : <></>}
                                             />
                                         </Badge>
                                     ) : (
                                         <Avatar
                                             size={40}
                                             className="coin-avatar"
-                                            icon={
-                                                <img
-                                                    src={Image || `${CRYPTO_ICON_URL}/${TokenID}.png`}
-                                                    alt="WELCOME TO INCOGNITO WEB WALLET"
-                                                    width="40"
-                                                />
-                                            }
+                                            icon={image ? <img src={Image} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : <></>}
                                         />
                                     )}
                                     <div className="content">
-                                        <h4 className="title-amount line-height">{Name}</h4>
-                                        <Text>{Amount}</Text>
+                                        <h4 className="title-amount line-height">{image}</h4>
+                                        <Text>{amount}</Text>
                                     </div>
                                     <div className="balance">
                                         <Text className="title-value no-margin line-height">
-                                            {balance} {Symbol}
+                                            {balance} {symbol}
                                         </Text>
                                     </div>
                                 </div>

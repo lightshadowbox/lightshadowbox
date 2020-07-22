@@ -9,13 +9,11 @@ const POPULAR_COIN = {
 const POPULAR_COIN_IDS = [POPULAR_COIN.XMR, POPULAR_COIN.BNB, POPULAR_COIN.USDT, POPULAR_COIN.ETH, POPULAR_COIN.BTC];
 
 const PRV = {
-    id: '0000000000000000000000000000000000000000000000000000000000000004',
+    tokenId: '0000000000000000000000000000000000000000000000000000000000000004',
     name: 'Privacy',
-    displayName: 'Privacy',
     symbol: 'PRV',
+    image: '',
     pDecimals: 9,
-    hasIcon: true,
-    originalSymbol: 'PRV',
     isVerified: true,
 };
 
@@ -23,5 +21,5 @@ export default {
     POPULAR_COIN,
     POPULAR_COIN_IDS,
     PRV,
-    PRV_ID: PRV.id,
+    PRV_ID: PRV.tokenId,
 };

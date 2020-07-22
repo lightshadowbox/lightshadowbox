@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
+import coin from 'app/consts/coin';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';
 
@@ -27,7 +28,16 @@ const incognitoDataReducer = createReducer(initState, {
     },
     [nameActs.onIncognitoPrivacyTokens]: (state, action) => {
         const { payload } = action;
-        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = payload;
+        const newPayloadState = payload.map((item) => ({
+            tokenId: item.TokenID,
+            name: item?.Name,
+            symbol: item?.Symbol,
+            image: item?.Image,
+            pDecimals: null,
+            amount: item?.Amount,
+            isVerified: item?.IsPrivacy,
+        }));
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = [coin.PRV, ...newPayloadState];
     },
     [nameActs.onIncognitoGetAccounts]: (state) => {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;

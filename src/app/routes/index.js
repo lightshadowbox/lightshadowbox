@@ -1,20 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
 import { makeSelectAccounts } from 'app/redux/incognito/selector';
-import { loadingClose, loadingOpen } from 'app/redux/common/actions';
-import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
-import loadIncognito from 'app/services/incognito';
+// import { loadingClose, loadingOpen } from 'app/redux/common/actions';
+// import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
+// import loadIncognito from 'app/services/incognito';
 import { routeAppConfig, routeForAuthConfig } from './config';
 import RouterApp from './consts';
 import history from './history';
 
 const AppRoutes = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const accounts = useSelector(makeSelectAccounts());
     const [hasWalletBackup, setWalletBackup] = useState(false);
 
@@ -56,17 +56,17 @@ const AppRoutes = () => {
         return routesMatch;
     };
 
-    useEffect(() => {
-        const loadWebAssembly = async () => {
-            if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
-                dispatch(loadingOpen());
-                await loadIncognito();
-                dispatch(onIncognitoGetAccounts());
-                dispatch(loadingClose());
-            }
-        };
-        // loadWebAssembly();
-    }, [dispatch]);
+    // useEffect(() => {
+    //     const loadWebAssembly = async () => {
+    //         if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
+    //             dispatch(loadingOpen());
+    //             await loadIncognito();
+    //             dispatch(onIncognitoGetAccounts());
+    //             dispatch(loadingClose());
+    //         }
+    //     };
+    //     loadWebAssembly();
+    // }, [dispatch]);
 
     useEffect(() => {
         if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET) && !isEmpty(accounts)) {
