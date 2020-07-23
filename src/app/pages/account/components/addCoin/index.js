@@ -16,21 +16,21 @@ import { makeSelectAddCoinStatus } from 'app/pages/account/redux/selectors';
 const AddCoinStyled = styled.div`
     flex: 1;
     .coins {
-        max-height: 400px;
+        max-height: 25rem;
         overflow-x: hidden;
         overflow-y: auto;
         .scroll-coins {
             width: 100% !important;
         }
         .wrap-inner {
-            padding: 5 15px;
+            padding: 0.313rem 0.938rem;
             .inner {
                 display: flex;
                 flex: 1;
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
-                border: 2px solid transparent;
+                border: 0.125rem solid transparent;
                 transition: all 0.3s ease-in;
                 &:hover {
                     border-color: rgba(122, 201, 253, 0.5);

@@ -13,7 +13,7 @@ const SendAssetStyled = styled.div`
         padding-right: 0;
     }
     .coins {
-        max-height: 400px;
+        max-height: 25rem;
         overflow-x: hidden;
         overflow-y: auto;
         .inner {

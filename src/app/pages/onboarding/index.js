@@ -14,7 +14,7 @@ import Logo from 'assets/logo.png';
 
 const OnboardingStyled = styled.div`
     .ant-avatar {
-        margin-bottom: 40px;
+        margin-bottom: 2.5rem;
     }
 `;
 

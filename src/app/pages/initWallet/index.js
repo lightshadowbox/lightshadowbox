@@ -13,10 +13,10 @@ import { onIncognitoGetAccounts } from 'app/redux/incognito/actions';
 
 const InitWalletStyled = styled.div`
     .wrap {
-        max-width: 742px;
+        max-width: 46.375rem;
         padding-top: 3rem;
         .title {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
     }
 `;

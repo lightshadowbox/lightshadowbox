@@ -84,7 +84,8 @@ class MasterAccount {
     async getTotalBalanceCoin(accountName) {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
-            return { status: MSG.SUCCESS, data: account.nativeToken.getTotalBalance() };
+            const balance = await account.nativeToken.getTotalBalance();
+            return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return {
                 status: MSG.ERROR,
@@ -96,7 +97,8 @@ class MasterAccount {
     async getAvaialbleBalanceCoin(accountName) {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
-            return { status: MSG.SUCCESS, data: account.nativeToken.getAvaiableBalance() };
+            const balance = await account.nativeToken.getAvaiableBalance();
+            return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return {
                 status: MSG.ERROR,
@@ -144,7 +146,8 @@ class MasterAccount {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            return { status: MSG.SUCCESS, data: token && (await token[0]?.getTotalBalance()) };
+            const balance = token && (await token[0]?.getTotalBalance());
+            return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return { status: MSG.ERROR, message: `Can not get total balance of the ${tokenId}` };
         }
@@ -154,7 +157,8 @@ class MasterAccount {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            return { status: MSG.SUCCESS, data: token && (await token[0]?.getAvaiableBalance()) };
+            const balance = token && (await token[0]?.getAvaiableBalance());
+            return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return {
                 status: MSG.ERROR,

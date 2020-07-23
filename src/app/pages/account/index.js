@@ -45,14 +45,14 @@ const AccountStyled = styled.div`
             align-items: center;
             display: flex;
             > img {
-                margin-right: 14px;
+                margin-right: 0.875rem;
             }
         }
     }
     .wrap {
         width: 85vw;
         padding-top: 3rem;
-        box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
+        box-shadow: 0 0 0.438rem 0 rgba(0, 0, 0, 0.08);
         padding: 0;
         margin-bottom: 10vh;
         display: flex;
@@ -64,7 +64,7 @@ const AccountStyled = styled.div`
         }
         .ant-layout {
             background: #fff;
-            border-right: 1px solid #f0f0f0;
+            border-right: 0.063rem solid #f0f0f0;
             .ant-layout-header {
                 padding: 1rem 2rem 0.5rem;
                 line-height: inherit;
@@ -74,7 +74,7 @@ const AccountStyled = styled.div`
                 }
             }
             .address {
-                width: 200px;
+                width: 12.5rem;
                 white-space: nowrap;
                 padding: 0.1rem 1.7rem 0.1rem 0.65rem;
                 margin-bottom: 1.4rem;
@@ -127,17 +127,20 @@ const AccountStyled = styled.div`
                 }
             }
             .account-sidebar {
-                border-right: 1px solid #f0f0f0;
+                border-right: 0.063rem solid #f0f0f0;
             }
         }
         .header {
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 0.063rem solid #f0f0f0;
         }
         .big-account {
             .ant-avatar-string {
                 font-size: 2rem;
                 font-weight: 600;
             }
+        }
+        .btn-add-coin {
+            margin-top: 1.5rem;
         }
     }
 `;
@@ -235,10 +238,10 @@ const Account = () => {
                                 className="spacing-avatar identicon-avatar"
                                 size={32}
                                 style={{
-                                    background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
+                                    background: getBackgroundColor(ac?.privateKeySerialized),
                                 }}
-                                alt={accountSelected?.name}>
-                                {getName(accountSelected?.name)}
+                                alt={ac?.name}>
+                                {getName(ac?.name)}
                             </Avatar>
                             {ac?.name}
                         </span>
@@ -275,21 +278,6 @@ const Account = () => {
                             </Title>
                         </div>
                     </Col>
-                    {/* <Col span={12} className="text-right">
-                        <div className="account-box">
-                            <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-                                <span className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                                    <Avatar
-                                        size={32}
-                                        style={{
-                                            background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
-                                        }}
-                                        alt={accountSelected?.name}
-                                    />
-                                </span>
-                            </Dropdown>
-                        </div>
-                    </Col> */}
                 </Row>
             </div>
             <div className="wrap">
@@ -300,25 +288,13 @@ const Account = () => {
                                 <Avatar
                                     size={70}
                                     style={{
-                                        background: getBackgroundColor(accountSelected?.paymentAddressKeySerialized),
+                                        background: getBackgroundColor(accountSelected?.privateKeySerialized),
                                     }}
                                     className="big-account coin-avatar"
                                     alt={accountSelected?.name}>
                                     {getName(accountSelected?.name)}
                                 </Avatar>
-                                <Dropdown
-                                    overlay={
-                                        // <Menu>
-                                        //     {!isEmpty(masterAccount) &&
-                                        //         masterAccount.map((ac, idx) => (
-                                        //             <Menu.Item key={idx} onClick={() => onHandleAccoutSelected(ac)}>
-                                        //                 <span>{ac?.name}</span>
-                                        //             </Menu.Item>
-                                        //         ))}
-                                        // </Menu>
-                                        menu
-                                    }
-                                    trigger={['click']}>
+                                <Dropdown overlay={menu} trigger={['click']}>
                                     <Title className="title pointer" level={3}>
                                         {accountSelected?.name} <CaretDownOutlined />
                                     </Title>
@@ -357,7 +333,9 @@ const Account = () => {
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
                         <div className="text-center">
-                            <Button onClick={onOpenAddCoinModal}>Add a coin +</Button>
+                            <Button className="btn btn-add-coin" onClick={onOpenAddCoinModal}>
+                                Add a coin +
+                            </Button>
                         </div>
                     </Sider>
                     <Content>
