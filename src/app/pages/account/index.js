@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { CaretDownOutlined, CopyOutlined, PlusOutlined, DownloadOutlined, CheckOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
+import coin from 'app/consts/coin';
 import { getBackgroundColor, getName } from 'app/utils';
 import LocalStorageServices from 'app/utils/localStorage';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
@@ -19,10 +20,14 @@ import accountReducer, {
     onSetImportAccountState,
     onSetAddCointState,
 } from 'app/pages/account/redux/slice';
-import { onIncognitoGetAccounts, onIncognitoPrivacyTokens, onIncognitoAccountSelected } from 'app/redux/incognito/actions';
+import {
+    onIncognitoGetAccounts,
+    onIncognitoPrivacyTokens,
+    onIncognitoAccountSelected,
+    onIncognitoPrivacyTokenSelected,
+} from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount, AddCoin, Transaction } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
-import PRVIcon from 'assets/prv@2x.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
 
@@ -144,43 +149,8 @@ const Account = () => {
     const pCustomeTokens = useSelector(makeSelectPCustomeTokens());
     const privacyTokens = useSelector(makeSelectPrivacyTokens());
     const { Content, Sider } = Layout;
-    const { Title, Text } = Typography;
+    const { Title } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
-
-    const onHandleAccoutSelected = async (account) => {
-        if (account) {
-            const { name } = account;
-            dispatch(loadingOpenAction());
-            const balanceBN = await MasterAccount.getAvaialbleBalanceCoin(name);
-            const history = await MasterAccount.getTxHistoriesCoin(name);
-            const selected = { ...account, balanceBN: balanceBN.toNumber() };
-            setAccountSelected({ ...selected });
-            dispatch(onIncognitoAccountSelected({ ...selected }));
-            dispatch(loadingCloseAction());
-            console.log(history);
-        }
-    };
-
-    const onGetStatusAction = async (backupWalletString) => {
-        if (backupWalletString) {
-            dispatch(loadingOpen());
-            await loadIncognito();
-            dispatch(onIncognitoGetAccounts());
-            dispatch(loadingClose());
-        }
-    };
-
-    const onOpenCreateAccountModal = () => {
-        dispatch(onSetCreateAccountState(true));
-    };
-
-    const onOpenImportAccountModal = () => {
-        dispatch(onSetImportAccountState(true));
-    };
-
-    const onOpenAddCoinModal = () => {
-        dispatch(onSetAddCointState(true));
-    };
 
     const onGetPrivacyTokens = useCallback(
         (tokenIds) => {
@@ -209,9 +179,45 @@ const Account = () => {
             const ac = masterAccount[0];
             setAccountSelected(ac);
             dispatch(onIncognitoAccountSelected(ac));
-            ac.privacyTokenIds && onGetPrivacyTokens(ac.privacyTokenIds);
+            if (ac.privacyTokenIds) {
+                onGetPrivacyTokens(ac.privacyTokenIds);
+                dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
+            }
         }
     }, [masterAccount, onGetPrivacyTokens, dispatch]);
+
+    const onHandleAccoutSelected = async (account) => {
+        if (account) {
+            const { name } = account;
+            dispatch(loadingOpenAction());
+            const history = await MasterAccount.getTxHistoriesCoin(name);
+            setAccountSelected(account);
+            dispatch(onIncognitoAccountSelected(account));
+            dispatch(loadingCloseAction());
+            console.log(history);
+        }
+    };
+
+    const onGetStatusAction = async (backupWalletString) => {
+        if (backupWalletString) {
+            dispatch(loadingOpen());
+            await loadIncognito();
+            dispatch(onIncognitoGetAccounts());
+            dispatch(loadingClose());
+        }
+    };
+
+    const onOpenCreateAccountModal = () => {
+        dispatch(onSetCreateAccountState(true));
+    };
+
+    const onOpenImportAccountModal = () => {
+        dispatch(onSetImportAccountState(true));
+    };
+
+    const onOpenAddCoinModal = () => {
+        dispatch(onSetAddCointState(true));
+    };
 
     const menu = (
         <Menu className="account-menu">
@@ -328,7 +334,7 @@ const Account = () => {
                                 </CopyToClipboard>
                             </Col>
                         </Row>
-                        <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
+                        {/* <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
                             <Menu.Item key="prv" className="wallet-balance">
                                 {accountSelected ? (
                                     <div className="inner">
@@ -346,7 +352,7 @@ const Account = () => {
                                     <></>
                                 )}
                             </Menu.Item>
-                        </Menu>
+                        </Menu> */}
                         <Suspense fallback={<h1>Still Loading…</h1>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>

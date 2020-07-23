@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { MSG } from 'app/consts';
 import { parseResponse } from 'app/services/parseResponse';
 import { loadingCloseAction, loadingOpenAction } from 'app/redux/common/actions';

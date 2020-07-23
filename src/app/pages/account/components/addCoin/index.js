@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { VariableSizeList as List } from 'react-window';
 import { Modal, notification, Typography } from 'antd';
 import { Config } from 'configs';

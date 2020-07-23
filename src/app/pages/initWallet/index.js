@@ -25,6 +25,12 @@ const InitWallet = () => {
     const dispatch = useDispatch();
     const { Title, Paragraph } = Typography;
 
+    useEffect(() => {
+        if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
+            history.push(RouterApp.rOnboarding);
+        }
+    }, []);
+
     const onFinish = async (values) => {
         if (values) {
             const { walletName } = values;
@@ -34,12 +40,6 @@ const InitWallet = () => {
             dispatch(loadingClose());
         }
     };
-
-    useEffect(() => {
-        if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
-            history.push(RouterApp.rOnboarding);
-        }
-    }, []);
 
     return (
         <InitWalletStyled>

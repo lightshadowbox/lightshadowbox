@@ -1,10 +1,13 @@
 import React, { lazy } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 import { Typography, Row, Col, Button, Avatar, Layout } from 'antd';
+import coin from 'app/consts/coin';
 import { onSetSendAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
+import PRVIcon from 'assets/prv@2x.png';
 
 const SendAsset = lazy(() => import('app/pages/account/components/send'));
 
@@ -27,9 +30,17 @@ const Transaction = () => {
                     <Col span={12} className="text-left">
                         <div className="wallet-balance title">
                             <div className="inner">
-                                <Avatar size={40} icon={<img src={tokenSelected?.Image} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
+                                <Avatar
+                                    size={40}
+                                    icon={
+                                        <img
+                                            src={isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image}
+                                            alt="WELCOME TO INCOGNITO WEB WALLET"
+                                        />
+                                    }
+                                />
                                 <div className="content">
-                                    <h4 className="title-amount line-height">{tokenSelected?.Name}</h4>
+                                    <h4 className="title-amount line-height">{tokenSelected?.name}</h4>
                                 </div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
 import { makeSelectAccounts } from 'app/redux/incognito/selector';
@@ -19,6 +19,12 @@ const AppRoutes = () => {
     const [hasWalletBackup, setWalletBackup] = useState(false);
 
     const routesMatch = [];
+
+    useEffect(() => {
+        if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET) && !isEmpty(accounts)) {
+            setWalletBackup(true);
+        }
+    }, [accounts]);
 
     const onceRouter = (route) => {
         const { component: Component, layout: Layout, path, exact, strict } = route;
@@ -67,12 +73,6 @@ const AppRoutes = () => {
     //     };
     //     loadWebAssembly();
     // }, [dispatch]);
-
-    useEffect(() => {
-        if (LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET) && !isEmpty(accounts)) {
-            setWalletBackup(true);
-        }
-    }, [accounts]);
 
     return (
         <ConnectedRouter history={history}>

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import coin from 'app/consts/coin';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';

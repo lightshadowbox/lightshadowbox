@@ -42,7 +42,7 @@ const Onboarding = () => {
                     <Col className="text-center" span={24}>
                         <Avatar size={150} icon={<img src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
                         <Title level={3}>WELCOME TO INCOGNITO WEB WALLET</Title>
-                        <Button type="primary" size="large" onClick={onAccessWallet}>
+                        <Button type="primary" className="btn" size="large" onClick={onAccessWallet}>
                             Get Started
                         </Button>
                     </Col>

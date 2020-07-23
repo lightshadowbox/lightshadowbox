@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { MSG } from 'app/consts';
 
 class MasterAccount {
@@ -82,13 +82,27 @@ class MasterAccount {
     }
 
     async getTotalBalanceCoin(accountName) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        return account.nativeToken.getTotalBalance();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            return { status: MSG.SUCCESS, data: account.nativeToken.getTotalBalance() };
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Native token - Can not get total balance',
+            };
+        }
     }
 
     async getAvaialbleBalanceCoin(accountName) {
-        const account = this.masterAccount.getAccountByName(accountName);
-        return account.nativeToken.getAvaiableBalance();
+        try {
+            const account = this.masterAccount.getAccountByName(accountName);
+            return { status: MSG.SUCCESS, data: account.nativeToken.getAvaiableBalance() };
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Native token - Can not get available balance',
+            };
+        }
     }
 
     async transfer(accountName, data) {
@@ -130,7 +144,7 @@ class MasterAccount {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            return token && (await token[0]?.getTotalBalance());
+            return { status: MSG.SUCCESS, data: token && (await token[0]?.getTotalBalance()) };
         } catch (error) {
             return { status: MSG.ERROR, message: `Can not get total balance of the ${tokenId}` };
         }
@@ -140,7 +154,7 @@ class MasterAccount {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            return token && (await token[0]?.getAvaiableBalance());
+            return { status: MSG.SUCCESS, data: token && (await token[0]?.getAvaiableBalance()) };
         } catch (error) {
             return {
                 status: MSG.ERROR,

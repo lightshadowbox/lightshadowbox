@@ -1,40 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
-import { Avatar, Menu, Typography, Badge } from 'antd';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
+import { Avatar, Menu, Badge } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
-import { masterAccount as MasterAccount } from 'app/services/incognito';
+import coin from 'app/consts/coin';
 import { onIncognitoPrivacyTokenSelected } from 'app/redux/incognito/actions';
-import { makeSelectAccountSelected } from 'app/redux/incognito/selector';
+import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
+import PRVIcon from 'assets/prv@2x.png';
+
+const PrivacyTokenAmount = lazy(() => import('app/pages/account/components/privacyTokenAmount'));
 
 const PrivacyToken = ({ data }) => {
     const dispatch = useDispatch();
-    const { Text } = Typography;
-    const accountSelected = useSelector(makeSelectAccountSelected());
-    const [balance, setBalance] = useState(0);
+    const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
 
     const onSelectedPrivacyToken = (token) => {
         dispatch(onIncognitoPrivacyTokenSelected(token));
     };
 
-    useEffect(() => {
-        const fetchBalanceToken = async (name, token) => {
-            const balance = await MasterAccount.getTotalBalanceToken(name, token);
-            setBalance(balance && balance.toNumber());
-        };
-        if (!isEmpty(accountSelected) && !isEmpty(data)) {
-            fetchBalanceToken(accountSelected.name, data.tokenId);
-        }
-    }, [accountSelected, data]);
-
     return (
-        <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
+        <Menu mode="inline" className="no-border" selectedKeys={[tokenSelected?.tokenId]} defaultSelectedKeys={[coin.PRV_ID]}>
             {!isEmpty(data) &&
-                data.map((ac, idx) => {
-                    const { symbol, image, amount, isVerified } = ac;
+                data.map((ac) => {
+                    const { symbol, image, amount, isVerified, tokenId, name } = ac;
                     return (
-                        <Menu.Item key={idx} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
+                        <Menu.Item key={tokenId} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
                                 <div className="inner">
                                     {isVerified ? (
@@ -42,25 +34,31 @@ const PrivacyToken = ({ data }) => {
                                             <Avatar
                                                 size={40}
                                                 className="coin-avatar"
-                                                icon={image ? <img src={image} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : <></>}
+                                                icon={
+                                                    <img
+                                                        src={isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image}
+                                                        alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                        width="40"
+                                                    />
+                                                }
                                             />
                                         </Badge>
                                     ) : (
                                         <Avatar
                                             size={40}
                                             className="coin-avatar"
-                                            icon={image ? <img src={Image} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : <></>}
+                                            icon={
+                                                <img
+                                                    src={isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image}
+                                                    alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                    width="40"
+                                                />
+                                            }
                                         />
                                     )}
-                                    <div className="content">
-                                        <h4 className="title-amount line-height">{image}</h4>
-                                        <Text>{amount}</Text>
-                                    </div>
-                                    <div className="balance">
-                                        <Text className="title-value no-margin line-height">
-                                            {balance} {symbol}
-                                        </Text>
-                                    </div>
+                                    <Suspense fallback={<h1>Still Loading…</h1>}>
+                                        <PrivacyTokenAmount tokenId={tokenId} name={name} symbol={symbol} amount={amount} />
+                                    </Suspense>
                                 </div>
                             ) : (
                                 <></>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { Button, Modal, Form, Input, notification } from 'antd';
 import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY } from 'app/consts';
