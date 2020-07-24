@@ -1,0 +1,127 @@
+.ant-form-item-explain {
+    font-size: 0.75rem;
+}
+
+.ant-avatar {
+    background: #ffffff;
+}
+
+.ant-input {
+    border-radius: 0.25rem;
+}
+
+.ant-dropdown-menu {
+    border-radius: 0.25rem;
+}
+
+.custom-modal {
+    width: 25.5rem !important;
+    .ant-modal-content {
+        border-radius: 0.5rem;
+        .ant-modal-header {
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .no-p-modal {
+            .ant-modal-body {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.button-actions {
+    .ant-form-item-control-input-content {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 100%;
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.full-buttons {
+    .ant-modal-footer {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        flex: 0 0 auto;
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.custome-badge {
+    .anticon {
+        background: #0acf97;
+        color: #ffffff;
+        border-radius: 50%;
+        padding: 0.125rem;
+        font-size: 0.5rem;
+        height: 0.875rem;
+        text-shadow: 0 0.063rem 0.188rem rgba(0, 0, 0, 0.3);
+        right: -0.313rem;
+        top: 0.313rem;
+    }
+}
+
+.coin-avatar {
+    border: 0.063rem solid #f0f0f0;
+    box-shadow: 0 0.063rem 0.188rem rgba(0, 0, 0, 0.1);
+}
+.account-menu {
+    // width: 320px;
+    .ant-dropdown-menu-item {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        position: relative;
+        font-size: 1rem;
+        &.account-header {
+            background: transparent !important;
+        }
+        &.account-item {
+            padding: 1.125rem;
+            &.active {
+                background-color: #e6f7ff;
+                border-right: 0.188rem solid #1890ff;
+                .account-icon {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+            &.inactive {
+                .account-icon {
+                    visibility: hidden;
+                    opacity: 0;
+                }
+            }
+        }
+    }
+}
+
+.identicon-avatar {
+    .ant-avatar-string {
+        font-weight: bold;
+        text-shadow: 0 0.063rem 0.188rem rgba(0, 0, 0, 0.1);
+        font-size: 0.875rem;
+    }
+}
