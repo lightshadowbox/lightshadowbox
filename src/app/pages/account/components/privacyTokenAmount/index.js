@@ -13,6 +13,7 @@ const PrivacyTokenAmount = ({ tokenId, name, amount, symbol }) => {
     const { Text } = Typography;
     const [balance, setBalance] = useState(0);
     const accountSelected = useSelector(makeSelectAccountSelected());
+
     useEffect(() => {
         const fetchBalanceToken = async (name, token) => {
             let bl = 0;
@@ -21,7 +22,6 @@ const PrivacyTokenAmount = ({ tokenId, name, amount, symbol }) => {
             } else {
                 bl = await MasterAccount.getTotalBalanceToken(name, token);
             }
-            console.log(bl);
             if (bl.status === MSG.SUCCESS && !isEmpty(bl.data)) {
                 setBalance(bl.data.toNumber() || 0);
             }
@@ -31,8 +31,6 @@ const PrivacyTokenAmount = ({ tokenId, name, amount, symbol }) => {
         }
     }, [accountSelected, tokenId]);
 
-    console.count('2222222222222222222');
-    console.log(balance);
     return (
         <>
             <div className="content">

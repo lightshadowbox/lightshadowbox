@@ -12,7 +12,7 @@ import coin from 'app/consts/coin';
 import { getBackgroundColor, getName } from 'app/utils';
 import LocalStorageServices from 'app/utils/localStorage';
 import { loadingClose, loadingOpen, loadingOpenAction, loadingCloseAction } from 'app/redux/common/actions';
-import { makeSelectAccounts, makeSelectPCustomeTokens, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
+import { makeSelectAccounts, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
 import loadIncognito, { masterAccount as MasterAccount } from 'app/services/incognito';
 import accountReducer, {
     KEY_REDUCER_SAGA,
@@ -149,26 +149,32 @@ const Account = () => {
     useInjectReducer({ key: KEY_REDUCER_SAGA, reducer: accountReducer });
     const dispatch = useDispatch();
     const masterAccount = useSelector(makeSelectAccounts());
-    const pCustomeTokens = useSelector(makeSelectPCustomeTokens());
     const privacyTokens = useSelector(makeSelectPrivacyTokens());
     const { Content, Sider } = Layout;
     const { Title } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
 
-    const onGetPrivacyTokens = useCallback(
-        (tokenIds) => {
-            const tokenDetails = [];
-            if (!isEmpty(pCustomeTokens)) {
-                tokenIds.forEach((token) => {
-                    const hasIndex = pCustomeTokens.findIndex((item) => item.TokenID === token);
-                    if (hasIndex !== -1) {
-                        tokenDetails.push(pCustomeTokens[hasIndex]);
-                    }
-                });
-            }
-            dispatch(onIncognitoPrivacyTokens(tokenDetails));
+    const fetchPrivacyTokens = useCallback(
+        async (name) => {
+            const ft = await MasterAccount.getFollowingPrivacyTokens(name);
+            const followTokens =
+                (ft &&
+                    ft.map((token) => {
+                        const { tokenId, name, symbol, bridgeInfo } = token;
+                        return {
+                            tokenId,
+                            name,
+                            symbol,
+                            image: '',
+                            pDecimals: bridgeInfo?.pDecimals || null,
+                            decimals: bridgeInfo?.decimals || null,
+                            isVerified: bridgeInfo?.verified || null,
+                        };
+                    })) ||
+                [];
+            dispatch(onIncognitoPrivacyTokens(followTokens));
         },
-        [dispatch, pCustomeTokens],
+        [dispatch],
     );
 
     useEffect(() => {
@@ -182,12 +188,10 @@ const Account = () => {
             const ac = masterAccount[0];
             setAccountSelected(ac);
             dispatch(onIncognitoAccountSelected(ac));
-            if (ac.privacyTokenIds) {
-                onGetPrivacyTokens(ac.privacyTokenIds);
-                dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
-            }
+            dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
+            fetchPrivacyTokens(ac?.name);
         }
-    }, [masterAccount, onGetPrivacyTokens, dispatch]);
+    }, [masterAccount, fetchPrivacyTokens, dispatch]);
 
     const onHandleAccoutSelected = async (account) => {
         if (account) {
@@ -196,8 +200,9 @@ const Account = () => {
             const history = await MasterAccount.getTxHistoriesCoin(name);
             setAccountSelected(account);
             dispatch(onIncognitoAccountSelected(account));
+            dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
             dispatch(loadingCloseAction());
-            console.log(history);
+            fetchPrivacyTokens(name);
         }
     };
 
