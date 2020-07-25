@@ -15,6 +15,23 @@ const PRV = {
     image: '',
     pDecimals: 9,
     isVerified: true,
+    totalBalance: null,
+    availableBalance: null,
+};
+
+const HISTORY = {
+    TYPE: {
+        DEPOSIT: 1, // same with PRIVATE_TOKEN_HISTORY_ADDRESS_TYPE.DEPOSIT
+        WITHDRAW: 2, // same with PRIVATE_TOKEN_HISTORY_ADDRESS_TYPE.WITHDRAW
+        SEND: 3, // custom
+        RECEIVE: 4, // custom
+    },
+    STATUS_TEXT: {
+        SUCCESS: 'SUCCESS',
+        FAILED: 'FAILED',
+        PENDING: 'PENDING',
+        EXPIRED: 'EXPIRED',
+    },
 };
 
 export default {
@@ -22,4 +39,5 @@ export default {
     POPULAR_COIN_IDS,
     PRV,
     PRV_ID: PRV.tokenId,
+    HISTORY,
 };

@@ -1,13 +1,16 @@
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { useImmer } from 'use-immer';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 import { Typography, Row, Col, Button, Avatar, Layout } from 'antd';
+import { pDecimalBalance, formatAmount } from 'app/utils/format';
 import coin from 'app/consts/coin';
 import { onSetSendAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
+import { isEmpty } from 'lodash';
 
 const SendAsset = lazy(() => import('app/pages/account/components/send'));
 
@@ -18,10 +21,24 @@ const Transaction = () => {
     const { Title, Text } = Typography;
     const { Header } = Layout;
     const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
+    const [tokenState, setTokenState] = useImmer({
+        totalBalance: 0,
+        availableBalance: 0,
+    });
 
     const onOpenSendModal = () => {
         dispatch(onSetSendAssetState(true));
     };
+
+    useEffect(() => {
+        if (!isEmpty(tokenSelected)) {
+            const { totalBalance, availableBalance, pDecimals } = tokenSelected;
+            setTokenState((draft) => {
+                draft.totalBalance = (totalBalance && pDecimals && formatAmount(pDecimalBalance(totalBalance, pDecimals))) || 0;
+                draft.availableBalance = (availableBalance && pDecimals && formatAmount(pDecimalBalance(availableBalance, pDecimals))) || 0;
+            });
+        }
+    }, [setTokenState, tokenSelected]);
 
     return (
         <TransactionStyled>
@@ -60,8 +77,8 @@ const Transaction = () => {
                     </Col>
                     <Col span={12} className="text-right">
                         <Title level={3} className="no-margin">
-                            {' '}
-                            {tokenSelected?.Symbol}
+                            {tokenState.availableBalance}&nbsp;
+                            {tokenSelected?.symbol}
                         </Title>
                     </Col>
                 </Row>

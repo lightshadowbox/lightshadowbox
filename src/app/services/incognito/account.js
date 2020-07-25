@@ -133,7 +133,11 @@ class MasterAccount {
     async getTxHistoriesCoin(accountName) {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
-            return account.nativeToken.getTxHistories();
+            const histories = await account.nativeToken.getTxHistories();
+            return {
+                status: MSG.SUCCESS,
+                data: histories,
+            };
         } catch (error) {
             return {
                 status: MSG.ERROR,
@@ -171,7 +175,11 @@ class MasterAccount {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            return token.getTxHistories();
+            const histories = await token.getTxHistories();
+            return {
+                status: MSG.SUCCESS,
+                data: histories,
+            };
         } catch (error) {
             return {
                 status: MSG.ERROR,

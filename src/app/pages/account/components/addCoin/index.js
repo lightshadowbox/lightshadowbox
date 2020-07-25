@@ -99,8 +99,9 @@ const CreateAccount = () => {
                                     symbol,
                                     image: '',
                                     pDecimals: bridgeInfo?.pDecimals || null,
-                                    decimals: bridgeInfo?.decimals || null,
                                     isVerified: bridgeInfo?.verified || null,
+                                    totalBalance: null,
+                                    availableBalance: null,
                                 };
                             })) ||
                         [];

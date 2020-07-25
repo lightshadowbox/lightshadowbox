@@ -26,10 +26,11 @@ import {
     onIncognitoAccountSelected,
     onIncognitoPrivacyTokenSelected,
 } from 'app/redux/incognito/actions';
-import { CreateAccount, ImportAccount, AddCoin, Transaction } from 'app/pages/account/components';
+import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
 
 const PrivacyToken = lazy(() => import('app/pages/account/components/privacyToken'));
+const Transaction = lazy(() => import('app/pages/account/components/transaction'));
 
 const AccountStyled = styled.div`
     height: 100%;
@@ -167,8 +168,9 @@ const Account = () => {
                             symbol,
                             image: '',
                             pDecimals: bridgeInfo?.pDecimals || null,
-                            decimals: bridgeInfo?.decimals || null,
                             isVerified: bridgeInfo?.verified || null,
+                            totalBalance: null,
+                            availableBalance: null,
                         };
                     })) ||
                 [];
@@ -197,12 +199,13 @@ const Account = () => {
         if (account) {
             const { name } = account;
             dispatch(loadingOpenAction());
-            const history = await MasterAccount.getTxHistoriesCoin(name);
             setAccountSelected(account);
             dispatch(onIncognitoAccountSelected(account));
             dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
             dispatch(loadingCloseAction());
             fetchPrivacyTokens(name);
+            const history = await MasterAccount.getTxHistoriesCoin(name);
+            console.log(JSON.stringify(history));
         }
     };
 
@@ -334,7 +337,7 @@ const Account = () => {
                                 )}
                             </Menu.Item>
                         </Menu> */}
-                        <Suspense fallback={<h1>Loading…</h1>}>
+                        <Suspense fallback={<h3>Loading…</h3>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
                         <div className="text-center">
@@ -344,7 +347,9 @@ const Account = () => {
                         </div>
                     </Sider>
                     <Content>
-                        <Transaction />
+                        <Suspense fallback={<h3>Loading…</h3>}>
+                            <Transaction />
+                        </Suspense>
                     </Content>
                 </Layout>
                 <CreateAccount onGetStatusCreated={onGetStatusAction} />

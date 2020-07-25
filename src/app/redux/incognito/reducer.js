@@ -1,8 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { produce } from 'immer';
 import cloneDeep from 'lodash/cloneDeep';
 import coin from 'app/consts/coin';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';
+import { isEmpty } from 'lodash';
 
 export const initState = {
     [FIELDS_STATE.ACCOUNTS]: [],
@@ -16,6 +18,38 @@ export const initState = {
 };
 
 const incognitoDataReducer = createReducer(initState, {
+    [nameActs.updateTotalBalance]: (state, action) => {
+        const {
+            payload: { tokenId, totalBalance },
+        } = action;
+        const privacyTokens = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] || [], (draftState) => {
+            const hasIndex = draftState.findIndex((item) => item.tokenId === tokenId);
+            draftState[hasIndex].totalBalance = totalBalance;
+        });
+        const tokenSelected = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] || null, (draftState) => {
+            if (!isEmpty(draftState) && draftState.tokenId === tokenId) {
+                draftState.totalBalance = totalBalance;
+            }
+        });
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = privacyTokens;
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] = tokenSelected;
+    },
+    [nameActs.updateAvailableBalance]: (state, action) => {
+        const {
+            payload: { tokenId, availableBalance },
+        } = action;
+        const privacyTokens = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] || [], (draftState) => {
+            const hasIndex = draftState.findIndex((item) => item.tokenId === tokenId);
+            draftState[hasIndex].availableBalance = availableBalance;
+        });
+        const tokenSelected = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] || null, (draftState) => {
+            if (!isEmpty(draftState) && draftState.tokenId === tokenId) {
+                draftState.availableBalance = availableBalance;
+            }
+        });
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = privacyTokens;
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] = tokenSelected;
+    },
     [nameActs.onIncognitoGetPCustomeFailed]: (state, action) => {
         const { payload } = action;
         state[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKEN_ERROR] = payload;

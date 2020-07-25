@@ -24,7 +24,7 @@ const PrivacyToken = ({ data }) => {
         <Menu mode="inline" className="no-border" selectedKeys={[tokenSelected?.tokenId]} defaultSelectedKeys={[coin.PRV_ID]}>
             {!isEmpty(data) &&
                 data.map((ac) => {
-                    const { symbol, image, amount, isVerified, tokenId, name } = ac;
+                    const { image, isVerified, tokenId } = ac;
                     const avatar = isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image;
                     return (
                         <Menu.Item key={tokenId} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
@@ -46,7 +46,7 @@ const PrivacyToken = ({ data }) => {
                                         />
                                     )}
                                     <Suspense fallback={<h1>Loading…</h1>}>
-                                        <PrivacyTokenAmount tokenId={tokenId} name={name} symbol={symbol} amount={amount} />
+                                        <PrivacyTokenAmount token={tokenSelected} />
                                     </Suspense>
                                 </div>
                             ) : (

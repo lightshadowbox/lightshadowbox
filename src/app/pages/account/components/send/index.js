@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Modal, Form, Input, Button, notification } from 'antd';
 import { MSG } from 'app/consts';
+import { nanoBalance, pDecimalBalance } from 'app/utils/format';
 import { masterAccount as MasterAccount } from 'app/services/incognito';
-import { makeSelectAccountSelected } from 'app/redux/incognito/selector';
+import { makeSelectAccountSelected, makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
 import { onSetSendAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectSendAssetStatus } from 'app/pages/account/redux/selectors';
 import { isEmpty } from 'lodash';
@@ -41,28 +42,36 @@ const tokenSymbol = 'PRV';
 const SendAsset = () => {
     const dispatch = useDispatch();
     const accountSelected = useSelector(makeSelectAccountSelected());
+    const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
     const visible = useSelector(makeSelectSendAssetStatus());
+    const [form] = Form.useForm();
 
     const onHandleCancel = () => {
         dispatch(onSetSendAssetState(false));
     };
 
     const onGetMax = () => {
-        console.log('onget max');
+        if (!isEmpty(tokenSelected)) {
+            const { availableBalance, pDecimals } = tokenSelected;
+            form.setFieldsValue({
+                amount: (availableBalance && pDecimalBalance(Number(availableBalance), pDecimals)) || 0,
+            });
+        }
     };
-
     const onSend = useCallback(
         async (values) => {
             if (!isEmpty(accountSelected) && !isEmpty(values)) {
                 const { amount, paymentAddressStr, message } = values;
+                console.log(nanoBalance(Number(amount), tokenSelected?.pDecimals));
                 const formated = {
-                    amount: Number(amount),
+                    amount: nanoBalance(Number(amount), tokenSelected?.pDecimals),
                     paymentAddressStr,
                     fee: Number(20),
                     message,
                 };
                 const transferStatus = await MasterAccount.transfer(accountSelected?.name, formated);
                 console.log(transferStatus);
+                console.log(JSON.stringify(transferStatus));
                 console.log(formated);
                 if (transferStatus.status === MSG.ERROR) {
                     const { message } = transferStatus;
@@ -73,7 +82,7 @@ const SendAsset = () => {
                 dispatch(onSetSendAssetState(false));
             }
         },
-        [dispatch, accountSelected],
+        [dispatch, tokenSelected, accountSelected],
     );
 
     return (
@@ -84,9 +93,27 @@ const SendAsset = () => {
             onCancel={onHandleCancel}
             className="text-center custom-modal full-buttons">
             <SendAssetStyled>
-                <Form name="import-account" layout="vertical" onFinish={onSend} initialValues={{ fee: 20 }}>
-                    <Form.Item name="amount" label="Amount" rules={[{ required: true, message: 'Required' }]}>
-                        <Input spellCheck="false" suffix={<span onClick={onGetMax}>MAX</span>} />
+                <Form form={form} name="import-account" layout="vertical" onFinish={onSend} initialValues={{ fee: 20 || 0 }}>
+                    <Form.Item
+                        name="amount"
+                        label="Amount"
+                        rules={[
+                            { required: true, message: 'Required' },
+                            // {
+                            //     type: 'number',
+                            //     asyncValidator: (rule, value) => {
+                            //         return new Promise((resolve, reject) => {
+                            //             if (value < 0.000000001) {
+                            //                 reject('Amount must be larger than 0.000000001 PRV'); // reject with error message
+                            //             } else if (value < 0.000000001) {
+                            //             } else {
+                            //                 resolve();
+                            //             }
+                            //         });
+                            //     },
+                            // },
+                        ]}>
+                        <Input type="number" spellCheck="false" suffix={<span onClick={onGetMax}>MAX</span>} />
                     </Form.Item>
                     <Form.Item name="paymentAddressStr" label={<span>To</span>} rules={[{ required: true, message: 'Required' }]}>
                         <Input.TextArea rows={2} spellCheck="false" placeholder="Enter Incognito address" />
