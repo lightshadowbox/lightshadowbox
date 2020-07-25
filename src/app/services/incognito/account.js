@@ -110,7 +110,7 @@ class MasterAccount {
     async transfer(accountName, data) {
         try {
             const account = this.masterAccount.getAccountByName(accountName);
-            const { paymentAddressStr, amount, fee, message } = data;
+            const { paymentAddressStr, amount, message, fee } = data;
             const history = await account.nativeToken.transfer(
                 [
                     {
@@ -125,7 +125,7 @@ class MasterAccount {
         } catch (error) {
             return {
                 status: MSG.ERROR,
-                message: 'Send native token in Incognito chain.',
+                message: 'Native token transfer failed.',
             };
         }
     }

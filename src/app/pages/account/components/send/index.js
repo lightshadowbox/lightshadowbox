@@ -2,9 +2,13 @@ import React, { useCallback } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { Modal, Form, Input, Button } from 'antd';
+import { Modal, Form, Input, Button, notification } from 'antd';
+import { MSG } from 'app/consts';
+import { masterAccount as MasterAccount } from 'app/services/incognito';
+import { makeSelectAccountSelected } from 'app/redux/incognito/selector';
 import { onSetSendAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectSendAssetStatus } from 'app/pages/account/redux/selectors';
+import { isEmpty } from 'lodash';
 
 const SendAssetStyled = styled.div`
     flex: 1;
@@ -36,6 +40,7 @@ const SendAssetStyled = styled.div`
 const tokenSymbol = 'PRV';
 const SendAsset = () => {
     const dispatch = useDispatch();
+    const accountSelected = useSelector(makeSelectAccountSelected());
     const visible = useSelector(makeSelectSendAssetStatus());
 
     const onHandleCancel = () => {
@@ -47,12 +52,28 @@ const SendAsset = () => {
     };
 
     const onSend = useCallback(
-        async (event) => {
-            event.preventDefault();
-
-            dispatch(onSetSendAssetState(false));
+        async (values) => {
+            if (!isEmpty(accountSelected) && !isEmpty(values)) {
+                const { amount, paymentAddressStr, message } = values;
+                const formated = {
+                    amount: Number(amount),
+                    paymentAddressStr,
+                    fee: Number(20),
+                    message,
+                };
+                const transferStatus = await MasterAccount.transfer(accountSelected?.name, formated);
+                console.log(transferStatus);
+                console.log(formated);
+                if (transferStatus.status === MSG.ERROR) {
+                    const { message } = transferStatus;
+                    notification.open({
+                        message,
+                    });
+                }
+                dispatch(onSetSendAssetState(false));
+            }
         },
-        [dispatch],
+        [dispatch, accountSelected],
     );
 
     return (
@@ -63,7 +84,7 @@ const SendAsset = () => {
             onCancel={onHandleCancel}
             className="text-center custom-modal full-buttons">
             <SendAssetStyled>
-                <Form name="import-account" layout="vertical" onFinish={onSend}>
+                <Form name="import-account" layout="vertical" onFinish={onSend} initialValues={{ fee: 20 }}>
                     <Form.Item name="amount" label="Amount" rules={[{ required: true, message: 'Required' }]}>
                         <Input spellCheck="false" suffix={<span onClick={onGetMax}>MAX</span>} />
                     </Form.Item>
