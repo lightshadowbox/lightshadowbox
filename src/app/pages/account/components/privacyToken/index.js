@@ -25,6 +25,7 @@ const PrivacyToken = ({ data }) => {
             {!isEmpty(data) &&
                 data.map((ac) => {
                     const { symbol, image, amount, isVerified, tokenId, name } = ac;
+                    const avatar = isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image;
                     return (
                         <Menu.Item key={tokenId} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
@@ -34,26 +35,14 @@ const PrivacyToken = ({ data }) => {
                                             <Avatar
                                                 size={40}
                                                 className="coin-avatar"
-                                                icon={
-                                                    <img
-                                                        src={isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image}
-                                                        alt="WELCOME TO INCOGNITO WEB WALLET"
-                                                        width="40"
-                                                    />
-                                                }
+                                                icon={avatar ? <img src={avatar} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : null}
                                             />
                                         </Badge>
                                     ) : (
                                         <Avatar
                                             size={40}
                                             className="coin-avatar"
-                                            icon={
-                                                <img
-                                                    src={isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image}
-                                                    alt="WELCOME TO INCOGNITO WEB WALLET"
-                                                    width="40"
-                                                />
-                                            }
+                                            icon={avatar ? <img src={avatar} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : null}
                                         />
                                     )}
                                     <Suspense fallback={<h1>Loading…</h1>}>
