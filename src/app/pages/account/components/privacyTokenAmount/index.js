@@ -13,7 +13,6 @@ const PrivacyTokenAmount = ({ tokenId, name, amount, symbol }) => {
     const { Text } = Typography;
     const [balance, setBalance] = useState(0);
     const accountSelected = useSelector(makeSelectAccountSelected());
-
     useEffect(() => {
         const fetchBalanceToken = async (name, token) => {
             let bl = 0;

@@ -334,7 +334,7 @@ const Account = () => {
                                 )}
                             </Menu.Item>
                         </Menu> */}
-                        <Suspense fallback={<h1>Still Loading…</h1>}>
+                        <Suspense fallback={<h1>Loading…</h1>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
                         <div className="text-center">

@@ -56,7 +56,7 @@ const PrivacyToken = ({ data }) => {
                                             }
                                         />
                                     )}
-                                    <Suspense fallback={<h1>Still Loading…</h1>}>
+                                    <Suspense fallback={<h1>Loading…</h1>}>
                                         <PrivacyTokenAmount tokenId={tokenId} name={name} symbol={symbol} amount={amount} />
                                     </Suspense>
                                 </div>

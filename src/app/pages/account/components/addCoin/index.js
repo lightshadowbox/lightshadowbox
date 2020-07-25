@@ -47,6 +47,12 @@ const AddCoinStyled = styled.div`
                     flex-direction: column;
                     flex: 1;
                     text-align: left;
+                    > h4,
+                    > span {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
                 }
             }
         }
