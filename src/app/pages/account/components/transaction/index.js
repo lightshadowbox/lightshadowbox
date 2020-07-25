@@ -4,17 +4,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useImmer } from 'use-immer';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
-import { Typography, Row, Col, Button, Avatar, Layout } from 'antd';
+import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
 import { pDecimalBalance, formatAmount } from 'app/utils/format';
 import coin from 'app/consts/coin';
-import { onSetSendAssetState } from 'app/pages/account/redux/slice';
+import { onSetSendAssetState, onSetReceiveAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
 import { isEmpty } from 'lodash';
 
 const SendAsset = lazy(() => import('app/pages/account/components/send'));
+const ReceiveAsset = lazy(() => import('app/pages/account/components/receive'));
 
 const TransactionStyled = styled.div``;
+
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        render: (text) => <a>{text}</a>,
+    },
+];
 
 const Transaction = () => {
     const dispatch = useDispatch();
@@ -28,6 +38,10 @@ const Transaction = () => {
 
     const onOpenSendModal = () => {
         dispatch(onSetSendAssetState(true));
+    };
+
+    const onOpenReceiveModal = () => {
+        dispatch(onSetReceiveAssetState(true));
     };
 
     useEffect(() => {
@@ -66,7 +80,7 @@ const Transaction = () => {
                         <Button className="btn btn-send" type="primary" size="large" htmlType="button" onClick={onOpenSendModal}>
                             Send
                         </Button>
-                        <Button className="btn btn-receive" type="primary" size="large" htmlType="button">
+                        <Button className="btn btn-receive" type="primary" size="large" htmlType="button" onClick={onOpenReceiveModal}>
                             Receive
                         </Button>
                     </Col>
@@ -83,8 +97,9 @@ const Transaction = () => {
                     </Col>
                 </Row>
             </Header>
-            content
+            {/* <Table columns={columns} dataSource={data} /> */}
             <SendAsset />
+            <ReceiveAsset />
         </TransactionStyled>
     );
 };

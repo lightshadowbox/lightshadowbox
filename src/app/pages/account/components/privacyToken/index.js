@@ -46,7 +46,7 @@ const PrivacyToken = ({ data }) => {
                                         />
                                     )}
                                     <Suspense fallback={<h1>Loading…</h1>}>
-                                        <PrivacyTokenAmount token={tokenSelected} />
+                                        <PrivacyTokenAmount token={ac} />
                                     </Suspense>
                                 </div>
                             ) : (

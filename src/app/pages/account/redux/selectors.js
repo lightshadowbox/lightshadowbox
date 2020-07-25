@@ -7,3 +7,4 @@ export const makeSelectCreatedAccountStatus = () => createSelector(accountSelect
 export const makeSelectImportedAccountStatus = () => createSelector(accountSelector, (item) => item.isImportAccount);
 export const makeSelectAddCoinStatus = () => createSelector(accountSelector, (item) => item.isAddCoin);
 export const makeSelectSendAssetStatus = () => createSelector(accountSelector, (item) => item.isSendAsset);
+export const makeSelectReceiveAssetStatus = () => createSelector(accountSelector, (item) => item.isReceiveAsset);

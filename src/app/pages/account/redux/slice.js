@@ -8,6 +8,7 @@ export const initialState = {
     isImportAccount: false,
     isAddCoin: false,
     isSendAsset: false,
+    isReceiveAsset: false,
 };
 
 const setCreateAccountState = (state, action) => {
@@ -26,6 +27,10 @@ const setSendAssetState = (state, action) => {
     const { payload } = action;
     state.isSendAsset = payload;
 };
+const setReceiveAssetState = (state, action) => {
+    const { payload } = action;
+    state.isReceiveAsset = payload;
+};
 const resetAccount = () => initialState;
 
 const accountSlice = createSlice({
@@ -36,6 +41,7 @@ const accountSlice = createSlice({
         onSetImportAccountState: setImportAccountState,
         onSetAddCointState: setAddCointState,
         onSetSendAssetState: setSendAssetState,
+        onSetReceiveAssetState: setReceiveAssetState,
         onResetAccount: resetAccount,
     },
 });
@@ -45,6 +51,7 @@ export const {
     onSetImportAccountState,
     onSetAddCointState,
     onSetSendAssetState,
+    onSetReceiveAssetState,
     onResetAccount,
 } = accountSlice.actions;
 export default accountSlice.reducer;

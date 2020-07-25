@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import { CaretDownOutlined, CopyOutlined, PlusOutlined, DownloadOutlined, CheckOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -25,6 +26,8 @@ import {
     onIncognitoPrivacyTokens,
     onIncognitoAccountSelected,
     onIncognitoPrivacyTokenSelected,
+    updateTotalBalance,
+    updateAvailableBalance,
 } from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
@@ -155,6 +158,36 @@ const Account = () => {
     const { Title } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
 
+    const getBalanceByFollowTokens = async (followTokens, name) => {
+        const balances = [];
+        const tokens = [...followTokens, coin.PRV];
+        tokens.forEach(async ({ tokenId }) => {
+            let bl = 0;
+            let av = 0;
+            if (isEqual(tokenId, coin.PRV_ID)) {
+                bl = await MasterAccount.getTotalBalanceCoin(name);
+                av = await MasterAccount.getAvaialbleBalanceCoin(name);
+            } else {
+                bl = await MasterAccount.getTotalBalanceToken(name, tokenId);
+                av = await MasterAccount.getAvaialbleBalanceToken(name, tokenId);
+            }
+            // dispatch(updateTotalBalance({ tokenId, totalBalance }));
+            dispatch(
+                updateTotalBalance({
+                    tokenId,
+                    totalBalance: (bl.data && bl.data.toNumber()) || 0,
+                }),
+            );
+            dispatch(
+                updateAvailableBalance({
+                    tokenId,
+                    availableBalance: (av.data && av.data.toNumber()) || 0,
+                }),
+            );
+        });
+        console.log('End', balances);
+    };
+
     const fetchPrivacyTokens = useCallback(
         async (name) => {
             const ft = await MasterAccount.getFollowingPrivacyTokens(name);
@@ -175,6 +208,7 @@ const Account = () => {
                     })) ||
                 [];
             dispatch(onIncognitoPrivacyTokens(followTokens));
+            // getBalanceByFollowTokens(followTokens, name);
         },
         [dispatch],
     );
@@ -205,6 +239,7 @@ const Account = () => {
             dispatch(loadingCloseAction());
             fetchPrivacyTokens(name);
             const history = await MasterAccount.getTxHistoriesCoin(name);
+            console.log('history', name);
             console.log(JSON.stringify(history));
         }
     };

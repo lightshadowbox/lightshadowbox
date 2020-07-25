@@ -1,10 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 import cloneDeep from 'lodash/cloneDeep';
+import { isEmpty } from 'lodash';
 import coin from 'app/consts/coin';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';
-import { isEmpty } from 'lodash';
 
 export const initState = {
     [FIELDS_STATE.ACCOUNTS]: [],
@@ -22,13 +22,14 @@ const incognitoDataReducer = createReducer(initState, {
         const {
             payload: { tokenId, totalBalance },
         } = action;
+        console.log('updateTotalBalance', totalBalance);
         const privacyTokens = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] || [], (draftState) => {
             const hasIndex = draftState.findIndex((item) => item.tokenId === tokenId);
-            draftState[hasIndex].totalBalance = totalBalance;
+            if (hasIndex !== -1) draftState[hasIndex].totalBalance = Number.isFinite(totalBalance) ? totalBalance : 0;
         });
         const tokenSelected = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] || null, (draftState) => {
             if (!isEmpty(draftState) && draftState.tokenId === tokenId) {
-                draftState.totalBalance = totalBalance;
+                draftState.totalBalance = Number.isFinite(totalBalance) ? totalBalance : 0;
             }
         });
         state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = privacyTokens;
@@ -40,11 +41,11 @@ const incognitoDataReducer = createReducer(initState, {
         } = action;
         const privacyTokens = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] || [], (draftState) => {
             const hasIndex = draftState.findIndex((item) => item.tokenId === tokenId);
-            draftState[hasIndex].availableBalance = availableBalance;
+            if (hasIndex !== -1) draftState[hasIndex].availableBalance = Number.isFinite(availableBalance) ? availableBalance : 0;
         });
         const tokenSelected = produce(state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED] || null, (draftState) => {
             if (!isEmpty(draftState) && draftState.tokenId === tokenId) {
-                draftState.availableBalance = availableBalance;
+                draftState.availableBalance = Number.isFinite(availableBalance) ? availableBalance : 0;
             }
         });
         state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = privacyTokens;
