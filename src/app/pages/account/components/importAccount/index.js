@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -92,4 +92,4 @@ ImportAccount.propTypes = {
     onGetStatusImported: PropTypes.func,
 };
 
-export default ImportAccount;
+export default memo(ImportAccount);

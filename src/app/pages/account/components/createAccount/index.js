@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -82,4 +82,4 @@ CreateAccount.propTypes = {
     onGetStatusCreated: PropTypes.func,
 };
 
-export default CreateAccount;
+export default memo(CreateAccount);

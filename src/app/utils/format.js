@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
 import floor from 'lodash/floor';
 
 const AMOUNT_MAX_DIGITS = 4;
@@ -43,4 +44,7 @@ const nanoBalance = (pAmount, pDecimals) => {
         return pAmount;
     }
 };
-export { pDecimalBalance, formatAmount, nanoBalance };
+
+const formatDateTime = (dateTime, formatPattern) => moment(dateTime).format(formatPattern || 'DD MMM hh:mm A');
+
+export { pDecimalBalance, formatAmount, nanoBalance, formatDateTime };

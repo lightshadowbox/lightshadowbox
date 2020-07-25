@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Row, Col, Avatar, Typography, Button } from 'antd';
 import { Helmet } from 'react-helmet';
@@ -52,4 +52,4 @@ const Onboarding = () => {
     );
 };
 
-export default Onboarding;
+export default memo(Onboarding);

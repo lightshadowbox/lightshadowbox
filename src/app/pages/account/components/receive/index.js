@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { Modal, Button } from 'antd';
+import QRCode from 'qrcode.react';
+import { Modal, Button, Tooltip } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
-import { CopyToClipboard, Tooltip } from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { makeSelectAccountSelected } from 'app/redux/incognito/selector';
 import { onSetReceiveAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectReceiveAssetStatus } from 'app/pages/account/redux/selectors';
@@ -15,24 +16,15 @@ const ReceiveAssetStyled = styled.div`
         padding-left: 0;
         padding-right: 0;
     }
-    .coins {
-        max-height: 25rem;
-        overflow-x: hidden;
-        overflow-y: auto;
-        .inner {
-            display: flex;
-            flex: 1;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            .content {
-                margin-left: 0.875rem;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-                text-align: left;
-            }
+    .inner-address {
+        canvas {
+            height: 15rem !important;
+            width: 15rem !important;
+            background: #ffffff;
+            border: 0.063rem solid rgba(1, 18, 34, 0.05);
+            box-shadow: 0 0.063rem 0.5rem rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            padding: 1.063rem;
         }
     }
 `;
@@ -53,15 +45,20 @@ const ReceiveAsset = () => {
                     All the wallet & account service will be sent directly to the main chain, we don’t store any data / keys on this
                     website.
                 </p>
-                {/* <CopyToClipboard text={accountSelected?.paymentAddressKeySerialized}>
-                    <Tooltip placement="bottom" title="Copy to clipboard" arrowPointAtCenter>
-                        <Button className="address">
-                            <span className="ellipsis">{accountSelected?.paymentAddressKeySerialized}</span>
-                            <span className="indent">{accountSelected?.paymentAddressKeySerialized}</span>
-                            <CopyOutlined />
-                        </Button>
-                    </Tooltip>
-                </CopyToClipboard> */}
+                {accountSelected && (
+                    <div className="inner-address">
+                        <QRCode value={accountSelected?.paymentAddressKeySerialized} />
+                        <CopyToClipboard text={accountSelected?.paymentAddressKeySerialized}>
+                            <Tooltip placement="bottom" title="Copy to clipboard" arrowPointAtCenter>
+                                <Button className="address-clipboard full-width">
+                                    <span className="ellipsis">{accountSelected?.paymentAddressKeySerialized}</span>
+                                    <span className="indent">{accountSelected?.paymentAddressKeySerialized}</span>
+                                    <CopyOutlined />
+                                </Button>
+                            </Tooltip>
+                        </CopyToClipboard>
+                    </div>
+                )}
             </ReceiveAssetStyled>
         </Modal>
     );
@@ -69,4 +66,4 @@ const ReceiveAsset = () => {
 
 ReceiveAsset.propTypes = {};
 
-export default ReceiveAsset;
+export default memo(ReceiveAsset);

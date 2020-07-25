@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useImmer } from 'use-immer';
@@ -159,7 +159,7 @@ const CreateAccount = () => {
             title="Coins"
             visible={visible}
             onCancel={onHandleCancel}
-            className="text-center custom-modal add-coin-modal no-p-modal">
+            className="text-center custom-modal popup-modal no-p-modal">
             <AddCoinStyled>
                 <div className="search-box">
                     <Input placeholder="Search..." onChange={onSearch} />
@@ -184,4 +184,4 @@ const CreateAccount = () => {
 
 CreateAccount.propTypes = {};
 
-export default CreateAccount;
+export default memo(CreateAccount);

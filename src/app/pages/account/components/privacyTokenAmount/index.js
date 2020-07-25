@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
@@ -65,4 +65,4 @@ PrivacyTokenAmount.propTypes = {
     token: PropTypes.object,
 };
 
-export default PrivacyTokenAmount;
+export default memo(PrivacyTokenAmount);

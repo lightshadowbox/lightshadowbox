@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { memo, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
@@ -63,4 +63,4 @@ PrivacyToken.propTypes = {
     data: PropTypes.array,
 };
 
-export default PrivacyToken;
+export default memo(PrivacyToken);

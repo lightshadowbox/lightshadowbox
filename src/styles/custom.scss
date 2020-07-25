@@ -21,12 +21,6 @@
         .ant-modal-header {
             border-radius: 0.5rem 0.5rem 0 0;
         }
-        .no-p-modal {
-            .ant-modal-body {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        }
     }
 }
 
@@ -127,8 +121,31 @@
     }
 }
 
-.add-coin-modal {
+.popup-modal {
     .ant-modal-body {
         padding: 0 !important;
+    }
+}
+
+.address-clipboard {
+    width: 12.5rem;
+    white-space: nowrap;
+    padding: 0.1rem 1.7rem 0.1rem 0.65rem;
+    margin-bottom: 1.4rem;
+    > span {
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: middle;
+        &.ellipsis {
+            display: inline-block;
+            width: calc(50% + 1.2rem);
+            text-overflow: ellipsis;
+        }
+
+        &.indent {
+            display: inline-flex;
+            width: calc(50% - 1.2rem);
+            justify-content: flex-end;
+        }
     }
 }

@@ -2,9 +2,8 @@ import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer } from 'redux-injectors';
 import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
 import { CaretDownOutlined, CopyOutlined, PlusOutlined, DownloadOutlined, CheckOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography, Spin } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
@@ -26,8 +25,6 @@ import {
     onIncognitoPrivacyTokens,
     onIncognitoAccountSelected,
     onIncognitoPrivacyTokenSelected,
-    updateTotalBalance,
-    updateAvailableBalance,
 } from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
@@ -53,6 +50,12 @@ const AccountStyled = styled.div`
             }
         }
     }
+    .spiner {
+        padding: 2rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .wrap {
         width: 85vw;
         padding-top: 3rem;
@@ -75,28 +78,6 @@ const AccountStyled = styled.div`
                 height: auto;
                 .btn-send {
                     margin-right: 1.5rem;
-                }
-            }
-            .address {
-                width: 12.5rem;
-                white-space: nowrap;
-                padding: 0.1rem 1.7rem 0.1rem 0.65rem;
-                margin-bottom: 1.4rem;
-                > span {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    vertical-align: middle;
-                    &.ellipsis {
-                        display: inline-block;
-                        width: calc(50% + 1.2rem);
-                        text-overflow: ellipsis;
-                    }
-
-                    &.indent {
-                        display: inline-flex;
-                        width: calc(50% - 1.2rem);
-                        justify-content: flex-end;
-                    }
                 }
             }
             .wallet-balance {
@@ -158,35 +139,35 @@ const Account = () => {
     const { Title } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
 
-    const getBalanceByFollowTokens = async (followTokens, name) => {
-        const balances = [];
-        const tokens = [...followTokens, coin.PRV];
-        tokens.forEach(async ({ tokenId }) => {
-            let bl = 0;
-            let av = 0;
-            if (isEqual(tokenId, coin.PRV_ID)) {
-                bl = await MasterAccount.getTotalBalanceCoin(name);
-                av = await MasterAccount.getAvaialbleBalanceCoin(name);
-            } else {
-                bl = await MasterAccount.getTotalBalanceToken(name, tokenId);
-                av = await MasterAccount.getAvaialbleBalanceToken(name, tokenId);
-            }
-            // dispatch(updateTotalBalance({ tokenId, totalBalance }));
-            dispatch(
-                updateTotalBalance({
-                    tokenId,
-                    totalBalance: (bl.data && bl.data.toNumber()) || 0,
-                }),
-            );
-            dispatch(
-                updateAvailableBalance({
-                    tokenId,
-                    availableBalance: (av.data && av.data.toNumber()) || 0,
-                }),
-            );
-        });
-        console.log('End', balances);
-    };
+    // const getBalanceByFollowTokens = async (followTokens, name) => {
+    //     const balances = [];
+    //     const tokens = [...followTokens, coin.PRV];
+    //     tokens.forEach(async ({ tokenId }) => {
+    //         let bl = 0;
+    //         let av = 0;
+    //         if (isEqual(tokenId, coin.PRV_ID)) {
+    //             bl = await MasterAccount.getTotalBalanceCoin(name);
+    //             av = await MasterAccount.getAvaialbleBalanceCoin(name);
+    //         } else {
+    //             bl = await MasterAccount.getTotalBalanceToken(name, tokenId);
+    //             av = await MasterAccount.getAvaialbleBalanceToken(name, tokenId);
+    //         }
+    //         dispatch(updateTotalBalance({ tokenId, totalBalance }));
+    //         dispatch(
+    //             updateTotalBalance({
+    //                 tokenId,
+    //                 totalBalance: (bl.data && bl.data.toNumber()) || 0,
+    //             }),
+    //         );
+    //         dispatch(
+    //             updateAvailableBalance({
+    //                 tokenId,
+    //                 availableBalance: (av.data && av.data.toNumber()) || 0,
+    //             }),
+    //         );
+    //     });
+    //     console.log('End', balances);
+    // };
 
     const fetchPrivacyTokens = useCallback(
         async (name) => {
@@ -238,9 +219,6 @@ const Account = () => {
             dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
             dispatch(loadingCloseAction());
             fetchPrivacyTokens(name);
-            const history = await MasterAccount.getTxHistoriesCoin(name);
-            console.log('history', name);
-            console.log(JSON.stringify(history));
         }
     };
 
@@ -344,7 +322,7 @@ const Account = () => {
                                 </Dropdown>
                                 <CopyToClipboard text={accountSelected?.paymentAddressKeySerialized}>
                                     <Tooltip placement="bottom" title="Copy to clipboard" arrowPointAtCenter>
-                                        <Button className="address">
+                                        <Button className="address-clipboard">
                                             <span className="ellipsis">{accountSelected?.paymentAddressKeySerialized}</span>
                                             <span className="indent">{accountSelected?.paymentAddressKeySerialized}</span>
                                             <CopyOutlined />
@@ -372,7 +350,7 @@ const Account = () => {
                                 )}
                             </Menu.Item>
                         </Menu> */}
-                        <Suspense fallback={<h3>Loading…</h3>}>
+                        <Suspense fallback={<h4>Loading…</h4>}>
                             <PrivacyToken data={privacyTokens} />
                         </Suspense>
                         <div className="text-center">
@@ -382,7 +360,12 @@ const Account = () => {
                         </div>
                     </Sider>
                     <Content>
-                        <Suspense fallback={<h3>Loading…</h3>}>
+                        <Suspense
+                            fallback={
+                                <div className="spiner">
+                                    <Spin tip="Loading..." />
+                                </div>
+                            }>
                             <Transaction />
                         </Suspense>
                     </Content>

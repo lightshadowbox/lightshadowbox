@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Col, Form, Input, Row, Typography } from 'antd';
 import { Helmet } from 'react-helmet';
@@ -68,4 +68,4 @@ const InitWallet = () => {
     );
 };
 
-export default InitWallet;
+export default memo(InitWallet);

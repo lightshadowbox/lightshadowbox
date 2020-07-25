@@ -1,28 +1,50 @@
-import React, { lazy, useEffect } from 'react';
+/* eslint-disable no-param-reassign */
+import React, { memo, lazy, useEffect, useCallback, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 import { useImmer } from 'use-immer';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
-import { pDecimalBalance, formatAmount } from 'app/utils/format';
+import { pDecimalBalance, formatAmount, formatDateTime } from 'app/utils/format';
 import coin from 'app/consts/coin';
+import { masterAccount as MasterAccount } from 'app/services/incognito';
 import { onSetSendAssetState, onSetReceiveAssetState } from 'app/pages/account/redux/slice';
-import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
+import { makeSelectPrivacyTokenSelected, makeSelectAccountSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
-import { isEmpty } from 'lodash';
 
 const SendAsset = lazy(() => import('app/pages/account/components/send'));
 const ReceiveAsset = lazy(() => import('app/pages/account/components/receive'));
 
-const TransactionStyled = styled.div``;
+const TransactionStyled = styled.div`
+    .table-transaction {
+        .ant-table-wrapper {
+            padding: 1rem 1.5rem 0.5rem;
+            .ant-table-content {
+                table {
+                    border: 0.063rem solid #f0f0f0;
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+`;
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => <a>{text}</a>,
+        title: 'txId',
+        dataIndex: 'txId',
+        key: 'txId',
+        width: 250,
+        render: (text) => <strong>{text}</strong>,
+    },
+    {
+        title: 'lockTime',
+        dataIndex: 'lockTime',
+        key: 'lockTime',
+        ellipsis: true,
+        render: (text) => <span>{formatDateTime(text)}</span>,
     },
 ];
 
@@ -31,18 +53,34 @@ const Transaction = () => {
     const { Title, Text } = Typography;
     const { Header } = Layout;
     const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
+    const accountSelected = useSelector(makeSelectAccountSelected());
+    const [isHistory, setHistory] = useState(false);
+    const [histories, setHistories] = useState(null);
     const [tokenState, setTokenState] = useImmer({
         totalBalance: 0,
         availableBalance: 0,
     });
 
-    const onOpenSendModal = () => {
-        dispatch(onSetSendAssetState(true));
-    };
+    const avatar = isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image;
 
-    const onOpenReceiveModal = () => {
-        dispatch(onSetReceiveAssetState(true));
-    };
+    const fetchHistories = useCallback(
+        async (accountSelected) => {
+            const { name } = accountSelected;
+            setHistory(true);
+            let history = null;
+            if (isEqual(tokenSelected?.tokenId, coin.PRV_ID)) {
+                console.log('get native history');
+                history = await MasterAccount.getTxHistoriesCoin(name);
+            } else {
+                console.log('get privacy history');
+                history = await MasterAccount.getTxHistoriesToken(name, tokenSelected?.tokenId);
+            }
+            setHistories(history?.data || []);
+            setHistory(false);
+            console.log(JSON.stringify(history));
+        },
+        [tokenSelected],
+    );
 
     useEffect(() => {
         if (!isEmpty(tokenSelected)) {
@@ -54,6 +92,20 @@ const Transaction = () => {
         }
     }, [setTokenState, tokenSelected]);
 
+    useEffect(() => {
+        if (!isEmpty(accountSelected)) {
+            fetchHistories(accountSelected);
+        }
+    }, [accountSelected, fetchHistories]);
+
+    const onOpenSendModal = () => {
+        dispatch(onSetSendAssetState(true));
+    };
+
+    const onOpenReceiveModal = () => {
+        dispatch(onSetReceiveAssetState(true));
+    };
+
     return (
         <TransactionStyled>
             <Header className="header bg-white">
@@ -62,13 +114,9 @@ const Transaction = () => {
                         <div className="wallet-balance title">
                             <div className="inner">
                                 <Avatar
+                                    className="coin-avatar"
                                     size={40}
-                                    icon={
-                                        <img
-                                            src={isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image}
-                                            alt="WELCOME TO INCOGNITO WEB WALLET"
-                                        />
-                                    }
+                                    icon={avatar ? <img src={avatar} alt="WELCOME TO INCOGNITO WEB WALLET" /> : null}
                                 />
                                 <div className="content">
                                     <h4 className="title-amount line-height">{tokenSelected?.name}</h4>
@@ -97,7 +145,9 @@ const Transaction = () => {
                     </Col>
                 </Row>
             </Header>
-            {/* <Table columns={columns} dataSource={data} /> */}
+            <div className="table-transaction">
+                <Table columns={columns} dataSource={histories} hasData={false} loading={isHistory} />
+            </div>
             <SendAsset />
             <ReceiveAsset />
         </TransactionStyled>
@@ -106,4 +156,4 @@ const Transaction = () => {
 
 Transaction.propTypes = {};
 
-export default Transaction;
+export default memo(Transaction);
