@@ -1,4 +1,4 @@
-import React, { memo, Suspense, lazy } from 'react';
+import React, { memo, Suspense, lazy, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
@@ -16,9 +16,12 @@ const PrivacyToken = ({ data }) => {
     const dispatch = useDispatch();
     const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
 
-    const onSelectedPrivacyToken = (token) => {
-        dispatch(onIncognitoPrivacyTokenSelected(token));
-    };
+    const onSelectedPrivacyToken = useCallback(
+        (token) => {
+            dispatch(onIncognitoPrivacyTokenSelected(token));
+        },
+        [dispatch],
+    );
 
     return (
         <Menu mode="inline" className="no-border" selectedKeys={[tokenSelected?.tokenId]} defaultSelectedKeys={[coin.PRV_ID]}>

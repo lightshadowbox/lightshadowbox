@@ -32,12 +32,20 @@ class MasterAccount {
         return this.masterAccount.child.findIndex((item) => item.name === accountName);
     }
 
+    async getAllAcounts(accountName) {
+        try {
+            const account = await this.masterAccount.getAccountByName(accountName);
+            return account;
+        } catch (error) {
+            return { status: MSG.ERROR, message: 'Get Accounts Error' };
+        }
+    }
+
     async createAccount(accountName, shardId = null) {
         try {
             return await this.masterAccount.addAccount(accountName, shardId);
         } catch (error) {
-            console.debug('CREATE ACCOUNT ERROR', error);
-            return { status: MSG.ERROR, ...error };
+            return { status: MSG.ERROR, message: 'Account was not created, please try again.' };
         }
     }
 
@@ -46,14 +54,13 @@ class MasterAccount {
             await this.masterAccount.importAccount(accountName, privateKey);
             return { status: MSG.SUCCESS };
         } catch (error) {
-            console.debug('IMPORT ERROR', error);
-            return { status: MSG.ERROR, ...error };
+            return { status: MSG.ERROR, message: 'Account was not imported, please try again.' };
         }
     }
 
     async followTokenById(accountName, tokenId) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             account.followTokenById(tokenId);
             const followingTokens = await account.getFollowingPrivacyToken();
             return { status: MSG.SUCCESS, data: followingTokens };
@@ -76,14 +83,14 @@ class MasterAccount {
     }
 
     async getFollowingPrivacyTokens(accountName) {
-        const account = this.masterAccount.getAccountByName(accountName);
+        const account = this.getAccountByName(accountName);
         const followingTokens = await account.getFollowingPrivacyToken();
         return followingTokens;
     }
 
     async getTotalBalanceCoin(accountName) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const balance = await account.nativeToken.getTotalBalance();
             return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
@@ -96,7 +103,7 @@ class MasterAccount {
 
     async getAvaialbleBalanceCoin(accountName) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const balance = await account.nativeToken.getAvaiableBalance();
             return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
@@ -107,9 +114,9 @@ class MasterAccount {
         }
     }
 
-    async transfer(accountName, data) {
+    async transferCoin(accountName, data) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const { paymentAddressStr, amount, message, fee } = data;
             const history = await account.nativeToken.transfer(
                 [
@@ -132,7 +139,7 @@ class MasterAccount {
 
     async getTxHistoriesCoin(accountName) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const histories = await account.nativeToken.getTxHistories();
             return {
                 status: MSG.SUCCESS,
@@ -141,16 +148,26 @@ class MasterAccount {
         } catch (error) {
             return {
                 status: MSG.ERROR,
-                message: 'Native token -Can not get transaction histories',
+                message: 'Native token - Can not get transaction history',
             };
+        }
+    }
+
+    async getAllFollowingPrivacyTokens(accountName) {
+        try {
+            const account = this.getAccountByName(accountName);
+            const tokens = await account.getFollowingPrivacyToken();
+            return { status: MSG.SUCCESS, data: tokens };
+        } catch (error) {
+            return { status: MSG.ERROR, message: 'Can not get all following privacy tokens' };
         }
     }
 
     async getTotalBalanceToken(accountName, tokenId) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            const balance = token && (await token[0]?.getTotalBalance());
+            const balance = token && (await token.getTotalBalance());
             return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return { status: MSG.ERROR, message: `Can not get total balance of the ${tokenId}` };
@@ -159,9 +176,9 @@ class MasterAccount {
 
     async getAvaialbleBalanceToken(accountName, tokenId) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
-            const balance = token && (await token[0]?.getAvaiableBalance());
+            const balance = token && (await token.getAvaiableBalance());
             return { status: MSG.SUCCESS, data: balance };
         } catch (error) {
             return {
@@ -171,9 +188,49 @@ class MasterAccount {
         }
     }
 
+    async hasExchangeRate(accountName, tokenId) {
+        try {
+            const account = this.getAccountByName(accountName);
+            const token = await account.getFollowingPrivacyToken(tokenId);
+            const isHasRate = await token.hasExchangeRate();
+            return { status: MSG.SUCCESS, data: isHasRate };
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Can not check exchange rate',
+            };
+        }
+    }
+
+    async transferToken(accountName, tokenId, data) {
+        try {
+            const account = this.getAccountByName(accountName);
+            const token = await account.getFollowingPrivacyToken(tokenId);
+
+            const { paymentAddressStr, amount, message, fee, privacyFee } = data;
+            const history = await token.transfer(
+                [
+                    {
+                        paymentAddressStr,
+                        amount,
+                        message,
+                    },
+                ],
+                fee,
+                privacyFee,
+            );
+            return { status: MSG.SUCCESS, data: history };
+        } catch (error) {
+            return {
+                status: MSG.ERROR,
+                message: 'Privacy token transfer failed.',
+            };
+        }
+    }
+
     async getTxHistoriesToken(accountName, tokenId) {
         try {
-            const account = this.masterAccount.getAccountByName(accountName);
+            const account = this.getAccountByName(accountName);
             const token = await account.getFollowingPrivacyToken(tokenId);
             const histories = await token.getTxHistories();
             return {
@@ -183,7 +240,7 @@ class MasterAccount {
         } catch (error) {
             return {
                 status: MSG.ERROR,
-                message: 'Privacy token - Can not get transaction histories',
+                message: 'Privacy token - Can not get transaction history',
             };
         }
     }

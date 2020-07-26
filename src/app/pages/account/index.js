@@ -7,7 +7,7 @@ import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Tooltip, Typography, 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { LOCAL_STORAGE_KEY } from 'app/consts';
+import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
 import coin from 'app/consts/coin';
 import { getBackgroundColor, getName } from 'app/utils';
 import LocalStorageServices from 'app/utils/localStorage';
@@ -25,6 +25,8 @@ import {
     onIncognitoPrivacyTokens,
     onIncognitoAccountSelected,
     onIncognitoPrivacyTokenSelected,
+    updateTotalBalance,
+    updateAvailableBalance,
 } from 'app/redux/incognito/actions';
 import { CreateAccount, ImportAccount, AddCoin } from 'app/pages/account/components';
 import Logo from 'assets/logo.png';
@@ -139,35 +141,43 @@ const Account = () => {
     const { Title } = Typography;
     const [accountSelected, setAccountSelected] = useState(null);
 
-    // const getBalanceByFollowTokens = async (followTokens, name) => {
-    //     const balances = [];
-    //     const tokens = [...followTokens, coin.PRV];
-    //     tokens.forEach(async ({ tokenId }) => {
-    //         let bl = 0;
-    //         let av = 0;
-    //         if (isEqual(tokenId, coin.PRV_ID)) {
-    //             bl = await MasterAccount.getTotalBalanceCoin(name);
-    //             av = await MasterAccount.getAvaialbleBalanceCoin(name);
-    //         } else {
-    //             bl = await MasterAccount.getTotalBalanceToken(name, tokenId);
-    //             av = await MasterAccount.getAvaialbleBalanceToken(name, tokenId);
-    //         }
-    //         dispatch(updateTotalBalance({ tokenId, totalBalance }));
-    //         dispatch(
-    //             updateTotalBalance({
-    //                 tokenId,
-    //                 totalBalance: (bl.data && bl.data.toNumber()) || 0,
-    //             }),
-    //         );
-    //         dispatch(
-    //             updateAvailableBalance({
-    //                 tokenId,
-    //                 availableBalance: (av.data && av.data.toNumber()) || 0,
-    //             }),
-    //         );
-    //     });
-    //     console.log('End', balances);
-    // };
+    const getBalanceNative = useCallback(
+        async (name) => {
+            const bl = await MasterAccount.getTotalBalanceCoin(name);
+            const av = await MasterAccount.getAvaialbleBalanceCoin(name);
+            if (bl.status === MSG.SUCCESS && !isEmpty(bl.data)) {
+                const totalBalance = bl.data.toNumber() || 0;
+                dispatch(updateTotalBalance({ tokenId: coin.PRV_ID, totalBalance }));
+            }
+            if (av.status === MSG.SUCCESS && !isEmpty(av.data)) {
+                const availableBalance = av.data.toNumber() || 0;
+                dispatch(updateAvailableBalance({ tokenId: coin.PRV_ID, availableBalance }));
+            }
+        },
+        [dispatch],
+    );
+
+    const getBalanceByFollowTokens = useCallback(
+        async (name) => {
+            const tokens = await MasterAccount.getAllFollowingPrivacyTokens(name);
+            if (tokens.status === MSG.SUCCESS && !isEmpty(tokens?.data)) {
+                const { data } = tokens;
+                try {
+                    data.forEach(async (token) => {
+                        const bl = token && (await token.getTotalBalance());
+                        const av = token && (await token.getAvaiableBalance());
+                        const totalBalance = bl.toNumber() || 0;
+                        const availableBalance = av.toNumber() || 0;
+                        dispatch(updateTotalBalance({ tokenId: token.tokenId, totalBalance }));
+                        dispatch(updateAvailableBalance({ tokenId: token.tokenId, availableBalance }));
+                    });
+                } catch (error) {
+                    console.debug('CAN GET COIN BALANCE', error);
+                }
+            }
+        },
+        [dispatch],
+    );
 
     const fetchPrivacyTokens = useCallback(
         async (name) => {
@@ -189,7 +199,6 @@ const Account = () => {
                     })) ||
                 [];
             dispatch(onIncognitoPrivacyTokens(followTokens));
-            // getBalanceByFollowTokens(followTokens, name);
         },
         [dispatch],
     );
@@ -207,8 +216,10 @@ const Account = () => {
             dispatch(onIncognitoAccountSelected(ac));
             dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
             fetchPrivacyTokens(ac?.name);
+            getBalanceByFollowTokens(ac?.name);
+            getBalanceNative(ac?.name);
         }
-    }, [masterAccount, fetchPrivacyTokens, dispatch]);
+    }, [masterAccount, fetchPrivacyTokens, getBalanceNative, getBalanceByFollowTokens, dispatch]);
 
     const onHandleAccoutSelected = async (account) => {
         if (account) {
@@ -219,6 +230,8 @@ const Account = () => {
             dispatch(onIncognitoPrivacyTokenSelected(coin.PRV));
             dispatch(loadingCloseAction());
             fetchPrivacyTokens(name);
+            getBalanceByFollowTokens(name);
+            getBalanceNative(name);
         }
     };
 

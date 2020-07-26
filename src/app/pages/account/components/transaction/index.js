@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import React, { memo, lazy, useEffect, useCallback, useState } from 'react';
-// import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { useImmer } from 'use-immer';
@@ -56,11 +55,11 @@ const Transaction = () => {
     const accountSelected = useSelector(makeSelectAccountSelected());
     const [isHistory, setHistory] = useState(false);
     const [histories, setHistories] = useState(null);
+
     const [tokenState, setTokenState] = useImmer({
         totalBalance: 0,
         availableBalance: 0,
     });
-
     const avatar = isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image;
 
     const fetchHistories = useCallback(
@@ -146,7 +145,7 @@ const Transaction = () => {
                 </Row>
             </Header>
             <div className="table-transaction">
-                <Table columns={columns} dataSource={histories} hasData={false} loading={isHistory} />
+                <Table columns={columns} dataSource={histories} hasData={false} loading={isHistory} rowKey="txId" />
             </div>
             <SendAsset />
             <ReceiveAsset />

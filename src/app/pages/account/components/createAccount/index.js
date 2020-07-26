@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import { Button, Modal, Form, Input, notification } from 'antd';
 import { Config } from 'configs';
-import { LOCAL_STORAGE_KEY } from 'app/consts';
+import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
 import { masterAccount as MasterAccount, IncognitoInstance } from 'app/services/incognito';
 import { onSetCreateAccountState } from 'app/pages/account/redux/slice';
@@ -25,7 +25,7 @@ const CreateAccount = ({ onGetStatusCreated }) => {
             const { accountName } = values;
             const account = await MasterAccount.createAccount(accountName);
             if (!isEmpty(account)) {
-                if (account.status === 'ERROR') {
+                if (account.status === MSG.ERROR) {
                     const { message } = account;
                     notification.open({
                         message,

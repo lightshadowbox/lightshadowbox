@@ -49,6 +49,12 @@ const SendAsset = () => {
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
 
+    const fetchExchangeRate = useCallback(async (accountSelected, tokenId) => {
+        const { name } = accountSelected;
+        const exchangeRate = await MasterAccount.hasExchangeRate(name, tokenId);
+        console.log(exchangeRate);
+    }, []);
+
     const onHandleCancel = () => {
         dispatch(onSetSendAssetState(false));
     };
@@ -68,10 +74,10 @@ const SendAsset = () => {
                 const formated = {
                     amount: nanoBalance(Number(amount), tokenSelected?.pDecimals),
                     paymentAddressStr,
-                    fee: Number(20),
+                    fee: Number(100),
                     message,
                 };
-                const transferStatus = await MasterAccount.transfer(accountSelected?.name, formated);
+                const transferStatus = await MasterAccount.transferCoin(accountSelected?.name, formated);
                 console.log(JSON.stringify(transferStatus));
                 if (transferStatus.status === MSG.ERROR) {
                     const { message } = transferStatus;
@@ -95,7 +101,12 @@ const SendAsset = () => {
             <SendAssetStyled>
                 <Tabs defaultActiveKey="1" type="card" size="default">
                     <TabPane tab="In-network" key="1">
-                        <Form form={form} name="import-account" layout="vertical" onFinish={onSend} initialValues={{ fee: 20 || 0 }}>
+                        <Form
+                            form={form}
+                            name="import-account"
+                            layout="vertical"
+                            onFinish={onSend}
+                            initialValues={{ fee: pDecimalBalance(100, tokenSelected?.pDecimals).toFixed(7) || 0 }}>
                             <Form.Item
                                 name="amount"
                                 label="Amount"

@@ -69,6 +69,11 @@ const loadIncognito = async (walletName = '') => {
             console.log('init wallet');
         } else {
             wallet = await walletInstance.restore(Config.WALLET_PASS, walletBackup);
+            // const t = wallet.masterAccount.getAccounts();
+            // const ac = t[0];
+            // const token = await ac.getFollowingPrivacyToken();
+            // const balanceBN = await token.getTotalBalance();
+            // console.log('Token total balance', balanceBN);
             console.log('restore wallet');
         }
         IncognitoInstance.wallet = wallet;
