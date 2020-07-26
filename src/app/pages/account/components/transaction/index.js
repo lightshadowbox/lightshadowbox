@@ -3,10 +3,8 @@ import React, { memo, lazy, useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { useImmer } from 'use-immer';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
-import { CopyOutlined } from '@ant-design/icons';
 import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
 import { pDecimalBalance, formatAmount, formatDateTime } from 'app/utils/format';
 import coin from 'app/consts/coin';
@@ -126,12 +124,12 @@ const Transaction = () => {
                     };
                     if (!isEmpty(nativeTokenInfo)) {
                         payment.fee = nativeTokenInfo?.fee;
-                        payment.amount = formatAmount(pDecimalBalance(nativeTokenInfo?.amount, 9)) || 0;
+                        payment.amount = (nativeTokenInfo?.amount && formatAmount(pDecimalBalance(nativeTokenInfo?.amount, 9))) || 0;
                         payment.address = nativeTokenInfo?.paymentInfoList && nativeTokenInfo?.paymentInfoList[0]?.paymentAddressStr;
                     }
                     if (!isEmpty(privacyTokenInfo)) {
                         payment.fee = privacyTokenInfo?.fee;
-                        payment.amount = formatAmount(pDecimalBalance(privacyTokenInfo?.amount, 9)) || 0;
+                        payment.amount = (privacyTokenInfo?.amount && formatAmount(pDecimalBalance(privacyTokenInfo?.amount, 9))) || 0;
                         payment.address = privacyTokenInfo?.paymentInfoList && privacyTokenInfo?.paymentInfoList[0]?.paymentAddressStr;
                     }
                     return {
