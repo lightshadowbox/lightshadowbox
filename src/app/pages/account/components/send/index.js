@@ -59,6 +59,29 @@ const SendAsset = () => {
         dispatch(onSetSendAssetState(false));
     };
 
+    const getMinAmount = () => {
+        // MIN = 1 nano
+        if (tokenSelected?.pDecimals) {
+            return 1 / 10 ** tokenSelected.pDecimals;
+        }
+
+        return 0;
+    };
+
+    const getMaxAmount = (estimateFeeData) => {
+        const { fee = 0, feeUnitByTokenId } = estimateFeeData;
+        let amount = tokenSelected?.amount;
+
+        if (feeUnitByTokenId === tokenSelected?.tokenId) {
+            const newAmount = (Number(amount) || 0) - (Number(fee) || 0);
+            amount = newAmount > 0 ? newAmount : 0;
+        }
+
+        const maxAmount = pDecimalBalance(amount, tokenSelected?.pDecimals);
+
+        return Math.max(maxAmount, 0);
+    };
+
     const onGetMax = () => {
         if (!isEmpty(tokenSelected)) {
             const { availableBalance, pDecimals } = tokenSelected;
@@ -78,7 +101,6 @@ const SendAsset = () => {
                     message,
                 };
                 const transferStatus = await MasterAccount.transferCoin(accountSelected?.name, formated);
-                console.log(JSON.stringify(transferStatus));
                 if (transferStatus.status === MSG.ERROR) {
                     const { message } = transferStatus;
                     notification.open({
@@ -112,19 +134,19 @@ const SendAsset = () => {
                                 label="Amount"
                                 rules={[
                                     { required: true, message: 'Required' },
-                                    // {
-                                    //     type: 'number',
-                                    //     asyncValidator: (rule, value) => {
-                                    //         return new Promise((resolve, reject) => {
-                                    //             if (value < 0.000000001) {
-                                    //                 reject('Amount must be larger than 0.000000001 PRV'); // reject with error message
-                                    //             } else if (value < 0.000000001) {
-                                    //             } else {
-                                    //                 resolve();
-                                    //             }
-                                    //         });
-                                    //     },
-                                    // },
+                                    {
+                                        type: 'number',
+                                        asyncValidator: (rule, value) => {
+                                            return new Promise((resolve, reject) => {
+                                                if (value < getMinAmount()) {
+                                                    reject(`Amount must be larger than ${getMinAmount()} PRV`); // reject with error message
+                                                } else if (value < getMinAmount()) {
+                                                } else {
+                                                    resolve();
+                                                }
+                                            });
+                                        },
+                                    },
                                 ]}>
                                 <Input type="number" spellCheck="false" suffix={<span onClick={onGetMax}>MAX</span>} />
                             </Form.Item>
