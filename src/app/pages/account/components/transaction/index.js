@@ -3,8 +3,10 @@ import React, { memo, lazy, useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { useImmer } from 'use-immer';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
+import { CopyOutlined } from '@ant-design/icons';
 import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
 import { pDecimalBalance, formatAmount, formatDateTime } from 'app/utils/format';
 import coin from 'app/consts/coin';
@@ -12,6 +14,7 @@ import { masterAccount as MasterAccount } from 'app/services/incognito';
 import { onSetSendAssetState, onSetReceiveAssetState } from 'app/pages/account/redux/slice';
 import { makeSelectPrivacyTokenSelected, makeSelectAccountSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
+import { MSG } from 'app/consts';
 
 const SendAsset = lazy(() => import('app/pages/account/components/send'));
 const ReceiveAsset = lazy(() => import('app/pages/account/components/receive'));
@@ -32,14 +35,45 @@ const TransactionStyled = styled.div`
 
 const columns = [
     {
-        title: 'txId',
+        title: 'TxId',
         dataIndex: 'txId',
         key: 'txId',
         width: 250,
-        render: (text) => <strong>{text}</strong>,
+        ellipsis: true,
+        render: (text) => (
+            <a href={`https://mainnet.incognito.org/tx/${text}`} target="_blank" rel="noreferrer">
+                {text}
+            </a>
+        ),
     },
     {
-        title: 'lockTime',
+        title: 'Fee',
+        dataIndex: 'fee',
+        key: 'fee',
+        ellipsis: true,
+        render: (text) => <span>{text}</span>,
+    },
+    {
+        title: 'Send',
+        dataIndex: 'amount',
+        key: 'amount',
+        ellipsis: true,
+        render: (text) => <span>{text}</span>,
+    },
+    {
+        title: 'To address',
+        dataIndex: 'address',
+        key: 'address',
+        width: 250,
+        ellipsis: true,
+        render: (text) => (
+            <>
+                <span>{text}</span>
+            </>
+        ),
+    },
+    {
+        title: 'Time',
         dataIndex: 'lockTime',
         key: 'lockTime',
         ellipsis: true,
@@ -68,15 +102,55 @@ const Transaction = () => {
             setHistory(true);
             let history = null;
             if (isEqual(tokenSelected?.tokenId, coin.PRV_ID)) {
-                console.log('get native history');
                 history = await MasterAccount.getTxHistoriesCoin(name);
             } else {
-                console.log('get privacy history');
                 history = await MasterAccount.getTxHistoriesToken(name, tokenSelected?.tokenId);
             }
-            setHistories(history?.data || []);
+            if (history.status === MSG.SUCCESS) {
+                const { data } = history;
+                const fmt = data.map((item) => {
+                    const {
+                        txId,
+                        txType,
+                        lockTime,
+                        status,
+                        nativeTokenInfo,
+                        privacyTokenInfo,
+                        accountPublicKeySerialized,
+                        historyType,
+                    } = item;
+                    const payment = {
+                        fee: null,
+                        amount: null,
+                        address: null,
+                    };
+                    if (!isEmpty(nativeTokenInfo)) {
+                        payment.fee = nativeTokenInfo?.fee;
+                        payment.amount = formatAmount(pDecimalBalance(nativeTokenInfo?.amount, 9)) || 0;
+                        payment.address = nativeTokenInfo?.paymentInfoList && nativeTokenInfo?.paymentInfoList[0]?.paymentAddressStr;
+                    }
+                    if (!isEmpty(privacyTokenInfo)) {
+                        payment.fee = privacyTokenInfo?.fee;
+                        payment.amount = formatAmount(pDecimalBalance(privacyTokenInfo?.amount, 9)) || 0;
+                        payment.address = privacyTokenInfo?.paymentInfoList && privacyTokenInfo?.paymentInfoList[0]?.paymentAddressStr;
+                    }
+                    return {
+                        txId,
+                        txType,
+                        lockTime,
+                        status,
+                        ...payment,
+
+                        nativeTokenInfo,
+                        accountPublicKeySerialized,
+                        historyType,
+                        coin: !isEmpty(nativeTokenInfo) ? 'PRV' : '',
+                    };
+                });
+                console.log(history);
+                setHistories(fmt);
+            }
             setHistory(false);
-            console.log(JSON.stringify(history));
         },
         [tokenSelected],
     );
@@ -145,7 +219,7 @@ const Transaction = () => {
                 </Row>
             </Header>
             <div className="table-transaction">
-                <Table columns={columns} dataSource={histories} hasData={false} loading={isHistory} rowKey="txId" />
+                <Table columns={columns} dataSource={histories} hasData={false} pagination={false} loading={isHistory} rowKey="txId" />
             </div>
             <SendAsset />
             <ReceiveAsset />

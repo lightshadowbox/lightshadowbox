@@ -143,7 +143,7 @@ class MasterAccount {
             const histories = await account.nativeToken.getTxHistories();
             return {
                 status: MSG.SUCCESS,
-                data: histories,
+                data: histories || [],
             };
         } catch (error) {
             return {
@@ -235,7 +235,7 @@ class MasterAccount {
             const histories = await token.getTxHistories();
             return {
                 status: MSG.SUCCESS,
-                data: histories,
+                data: histories || [],
             };
         } catch (error) {
             return {
