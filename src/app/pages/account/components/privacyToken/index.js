@@ -6,8 +6,9 @@ import isEqual from 'lodash/isEqual';
 import { Avatar, Menu, Badge } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import coin from 'app/consts/coin';
-import { onIncognitoPrivacyTokenSelected } from 'app/redux/incognito/actions';
-import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
+import { masterAccount as MasterAccount } from 'app/services/incognito';
+import { onIncognitoPrivacyTokenSelected, updateAvailableBalance } from 'app/redux/incognito/actions';
+import { makeSelectPrivacyTokenSelected, makeSelectAccountSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
 import DefaultIcon from 'assets/200x200.png';
 
@@ -16,12 +17,25 @@ const PrivacyTokenAmount = lazy(() => import('app/pages/account/components/priva
 const PrivacyToken = ({ data }) => {
     const dispatch = useDispatch();
     const tokenSelected = useSelector(makeSelectPrivacyTokenSelected());
+    const accountSelected = useSelector(makeSelectAccountSelected());
 
     const onSelectedPrivacyToken = useCallback(
-        (token) => {
-            dispatch(onIncognitoPrivacyTokenSelected(token));
+        async (item) => {
+            dispatch(onIncognitoPrivacyTokenSelected(item));
+            if (!isEmpty(accountSelected?.name)) {
+                const account = await MasterAccount.getAccountByName(accountSelected?.name);
+                let balance;
+                if (item?.tokenId === coin.PRV_ID) {
+                    balance = await account.nativeToken.getAvaiableBalance();
+                } else {
+                    const token = await account.getFollowingPrivacyToken(item?.tokenId);
+                    balance = token && (await token.getAvaiableBalance());
+                }
+                const availableBalance = (!isEmpty(balance) && balance.toNumber()) || 0;
+                await dispatch(updateAvailableBalance({ tokenId: item?.tokenId, availableBalance }));
+            }
         },
-        [dispatch],
+        [accountSelected, dispatch],
     );
 
     return (

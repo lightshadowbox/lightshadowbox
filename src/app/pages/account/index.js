@@ -146,14 +146,14 @@ const Account = () => {
     const getBalanceNative = useCallback(
         async (name) => {
             const bl = await MasterAccount.getTotalBalanceCoin(name);
-            const av = await MasterAccount.getAvaialbleBalanceCoin(name);
             if (bl.status === MSG.SUCCESS && !isEmpty(bl.data)) {
                 const totalBalance = bl.data.toNumber() || 0;
-                dispatch(updateTotalBalance({ tokenId: coin.PRV_ID, totalBalance }));
+                await dispatch(updateTotalBalance({ tokenId: coin.PRV_ID, totalBalance }));
             }
+            const av = await MasterAccount.getAvaialbleBalanceCoin(name);
             if (av.status === MSG.SUCCESS && !isEmpty(av.data)) {
                 const availableBalance = av.data.toNumber() || 0;
-                dispatch(updateAvailableBalance({ tokenId: coin.PRV_ID, availableBalance }));
+                await dispatch(updateAvailableBalance({ tokenId: coin.PRV_ID, availableBalance }));
             }
         },
         [dispatch],
@@ -168,12 +168,14 @@ const Account = () => {
                     data.forEach(async (token) => {
                         setTimeout(async () => {
                             const bl = token && (await token.getTotalBalance());
-                            const av = token && (await token.getAvaiableBalance());
                             const totalBalance = bl.toNumber() || 0;
-                            const availableBalance = av.toNumber() || 0;
-                            dispatch(updateTotalBalance({ tokenId: token.tokenId, totalBalance }));
-                            dispatch(updateAvailableBalance({ tokenId: token.tokenId, availableBalance }));
+                            await dispatch(updateTotalBalance({ tokenId: token.tokenId, totalBalance }));
                         }, 3000);
+                        // setTimeout(async () => {
+                        //     const av = token && (await token.getAvaiableBalance());
+                        //     const availableBalance = av.toNumber() || 0;
+                        //     await dispatch(updateAvailableBalance({ tokenId: token.tokenId, availableBalance }));
+                        // }, 3000);
                     });
                 } catch (error) {
                     console.debug('CAN GET COIN BALANCE', error);
@@ -237,6 +239,7 @@ const Account = () => {
             fetchPrivacyTokens(account?.privacyTokenIds, account?.paymentAddressKeySerialized);
             getBalanceByFollowTokens(account?.name);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onHandleAccoutSelected = useCallback(

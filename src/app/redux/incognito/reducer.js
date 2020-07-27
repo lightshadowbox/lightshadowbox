@@ -2,7 +2,6 @@ import { createReducer } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 import cloneDeep from 'lodash/cloneDeep';
 import { isEmpty } from 'lodash';
-import coin from 'app/consts/coin';
 import * as nameActs from './actions';
 import { FIELDS_STATE } from './consts';
 

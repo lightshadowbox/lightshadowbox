@@ -129,6 +129,7 @@ const CreateAccount = () => {
                 dispatch(onSetAddCointState(false));
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [accountSelected, privacyTokens, dispatch],
     );
 

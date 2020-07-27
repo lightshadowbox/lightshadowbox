@@ -50,11 +50,11 @@ const SendAsset = () => {
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
 
-    const fetchExchangeRate = useCallback(async (accountSelected, tokenId) => {
-        const { name } = accountSelected;
-        const exchangeRate = await MasterAccount.hasExchangeRate(name, tokenId);
-        console.log(exchangeRate);
-    }, []);
+    // const fetchExchangeRate = useCallback(async (accountSelected, tokenId) => {
+    //     const { name } = accountSelected;
+    //     const exchangeRate = await MasterAccount.hasExchangeRate(name, tokenId);
+    //     console.log(exchangeRate);
+    // }, []);
 
     const onHandleCancel = () => {
         dispatch(onSetSendAssetState(false));
@@ -69,19 +69,19 @@ const SendAsset = () => {
         return 0;
     };
 
-    const getMaxAmount = (estimateFeeData) => {
-        const { fee = 0, feeUnitByTokenId } = estimateFeeData;
-        let amount = tokenSelected?.amount;
+    // const getMaxAmount = (estimateFeeData) => {
+    //     const { fee = 0, feeUnitByTokenId } = estimateFeeData;
+    //     let amount = tokenSelected?.amount;
 
-        if (feeUnitByTokenId === tokenSelected?.tokenId) {
-            const newAmount = (Number(amount) || 0) - (Number(fee) || 0);
-            amount = newAmount > 0 ? newAmount : 0;
-        }
+    //     if (feeUnitByTokenId === tokenSelected?.tokenId) {
+    //         const newAmount = (Number(amount) || 0) - (Number(fee) || 0);
+    //         amount = newAmount > 0 ? newAmount : 0;
+    //     }
 
-        const maxAmount = pDecimalBalance(amount, tokenSelected?.pDecimals);
+    //     const maxAmount = pDecimalBalance(amount, tokenSelected?.pDecimals);
 
-        return Math.max(maxAmount, 0);
-    };
+    //     return Math.max(maxAmount, 0);
+    // };
 
     const onGetMax = () => {
         if (!isEmpty(tokenSelected)) {
