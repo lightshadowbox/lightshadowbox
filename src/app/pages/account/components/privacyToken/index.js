@@ -9,6 +9,7 @@ import coin from 'app/consts/coin';
 import { onIncognitoPrivacyTokenSelected } from 'app/redux/incognito/actions';
 import { makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
 import PRVIcon from 'assets/prv@2x.png';
+import DefaultIcon from 'assets/200x200.png';
 
 const PrivacyTokenAmount = lazy(() => import('app/pages/account/components/privacyTokenAmount'));
 
@@ -27,8 +28,10 @@ const PrivacyToken = ({ data }) => {
         <Menu mode="inline" className="no-border" selectedKeys={[tokenSelected?.tokenId]} defaultSelectedKeys={[coin.PRV_ID]}>
             {!isEmpty(data) &&
                 data.map((ac) => {
-                    const { image, isVerified, tokenId } = ac;
-                    const avatar = isEqual(tokenId, coin.PRV_ID) ? PRVIcon : image;
+                    const { isVerified, tokenId } = ac;
+                    const avatar = isEqual(tokenId, coin.PRV_ID)
+                        ? PRVIcon
+                        : `https://storage.googleapis.com/incognito/wallet/tokens/icons/${tokenId}.png`;
                     return (
                         <Menu.Item key={tokenId} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
@@ -38,14 +41,36 @@ const PrivacyToken = ({ data }) => {
                                             <Avatar
                                                 size={40}
                                                 className="coin-avatar"
-                                                icon={avatar ? <img src={avatar} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : null}
+                                                icon={
+                                                    avatar ? (
+                                                        <img
+                                                            src={avatar}
+                                                            alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                            width="40"
+                                                            onError={(e) => {
+                                                                e.target.src = DefaultIcon;
+                                                            }}
+                                                        />
+                                                    ) : null
+                                                }
                                             />
                                         </Badge>
                                     ) : (
                                         <Avatar
                                             size={40}
                                             className="coin-avatar"
-                                            icon={avatar ? <img src={avatar} alt="WELCOME TO INCOGNITO WEB WALLET" width="40" /> : null}
+                                            icon={
+                                                avatar ? (
+                                                    <img
+                                                        src={avatar}
+                                                        alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                        width="40"
+                                                        onError={(e) => {
+                                                            e.target.src = DefaultIcon;
+                                                        }}
+                                                    />
+                                                ) : null
+                                            }
                                         />
                                     )}
                                     <Suspense fallback={<h1>Loading…</h1>}>

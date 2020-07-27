@@ -107,10 +107,11 @@ const SendAsset = () => {
                         message,
                     });
                 }
+                form.resetFields();
                 dispatch(onSetSendAssetState(false));
             }
         },
-        [dispatch, tokenSelected, accountSelected],
+        [dispatch, tokenSelected, accountSelected, form],
     );
 
     return (

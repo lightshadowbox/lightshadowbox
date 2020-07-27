@@ -190,7 +190,7 @@ const Account = () => {
                             tokenId,
                             name,
                             symbol,
-                            image: '',
+                            image: `https://storage.googleapis.com/incognito/wallet/tokens/icons/${tokenId}.png`,
                             pDecimals: bridgeInfo?.pDecimals || null,
                             isVerified: bridgeInfo?.verified || null,
                             totalBalance: null,

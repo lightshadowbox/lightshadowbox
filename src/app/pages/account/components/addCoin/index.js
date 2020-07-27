@@ -5,7 +5,8 @@ import { useImmer } from 'use-immer';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import { VariableSizeList as List } from 'react-window';
-import { Modal, notification, Typography, Input } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Modal, notification, Typography, Input, Badge, Avatar, Empty } from 'antd';
 import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
 import LocalStorageServices from 'app/utils/localStorage';
@@ -14,6 +15,7 @@ import { makeSelectPCustomeTokens, makeSelectAccountSelected, makeSelectPrivacyT
 import { masterAccount as MasterAccount, IncognitoInstance } from 'app/services/incognito';
 import { onSetAddCointState } from 'app/pages/account/redux/slice';
 import { makeSelectAddCoinStatus } from 'app/pages/account/redux/selectors';
+import DefaultIcon from 'assets/200x200.png';
 
 const AddCoinStyled = styled.div`
     flex: 1;
@@ -27,8 +29,12 @@ const AddCoinStyled = styled.div`
         .scroll-coins {
             width: 100% !important;
         }
+        img {
+            background-image: url('http://placehold.it/200x200');
+            overflow: hidden;
+        }
         .wrap-inner {
-            padding: 0.313rem 0.1rem;
+            padding: 0.313rem 1rem;
             .inner {
                 display: flex;
                 flex: 1;
@@ -53,6 +59,16 @@ const AddCoinStyled = styled.div`
                         overflow: hidden;
                         text-overflow: ellipsis;
                     }
+                    > h4 {
+                        margin: 0;
+                    }
+                }
+            }
+            .custome-badge {
+                .anticon {
+                    width: 1rem;
+                    height: 1rem;
+                    right: 0.1212rem;
                 }
             }
         }
@@ -97,7 +113,7 @@ const CreateAccount = () => {
                                     tokenId,
                                     name,
                                     symbol,
-                                    image: '',
+                                    image: `https://storage.googleapis.com/incognito/wallet/tokens/icons/${tokenId}.png`,
                                     pDecimals: bridgeInfo?.pDecimals || null,
                                     isVerified: bridgeInfo?.verified || null,
                                     totalBalance: null,
@@ -137,11 +153,44 @@ const CreateAccount = () => {
 
     // eslint-disable-next-line react/prop-types
     const Row = ({ index, style }) => {
-        const { TokenID, Name, Symbol } = options[index];
+        const { TokenID, Name, Symbol, Verified } = options[index];
         return (
             <div style={style}>
                 <div className="wrap-inner">
                     <div className="inner pointer" onClick={(event) => onAddCoin(event, TokenID)}>
+                        {Verified ? (
+                            <Badge count={<CheckOutlined />} className="custome-badge">
+                                <Avatar
+                                    size={40}
+                                    className="coin-avatar"
+                                    icon={
+                                        <img
+                                            src={`https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`}
+                                            alt="WELCOME TO INCOGNITO WEB WALLET"
+                                            onError={(e) => {
+                                                e.target.src = DefaultIcon;
+                                            }}
+                                            width="40"
+                                        />
+                                    }
+                                />
+                            </Badge>
+                        ) : (
+                            <Avatar
+                                size={40}
+                                className="coin-avatar"
+                                icon={
+                                    <img
+                                        src={`https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`}
+                                        alt="WELCOME TO INCOGNITO WEB WALLET"
+                                        onError={(e) => {
+                                            e.target.src = DefaultIcon;
+                                        }}
+                                        width="40"
+                                    />
+                                }
+                            />
+                        )}
                         <div className="content">
                             <Title level={4}>{Name}</Title>
                             <Text>{Symbol}</Text>
@@ -165,7 +214,7 @@ const CreateAccount = () => {
                     <Input placeholder="Search..." onChange={onSearch} />
                 </div>
                 <div className="coins">
-                    {!isEmpty(options) && (
+                    {!isEmpty(options) ? (
                         <List
                             className="scroll-coins"
                             useIsScrolling
@@ -175,6 +224,8 @@ const CreateAccount = () => {
                             width={400}>
                             {Row}
                         </List>
+                    ) : (
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}
                 </div>
             </AddCoinStyled>
