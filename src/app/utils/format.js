@@ -1,8 +1,18 @@
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import floor from 'lodash/floor';
+import isNaN from 'lodash/isNaN';
+import isNumber from 'lodash/isNumber';
 
 const AMOUNT_MAX_DIGITS = 4;
+
+const toFixed = (number, decimals = 0) => {
+    if (isNumber(number) && !isNaN(number)) {
+        return number.toFixed(decimals);
+    }
+
+    return number;
+};
 
 const pDecimalBalance = (amount, pDecimals) => {
     try {
@@ -46,4 +56,4 @@ const nanoBalance = (pAmount, pDecimals) => {
 };
 const formatDateTime = (dateTime, formatPattern) => moment(dateTime).format(formatPattern || 'DD MMM hh:mm A');
 
-export { pDecimalBalance, formatAmount, nanoBalance, formatDateTime };
+export { pDecimalBalance, formatAmount, nanoBalance, formatDateTime, toFixed };

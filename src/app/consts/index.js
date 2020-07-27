@@ -20,6 +20,7 @@ export const MSG = {
 export const LOCAL_STORAGE_KEY = {
     IS_DASHBOARD: 'IS_DASHBOARD',
     WALLET: 'WALLET',
+    PRIVACY_TOKENS: 'PRIVACY_TOKENS',
 };
 
 export const META_TITLE_PAGE = {

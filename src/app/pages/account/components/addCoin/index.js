@@ -93,35 +93,34 @@ const CreateAccount = () => {
         }
     }, [pCustomeTokens, setOptions]);
 
+    const checkPrivacyAdded = (tokenId) => privacyTokens && privacyTokens.findIndex((p) => p.tokenId === tokenId) !== -1;
+
     const onAddCoin = useCallback(
-        async (event, token) => {
+        async (event, privacyToken) => {
             event.preventDefault();
-            if (!isEmpty(accountSelected) && !isEmpty(token)) {
+            if (!isEmpty(accountSelected) && !isEmpty(privacyToken) && !checkPrivacyAdded(privacyToken?.TokenID)) {
+                const { TokenID, PricePrv, Name, Verified, PSymbol, Symbol, PDecimals } = privacyToken;
                 const { name } = accountSelected;
-                const followStatus = await MasterAccount.followTokenById(name, token);
+                const followStatus = await MasterAccount.followTokenById(name, TokenID);
                 if (followStatus.status === MSG.SUCCESS) {
                     notification.open({
                         message: 'Success',
                     });
                     const backupWalletString = IncognitoInstance.wallet.backup(Config.WALLET_PASS);
                     LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString);
-                    const followTokens =
-                        (!isEmpty(followStatus?.data) &&
-                            followStatus?.data.map((token) => {
-                                const { tokenId, name, symbol, bridgeInfo } = token;
-                                return {
-                                    tokenId,
-                                    name,
-                                    symbol,
-                                    image: `https://storage.googleapis.com/incognito/wallet/tokens/icons/${tokenId}.png`,
-                                    pDecimals: bridgeInfo?.pDecimals || null,
-                                    isVerified: bridgeInfo?.verified || null,
-                                    totalBalance: null,
-                                    availableBalance: null,
-                                };
-                            })) ||
-                        [];
-                    dispatch(onIncognitoPrivacyTokens(followTokens));
+                    const privacyTokenAdded = {
+                        tokenId: TokenID,
+                        name: Name,
+                        pSymbol: PSymbol,
+                        symbol: Symbol,
+                        image: `https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`,
+                        pDecimals: PDecimals,
+                        isVerified: Verified,
+                        totalBalance: null,
+                        availableBalance: null,
+                        pricePrv: PricePrv,
+                    };
+                    dispatch(onIncognitoPrivacyTokens([...privacyTokens, privacyTokenAdded]));
                 } else {
                     notification.open({
                         message: followStatus?.message,
@@ -130,7 +129,7 @@ const CreateAccount = () => {
                 dispatch(onSetAddCointState(false));
             }
         },
-        [accountSelected, dispatch],
+        [accountSelected, privacyTokens, dispatch],
     );
 
     const onSearch = (event) => {
@@ -149,15 +148,13 @@ const CreateAccount = () => {
         });
     };
 
-    const checkPrivacyAdded = (tokenId) => privacyTokens && privacyTokens.findIndex((p) => p.tokenId === tokenId) !== -1;
-
     // eslint-disable-next-line react/prop-types
     const Row = ({ index, style }) => {
         const { TokenID, Name, Symbol, Verified } = options[index];
         return (
             <div style={style}>
                 <div className="wrap-inner">
-                    <div className="inner pointer" onClick={(event) => onAddCoin(event, TokenID)}>
+                    <div className="inner pointer" onClick={(event) => onAddCoin(event, options[index])}>
                         {Verified ? (
                             <Badge count={<CheckOutlined />} className="custome-badge">
                                 <Avatar

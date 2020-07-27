@@ -63,7 +63,7 @@ const incognitoDataReducer = createReducer(initState, {
     },
     [nameActs.onIncognitoPrivacyTokens]: (state, action) => {
         const { payload } = action;
-        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = [coin.PRV, ...payload];
+        state[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS] = payload;
     },
     [nameActs.onIncognitoGetAccounts]: (state) => {
         state[FIELDS_STATE.INCOGNITO_LOADING] = true;

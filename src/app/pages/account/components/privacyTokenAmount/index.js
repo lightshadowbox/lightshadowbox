@@ -2,7 +2,8 @@ import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import { Typography } from 'antd';
-import { pDecimalBalance, formatAmount } from 'app/utils/format';
+import { pDecimalBalance, formatAmount, toFixed } from 'app/utils/format';
+import coin from 'app/consts/coin';
 
 const PrivacyTokenAmount = ({ token }) => {
     const { Text } = Typography;
@@ -19,7 +20,12 @@ const PrivacyTokenAmount = ({ token }) => {
         <>
             <div className="content">
                 <h4 className="title-amount no-margin line-height">{token?.name}</h4>
-                <Text>{token?.amount}</Text>
+                {token?.tokenId !== coin.PRV_ID && (
+                    <Text>
+                        &#x1D561;
+                        {toFixed(token?.pricePrv, 4)}
+                    </Text>
+                )}
             </div>
             <div className="balance">
                 <Text className="title-value no-margin line-height">

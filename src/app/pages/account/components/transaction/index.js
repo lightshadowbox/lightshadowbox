@@ -2,7 +2,6 @@
 import React, { memo, lazy, useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { useImmer } from 'use-immer';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
@@ -88,10 +87,6 @@ const Transaction = () => {
     const [isHistory, setHistory] = useState(false);
     const [histories, setHistories] = useState(null);
 
-    const [tokenState, setTokenState] = useImmer({
-        totalBalance: 0,
-        availableBalance: 0,
-    });
     const avatar = isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image;
 
     const fetchHistories = useCallback(
@@ -154,16 +149,6 @@ const Transaction = () => {
     );
 
     useEffect(() => {
-        if (!isEmpty(tokenSelected)) {
-            const { totalBalance, availableBalance, pDecimals } = tokenSelected;
-            setTokenState((draft) => {
-                draft.totalBalance = (totalBalance && pDecimals && formatAmount(pDecimalBalance(totalBalance, pDecimals))) || 0;
-                draft.availableBalance = (availableBalance && pDecimals && formatAmount(pDecimalBalance(availableBalance, pDecimals))) || 0;
-            });
-        }
-    }, [setTokenState, tokenSelected]);
-
-    useEffect(() => {
         if (!isEmpty(accountSelected)) {
             fetchHistories(accountSelected);
         }
@@ -210,7 +195,7 @@ const Transaction = () => {
                     </Col>
                     <Col span={12} className="text-right">
                         <Title level={3} className="no-margin">
-                            {tokenState.availableBalance}&nbsp;
+                            {formatAmount(pDecimalBalance(tokenSelected?.availableBalance, tokenSelected?.pDecimals)) || 0}&nbsp;
                             {tokenSelected?.symbol}
                         </Title>
                     </Col>
