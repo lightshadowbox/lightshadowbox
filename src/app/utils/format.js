@@ -44,7 +44,6 @@ const nanoBalance = (pAmount, pDecimals) => {
         return pAmount;
     }
 };
-
 const formatDateTime = (dateTime, formatPattern) => moment(dateTime).format(formatPattern || 'DD MMM hh:mm A');
 
 export { pDecimalBalance, formatAmount, nanoBalance, formatDateTime };

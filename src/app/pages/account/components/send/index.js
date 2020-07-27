@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Modal, Form, Input, Button, notification, Tabs } from 'antd';
 import { MSG } from 'app/consts';
+import { MAX_FEE_PER_TX } from 'app/consts/coin';
 import { nanoBalance, pDecimalBalance } from 'app/utils/format';
 import { masterAccount as MasterAccount } from 'app/services/incognito';
 import { makeSelectAccountSelected, makeSelectPrivacyTokenSelected } from 'app/redux/incognito/selector';
@@ -97,7 +98,7 @@ const SendAsset = () => {
                 const formated = {
                     amount: nanoBalance(Number(amount), tokenSelected?.pDecimals),
                     paymentAddressStr,
-                    fee: Number(100),
+                    fee: Number(MAX_FEE_PER_TX),
                     message,
                 };
                 const transferStatus = await MasterAccount.transferCoin(accountSelected?.name, formated);
@@ -129,7 +130,7 @@ const SendAsset = () => {
                             name="import-account"
                             layout="vertical"
                             onFinish={onSend}
-                            initialValues={{ fee: pDecimalBalance(100, tokenSelected?.pDecimals).toFixed(7) || 0 }}>
+                            initialValues={{ fee: pDecimalBalance(MAX_FEE_PER_TX, tokenSelected?.pDecimals).toFixed(7) || 0 }}>
                             <Form.Item
                                 name="amount"
                                 label="Amount"
