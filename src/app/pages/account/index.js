@@ -213,7 +213,7 @@ const Account = () => {
                             followTokens.push(param);
                         }
                     });
-                    createCookie(TOKEN_LOCAL_KEY, JSON.stringify(followTokens), 1);
+                    createCookie(TOKEN_LOCAL_KEY, JSON.stringify(followTokens), 1 / 48);
                     dispatch(onIncognitoPrivacyTokens([coin.PRV, ...followTokens]));
                 }
             } else {
