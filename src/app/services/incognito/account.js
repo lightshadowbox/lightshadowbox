@@ -244,6 +244,42 @@ class MasterAccount {
             };
         }
     }
+
+    async getAllPrivacyTokenBalance(accountName) {
+        try {
+            // get list privacy token
+            const privacyTokens = await this.getAllFollowingPrivacyTokens(accountName);
+            const pTokenList = privacyTokens?.data;
+            // get balance for each privacy token
+            const tasks = [];
+            for (let i = 0; i < pTokenList.length; i += 1) {
+                const token = pTokenList[i];
+                const tokenBalanceItemPromise = new Promise((resolve) => {
+                    token &&
+                        token.getTotalBalance().then((res) => {
+                            const totalBalance = res.toNumber() || 0;
+                            resolve({
+                                tokenId: token?.tokenID,
+                                balance: totalBalance,
+                            });
+                        });
+                });
+                tasks.push(tokenBalanceItemPromise);
+            }
+
+            const allResult = await Promise.all(tasks);
+            const hasBalanceResult = allResult && allResult.filter((r) => r && r.balance > 0);
+            return {
+                status: MSG.SUCCESS,
+                data: hasBalanceResult || [],
+            };
+        } catch (e) {
+            return {
+                status: MSG.ERROR,
+                message: e,
+            };
+        }
+    }
 }
 
 export default MasterAccount;

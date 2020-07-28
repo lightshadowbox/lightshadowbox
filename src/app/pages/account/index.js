@@ -161,25 +161,14 @@ const Account = () => {
 
     const getBalanceByFollowTokens = useCallback(
         async (name) => {
-            const tokens = await MasterAccount.getAllFollowingPrivacyTokens(name);
-            if (tokens.status === MSG.SUCCESS && !isEmpty(tokens?.data)) {
-                const { data } = tokens;
-                try {
-                    data.forEach(async (token) => {
-                        setTimeout(async () => {
-                            const bl = token && (await token.getTotalBalance());
-                            const totalBalance = bl.toNumber() || 0;
-                            await dispatch(updateTotalBalance({ tokenId: token.tokenId, totalBalance }));
-                        }, 3000);
-                        // setTimeout(async () => {
-                        //     const av = token && (await token.getAvaiableBalance());
-                        //     const availableBalance = av.toNumber() || 0;
-                        //     await dispatch(updateAvailableBalance({ tokenId: token.tokenId, availableBalance }));
-                        // }, 3000);
-                    });
-                } catch (error) {
-                    console.debug('CAN GET COIN BALANCE', error);
-                }
+            const balances = await MasterAccount.getAllPrivacyTokenBalance(name);
+            if (balances?.status === MSG.SUCCESS && !isEmpty(balances?.data)) {
+                const { data } = balances;
+                data.forEach(async (token) => {
+                    const { tokenId, balance } = token;
+                    const totalBalance = balance.toNumber() || 0;
+                    await dispatch(updateTotalBalance({ tokenId, totalBalance }));
+                });
             }
         },
         [dispatch],
