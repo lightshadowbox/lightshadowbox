@@ -6,6 +6,7 @@ import isEqual from 'lodash/isEqual';
 import { Avatar, Menu, Badge } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import coin from 'app/consts/coin';
+import { getIconBySymbol } from 'app/utils';
 import { masterAccount as MasterAccount } from 'app/services/incognito';
 import { onIncognitoPrivacyTokenSelected, updateAvailableBalance } from 'app/redux/incognito/actions';
 import { makeSelectPrivacyTokenSelected, makeSelectAccountSelected } from 'app/redux/incognito/selector';
@@ -42,10 +43,8 @@ const PrivacyToken = ({ data }) => {
         <Menu mode="inline" className="no-border" selectedKeys={[tokenSelected?.tokenId]} defaultSelectedKeys={[coin.PRV_ID]}>
             {!isEmpty(data) &&
                 data.map((ac) => {
-                    const { isVerified, tokenId } = ac;
-                    const avatar = isEqual(tokenId, coin.PRV_ID)
-                        ? PRVIcon
-                        : `https://storage.googleapis.com/incognito/wallet/tokens/icons/${tokenId}.png`;
+                    const { isVerified, tokenId, symbol } = ac;
+                    const avatar = isEqual(tokenId, coin.PRV_ID) ? PRVIcon : getIconBySymbol(symbol);
                     return (
                         <Menu.Item key={tokenId} className="wallet-balance" onClick={() => onSelectedPrivacyToken(ac)}>
                             {ac ? (
@@ -59,7 +58,7 @@ const PrivacyToken = ({ data }) => {
                                                     avatar ? (
                                                         <img
                                                             src={avatar}
-                                                            alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                            alt={symbol}
                                                             width="40"
                                                             onError={(e) => {
                                                                 e.target.src = DefaultIcon;
@@ -77,7 +76,7 @@ const PrivacyToken = ({ data }) => {
                                                 avatar ? (
                                                     <img
                                                         src={avatar}
-                                                        alt="WELCOME TO INCOGNITO WEB WALLET"
+                                                        alt={symbol}
                                                         width="40"
                                                         onError={(e) => {
                                                             e.target.src = DefaultIcon;

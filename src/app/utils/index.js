@@ -39,7 +39,7 @@ const getBackgroundColor = (str) => {
     return '#F25A5A';
 };
 
-export const getName = (name) => {
+const getName = (name) => {
     const arrChar = [];
     if (!isEmpty(name)) {
         const arrName = name.split(' ');
@@ -56,4 +56,7 @@ export const getName = (name) => {
     return arrChar ? arrChar.join('').toUpperCase() : 'P';
 };
 
-export { getBackgroundColor };
+const getIconBySymbol = (symbol) =>
+    `https://s3.amazonaws.com/incognito-org/wallet/cryptocurrency-icons/32@2x/color/${symbol.toLowerCase()}@2x.png`;
+
+export { getBackgroundColor, getName, getIconBySymbol };

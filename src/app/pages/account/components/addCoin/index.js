@@ -9,6 +9,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import { Modal, notification, Typography, Input, Badge, Avatar, Empty } from 'antd';
 import { Config } from 'configs';
 import { LOCAL_STORAGE_KEY, MSG } from 'app/consts';
+import { getIconBySymbol } from 'app/utils';
 import LocalStorageServices from 'app/utils/localStorage';
 import { onIncognitoPrivacyTokens } from 'app/redux/incognito/actions';
 import { makeSelectPCustomeTokens, makeSelectAccountSelected, makeSelectPrivacyTokens } from 'app/redux/incognito/selector';
@@ -113,7 +114,6 @@ const CreateAccount = () => {
                         name: Name,
                         pSymbol: PSymbol,
                         symbol: Symbol,
-                        image: `https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`,
                         pDecimals: PDecimals,
                         isVerified: Verified,
                         totalBalance: null,
@@ -163,7 +163,7 @@ const CreateAccount = () => {
                                     className="coin-avatar"
                                     icon={
                                         <img
-                                            src={`https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`}
+                                            src={getIconBySymbol(Symbol)}
                                             alt="WELCOME TO INCOGNITO WEB WALLET"
                                             onError={(e) => {
                                                 e.target.src = DefaultIcon;
@@ -179,7 +179,7 @@ const CreateAccount = () => {
                                 className="coin-avatar"
                                 icon={
                                     <img
-                                        src={`https://storage.googleapis.com/incognito/wallet/tokens/icons/${TokenID}.png`}
+                                        src={getIconBySymbol(Symbol)}
                                         alt="WELCOME TO INCOGNITO WEB WALLET"
                                         onError={(e) => {
                                             e.target.src = DefaultIcon;
