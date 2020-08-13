@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash';
 import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 import { Typography, Row, Col, Button, Avatar, Layout, Table } from 'antd';
+import { getIconBySymbol } from 'app/utils';
 import { pDecimalBalance, formatAmount, formatDateTime } from 'app/utils/format';
 import coin from 'app/consts/coin';
 import { masterAccount as MasterAccount } from 'app/services/incognito';
@@ -87,7 +88,7 @@ const Transaction = () => {
     const [isHistory, setHistory] = useState(false);
     const [histories, setHistories] = useState(null);
 
-    const avatar = isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : tokenSelected?.image;
+    const avatar = isEqual(tokenSelected?.tokenId, coin.PRV_ID) ? PRVIcon : getIconBySymbol(tokenSelected?.symbol);
 
     const fetchHistories = useCallback(
         async (accountSelected) => {
