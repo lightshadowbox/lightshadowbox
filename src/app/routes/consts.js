@@ -1,11 +1,13 @@
-const rOnboarding = '/welcome';
-const rInitWallet = '/initialize';
-const rAccount = '/dashboard';
+const rOnboarding = '/welcome'
+const rLogin = '/login'
+const rInitWallet = '/initialize'
+const rAccount = '/dashboard'
 
 const RouterApp = {
-    rOnboarding,
-    rInitWallet,
-    rAccount,
-};
+  rOnboarding,
+  rInitWallet,
+  rAccount,
+  rLogin,
+}
 
-export default RouterApp;
+export default RouterApp

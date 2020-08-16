@@ -48,7 +48,9 @@
     "reselect": "^4.0.0",
     "source-map-explorer": "^2.4.2",
     "styled-components": "^5.1.1",
-    "use-immer": "^0.4.0"
+    "use-immer": "^0.4.0",
+    "react-qr-code": "1.0.2",
+    "react-code-input": "3.10.0"
   },
   "scripts": {
     "start": "cross-env REACT_APP_ENV=development react-scripts start",
@@ -103,8 +105,9 @@
     "trailingComma": "all",
     "bracketSpacing": true,
     "jsxBracketSameLine": true,
-    "tabWidth": 4,
-    "printWidth": 140
+    "tabWidth": 2,
+    "printWidth": 140,
+    "semi": false
   },
   "husky": {
     "hooks": {

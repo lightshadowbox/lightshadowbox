@@ -13,8 +13,6 @@ import { Helmet } from 'react-helmet'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-const OnboardingStyled = styled.div``
-
 const LogoImage = styled.img`
   max-width: 200px;
   margin: 2px;
@@ -30,9 +28,9 @@ const StartButtonStyled = styled(Button)`
   font-size: 24px;
 `
 
-const Onboarding = () => {
+const PasscodePage = () => {
   const dispatch = useDispatch()
-  const onAccessWallet = async () => {
+  const onUnlockWallet = async () => {
     dispatch(onIncognitoGetPCustomeToken())
     if (!LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)) {
       history.push(RouterApp.rInitWallet)
@@ -44,28 +42,28 @@ const Onboarding = () => {
     }
   }
   return (
-    <OnboardingStyled>
+    <div>
       <Helmet>
-        <title>{META_TITLE_PAGE.WELCOME}</title>
+        <title>{META_TITLE_PAGE.PASSCODE}</title>
       </Helmet>
       <div className="wrap">
         <Row gutter={[30, 30]}>
           <Col className="text-center" span={24}>
-            <LogoImage src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />
-            <Typography.Title level={1}>LIGHT SHADOW BOX</Typography.Title>
-            <SoluganTextStyled>Anonymize your crypto transactions - Powered by Incognito</SoluganTextStyled>
+            <LogoImage src={Logo} alt="LIGHT SHADOW BOX" />
+            <Typography.Title level={1}>WELCOME BACK</Typography.Title>
+            <SoluganTextStyled>Input passcode to unlock your wallet</SoluganTextStyled>
           </Col>
         </Row>
         <Row>
           <Col className="text-center" span={24}>
-            <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
-              Get Started
+            <StartButtonStyled type="primary" className="btn" size="large" onClick={onUnlockWallet}>
+              Unlock
             </StartButtonStyled>
           </Col>
         </Row>
       </div>
-    </OnboardingStyled>
+    </div>
   )
 }
 
-export default memo(Onboarding)
+export default memo(PasscodePage)

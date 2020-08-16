@@ -1,13 +1,16 @@
-import { createSelector } from 'reselect';
-import { FIELDS_STATE, KEY_REDUCER_INCOGNITO } from './consts';
-import { initState } from './reducer';
+import { isEmpty } from 'lodash'
+import { createSelector } from 'reselect'
 
-const incognitoSelector = (state) => state[KEY_REDUCER_INCOGNITO] || initState;
+import { FIELDS_STATE, KEY_REDUCER_INCOGNITO } from './consts'
+import { initState } from './reducer'
 
-export const makeSelectIncognitoLoading = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_LOADING]);
-export const makeSelectAccounts = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNTS]);
-export const makeSelectAccountSelected = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNT_SELECTED]);
-export const makeSelectPrivacyTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS]);
+const incognitoSelector = (state) => state[KEY_REDUCER_INCOGNITO] || initState
+
+export const makeSelectIncognitoLoading = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_LOADING])
+export const makeSelectAccounts = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNTS])
+export const makeSelectAccountSelected = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.ACCOUNT_SELECTED])
+export const makeSelectPrivacyTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKENS])
 export const makeSelectPrivacyTokenSelected = () =>
-    createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED]);
-export const makeSelectPCustomeTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS]);
+  createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PRIVACY_TOKEN_SELECTED])
+export const makeSelectPCustomeTokens = () => createSelector(incognitoSelector, (item) => item[FIELDS_STATE.INCOGNITO_PCUSTOM_TOKENS])
+export const makeSelectorIsLogin = () => createSelector(incognitoSelector, (item) => !isEmpty(item[FIELDS_STATE.ACCOUNTS]))

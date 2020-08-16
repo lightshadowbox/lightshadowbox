@@ -1,27 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { IntlProvider } from 'react-intl-redux';
-import { Provider } from 'react-redux';
-import { initialLocalization } from 'app/utils/localization';
-import store from 'app/redux/store';
-import AppRoutes from 'app/routes';
-import LoadingApp from 'app/components/loadingApp';
-import LoadingAction from 'app/components/loadingAction';
-import * as serviceWorker from './serviceWorker';
-import './styles/index.scss';
+import './styles/index.scss'
+
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+import LoadingAction from 'app/components/loadingAction'
+import LoadingApp from 'app/components/loadingApp'
+import store from 'app/redux/store'
+import AppRoutes from 'app/routes'
+import { initialLocalization } from 'app/utils/localization'
+import { IntlProvider } from 'react-intl-redux'
+import { Provider } from 'react-redux'
+
+import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-    <Provider store={store(initialLocalization)}>
-        <IntlProvider>
-            <LoadingApp />
-            <LoadingAction />
-            <AppRoutes />
-        </IntlProvider>
-    </Provider>,
-    document.getElementById('root'),
-);
+  <Provider store={store(initialLocalization)}>
+    <IntlProvider>
+      <LoadingApp />
+      <LoadingAction />
+      <AppRoutes />
+    </IntlProvider>
+  </Provider>,
+  document.getElementById('root'),
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.unregister()
