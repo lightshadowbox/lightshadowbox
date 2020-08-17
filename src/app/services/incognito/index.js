@@ -41,11 +41,11 @@ const loadIncognito = async (password) => {
   }
 }
 
-export const createIncognito = async (walletName) => {
+export const createIncognito = async (walletName, password) => {
   await loadWASM()
   semaphore = true // mark awaited constructor
-  const wallet = await walletInstance.createWallet(Config.WALLET_PASS, walletName || Config.WALLET_NAME)
-  const backupWalletString = wallet.backup(Config.WALLET_PASS)
+  const wallet = await walletInstance.createWallet(password, walletName || Config.WALLET_NAME)
+  const backupWalletString = wallet.backup(password)
   LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString)
   IncognitoInstance.wallet = wallet
   masterAccount = new MasterAccount(wallet)

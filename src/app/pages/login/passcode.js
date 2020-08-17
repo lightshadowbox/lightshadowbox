@@ -78,7 +78,7 @@ const PasscodePage = () => {
                 padding: 8,
                 backgroundColor: '#ffffff',
                 color: 'black',
-                marginLeft: 32,
+                margin: 16,
                 border: '1px solid rgba(0,0,0,0.3)',
                 outline: 'none !important',
               }}
@@ -92,11 +92,13 @@ const PasscodePage = () => {
                 padding: 8,
                 backgroundColor: '#ffffff',
                 color: 'black',
-                marginLeft: 32,
+                margin: 16,
                 border: '2px solid rgba(221,19,67,0.5)',
                 outline: 'none !important',
               }}
             />
+            <br />
+            {isInvalid && <Typography.Text style={{ color: 'red' }}>Wrong, please try again!</Typography.Text>}
           </Col>
         </Row>
       </div>

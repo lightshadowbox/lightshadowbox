@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { Layout } from 'antd'
+import { Layout, PageHeader } from 'antd'
+import { APP_SUB_TITLE, APP_TITLE } from 'app/consts'
+import logoPNG from 'assets/logo.png'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
@@ -36,13 +38,35 @@ const PublicLayoutStyled = styled.div`
     -ms-flex-direction: column;
     flex-direction: column;
   }
+  .ant-page-header-heading-title {
+    font-weight: lighter;
+  }
+  .ant-page-header-heading-sub-title {
+    position: absolute;
+    left: 69px;
+    top: 47px;
+    font-size: 11px;
+  }
 `
 
 const PublicLayout = ({ children }) => {
   const { Content } = Layout
   return (
     <PublicLayoutStyled>
-      <Content>{children}</Content>
+      <PageHeader
+        title={APP_TITLE}
+        className="site-page-header"
+        subTitle={APP_SUB_TITLE}
+        // extra={[
+        //   <Button key="3">Operation</Button>,
+        //   <Button key="2">Operation</Button>,
+        //   <Button key="1" type="primary">
+        //     Primary
+        //   </Button>,
+        // ]}
+        avatar={{ src: logoPNG }}>
+        <Content>{children}</Content>
+      </PageHeader>
     </PublicLayoutStyled>
   )
 }

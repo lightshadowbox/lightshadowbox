@@ -53,7 +53,7 @@ const Onboarding = () => {
           <Col className="text-center" span={24}>
             <LogoImage src={Logo} alt="LIGHT SHADOW BOX" />
             <Typography.Title level={1}>LIGHT SHADOW BOX</Typography.Title>
-            <SoluganTextStyled>Anonymize your crypto transactions - Powered by Incognito</SoluganTextStyled>
+            <SoluganTextStyled>Reclaim your crypto privacy</SoluganTextStyled>
           </Col>
         </Row>
         <Row>
