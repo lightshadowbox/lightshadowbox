@@ -45,7 +45,7 @@ export const firstTimeRoutes = [
   {
     title: 'Create New Wallet',
     path: RouterApp.rInitWallet,
-    layout: PrivateLayout,
+    layout: PublicLayout,
     component: AsyncInitWallet,
   },
 ]

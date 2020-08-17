@@ -32,4 +32,7 @@ export const META_TITLE_PAGE = {
   CREATE_ACCOUNT: 'Incogito Web Wallet',
 }
 
+export const APP_TITLE = 'LIGHT SHADOW BOX'
+export const APP_SUB_TITLE = 'Web wallet powered by Incognito'
+
 export const CRYPTO_ICON_URL = 'https://s3.amazonaws.com/incognito-org/wallet/cryptocurrency-icons/32@2x/color'
