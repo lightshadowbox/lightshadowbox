@@ -1,10 +1,6 @@
 {
-  "name": "incoginto-client",
+  "name": "lightshadowbox",
   "version": "1.0.0",
-  "author": {
-    "email": "nghiweb@gmail.com",
-    "name": "Nghi Nguyen"
-  },
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
