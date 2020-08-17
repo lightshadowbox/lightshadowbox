@@ -28,5 +28,3 @@ export class Wallet {
 }
 
 export const walletInstance = new Wallet()
-
-window.W = walletInstance

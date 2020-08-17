@@ -51,7 +51,7 @@ const Onboarding = () => {
       <div className="wrap">
         <Row gutter={[30, 30]}>
           <Col className="text-center" span={24}>
-            <LogoImage src={Logo} alt="WELCOME TO INCOGNITO WEB WALLET" />
+            <LogoImage src={Logo} alt="LIGHT SHADOW BOX" />
             <Typography.Title level={1}>LIGHT SHADOW BOX</Typography.Title>
             <SoluganTextStyled>Anonymize your crypto transactions - Powered by Incognito</SoluganTextStyled>
           </Col>

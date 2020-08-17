@@ -37,7 +37,7 @@ const authenticatedRoutes = [
 ]
 export const firstTimeRoutes = [
   {
-    title: 'Welcome Web Wallet',
+    title: 'Welcome LIGHT SHADOW BOX',
     path: RouterApp.rOnboarding,
     layout: PublicLayout,
     component: AsyncOnboarding,

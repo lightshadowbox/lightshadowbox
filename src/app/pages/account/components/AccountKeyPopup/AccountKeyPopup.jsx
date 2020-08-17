@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { Input, List, message, Modal, Tooltip } from 'antd'
+import { Button, Input, List, message, Modal, Tooltip } from 'antd'
+import { masterAccount } from 'app/services/incognito'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import styled from 'styled-components'
@@ -46,15 +47,6 @@ export const KeyListItem = ({ item }) => {
 
   const inputRef = React.createRef()
 
-  const downloadFile = () => {
-    const data = new Blob([item.key], { type: 'text/txt' })
-    const csvURL = window.URL.createObjectURL(data)
-    const tempLink = document.createElement('a')
-    tempLink.href = csvURL
-    tempLink.setAttribute('download', `${item.title}.txt`)
-    tempLink.click()
-  }
-
   return (
     <List.Item.Meta
       title={item.title}
@@ -82,9 +74,6 @@ export const KeyListItem = ({ item }) => {
                     <CopyOutlined />
                   </CopyToClipboard>
                 </Tooltip>
-                <Tooltip title={`Download "${item.title}"`}>
-                  <DownloadOutlined onClick={downloadFile} />
-                </Tooltip>
               </KeyActionsStyled>
             }
           />
@@ -96,11 +85,25 @@ export const KeyListItem = ({ item }) => {
 }
 
 export const AccountKeyPopup = ({ visible, closeModal }) => {
-  const data = useKeyListFromRedux()
+  const [name, data] = useKeyListFromRedux()
+  const downloadBackup = async () => {
+    try {
+      const backupData = await masterAccount.getBackupData(name)
+      const data = new Blob([JSON.stringify(backupData, null, 2)], { type: 'text/txt' })
+      const csvURL = window.URL.createObjectURL(data)
+      const tempLink = document.createElement('a')
+      tempLink.href = csvURL
+      tempLink.setAttribute('download', `backup_wallet__${name}.txt`)
+      tempLink.click()
+    } catch (err) {
+      message.error(err.message)
+    }
+  }
+
   return (
     <Modal
       footer={null}
-      title="ACCOUNT BACKUP KEYS"
+      title={`ACCOUNT: ${name}`}
       visible={visible}
       onCancel={closeModal}
       onOk={closeModal}
@@ -116,6 +119,9 @@ export const AccountKeyPopup = ({ visible, closeModal }) => {
           </List.Item>
         )}
       />
+      <Button icon={<DownloadOutlined />} onClick={downloadBackup}>
+        Download Backup
+      </Button>
     </Modal>
   )
 }

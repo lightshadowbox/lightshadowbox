@@ -1,6 +1,6 @@
 {
-    "short_name": "Incognito Wallet",
-    "name": "Incognito Web Wallet",
+    "short_name": "LIGHT SHADOW BOX",
+    "name": "LIGHT SHADOW BOX",
     "version": "1.0.0",
     "manifest_version": 2,
     "icons": {
@@ -9,13 +9,18 @@
         "48": "logo.png"
     },
     "background": {
-        "scripts": ["background.js"],
+        "scripts": [
+            "background.js"
+        ],
         "persistent": true
     },
     "browser_action": {
         "default_icon": "logo.png",
         "default_popup": "index.html",
-        "default_title": "Incognito Web Wallet"
+        "default_title": "LIGHT SHADOW BOX"
     },
-    "permissions": ["storage", "tabs"]
+    "permissions": [
+        "storage",
+        "tabs"
+    ]
 }

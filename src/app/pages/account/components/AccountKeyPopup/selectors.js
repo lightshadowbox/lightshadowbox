@@ -29,5 +29,5 @@ export const useKeyListFromRedux = () => {
       key: accountSelectedState.validatorKey,
     },
   ]
-  return data
+  return [accountSelectedState.name, data]
 }

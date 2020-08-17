@@ -54,6 +54,15 @@ class MasterAccount {
     }
   }
 
+  async getBackupData(accountName) {
+    try {
+      const account = await this.masterAccount.getAccountByName(accountName)
+      return account.getBackupData()
+    } catch (error) {
+      return { status: MSG.ERROR, message: 'Account was not created, please try again.' }
+    }
+  }
+
   async importAccount(accountName, privateKey) {
     try {
       await this.masterAccount.importAccount(accountName, privateKey)
