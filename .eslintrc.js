@@ -69,7 +69,8 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'import/prefer-default-export': 0,
     'react/prop-types': 0,
-    'import/no-unresolved': 0
+    'import/no-unresolved': 0,
+    'react-hooks/exhaustive-deps': 0
   },
   settings: {
     'import/resolver': {

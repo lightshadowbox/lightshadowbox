@@ -1,13 +1,9 @@
-const rOnboarding = '/welcome'
-const rLogin = '/login'
-const rInitWallet = '/initialize'
-const rAccount = '/dashboard'
-
 const RouterApp = {
-  rOnboarding,
-  rInitWallet,
-  rAccount,
-  rLogin,
+  rOnboarding: '/welcome',
+  rInitWallet: '/initialize',
+  rAccount: '/dashboard',
+  rLogin: '/login',
+  rMigrate: '/migrate-from-incwallet',
 }
 
 export default RouterApp
