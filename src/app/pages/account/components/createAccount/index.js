@@ -4,9 +4,8 @@ import { Button, Form, Input, Modal, notification } from 'antd'
 import { LOCAL_STORAGE_KEY, MSG } from 'app/consts'
 import { makeSelectCreatedAccountStatus } from 'app/pages/account/redux/selectors'
 import { onSetCreateAccountState } from 'app/pages/account/redux/slice'
-import { IncognitoInstance, masterAccount as MasterAccount } from 'app/services/incognito'
+import { IncognitoInstance, masterAccount as MasterAccount, TempData } from 'app/services/incognito'
 import LocalStorageServices from 'app/utils/localStorage'
-import { Config } from 'configs'
 import isEmpty from 'lodash/isEmpty'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,7 +35,7 @@ const CreateAccount = ({ onGetStatusCreated }) => {
           notification.open({
             message: 'Success',
           })
-          const backupWalletString = await IncognitoInstance.wallet.backup(Config.WALLET_PASS)
+          const backupWalletString = await IncognitoInstance.wallet.backup(TempData.password)
           LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString)
           if (onGetStatusCreated && typeof onGetStatusCreated === 'function') {
             onGetStatusCreated(backupWalletString)

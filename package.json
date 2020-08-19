@@ -48,7 +48,8 @@
     "react-qr-code": "1.0.2",
     "react-code-input": "3.10.0",
     "formik": "2.1.5",
-    "yup": "0.29.3"
+    "yup": "0.29.3",
+    "query-string": "6.13.1"
   },
   "scripts": {
     "start": "cross-env REACT_APP_ENV=development react-scripts start",

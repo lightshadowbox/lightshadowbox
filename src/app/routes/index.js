@@ -18,6 +18,15 @@ const AsyncOnboarding = AsyncComponent(() => import('app/pages/onboarding/index'
 const AsyncInitWallet = AsyncComponent(() => import('app/pages/initWallet/index'))
 const AsyncLogin = AsyncComponent(() => import('app/pages/login/passcode'))
 
+const publicRoutes = [
+  {
+    title: 'Migrate Your Wallet',
+    path: RouterApp.rMigrate,
+    layout: PublicLayout,
+    component: AsyncComponent(() => import('app/pages/migrate/index')),
+  },
+]
+
 const returnRoutes = [
   {
     title: 'Incognito Login',
@@ -35,6 +44,7 @@ const authenticatedRoutes = [
     component: AsyncAccount,
   },
 ]
+
 export const firstTimeRoutes = [
   {
     title: 'Welcome LIGHT SHADOW BOX',
@@ -91,7 +101,6 @@ const AppRoutes = () => {
     return routesMatch
   }
 
-  console.log(isLogin)
   if (isLogin) {
     return (
       <ConnectedRouter history={history}>
@@ -108,7 +117,7 @@ const AppRoutes = () => {
       {!isHaveBackupWallet ? (
         <>
           <Switch>
-            {routerListNav(firstTimeRoutes)}
+            {routerListNav([...publicRoutes, ...firstTimeRoutes])}
             <Redirect to={RouterApp.rOnboarding} />
           </Switch>
         </>

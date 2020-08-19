@@ -19,6 +19,7 @@ function loadWASM() {
     //     isWASMRunned = true;
     //     resolve();
     // });
+    console.log('loading chain package...')
     incognitoJs.setConfig({
       mainnet: true,
       // chainURL: 'http://34.70.205.102:9354',

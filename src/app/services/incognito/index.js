@@ -8,6 +8,9 @@ import { walletInstance } from './wallet'
 
 export const IncognitoInstance = {}
 export let masterAccount = null
+export const TempData = {
+  password: '',
+}
 let semaphore = false
 // const getInstance = async () => {
 //     console.log(instance && !semaphore);
@@ -35,6 +38,7 @@ const loadIncognito = async (password) => {
     semaphore = true // mark awaited constructor
     const walletBackup = LocalStorageServices.getItem(LOCAL_STORAGE_KEY.WALLET)
     const wallet = await walletInstance.restore(password, walletBackup)
+    TempData.password = password
     IncognitoInstance.wallet = wallet
     masterAccount = new MasterAccount(wallet)
     IncognitoInstance.masterAccount = masterAccount
@@ -47,6 +51,20 @@ export const createIncognito = async (walletName, password) => {
   const wallet = await walletInstance.createWallet(password, walletName || Config.WALLET_NAME)
   const backupWalletString = wallet.backup(password)
   LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString)
+  TempData.password = password
+  IncognitoInstance.wallet = wallet
+  masterAccount = new MasterAccount(wallet)
+  IncognitoInstance.masterAccount = masterAccount
+}
+
+export const updateWallet = async (wallet, walletName, newPassword) => {
+  await loadWASM()
+  semaphore = true // mark awaited constructor
+  const newWallet = wallet
+  newWallet.name = walletName
+  const backupWalletString = newWallet.backup(newPassword)
+  LocalStorageServices.setItem(LOCAL_STORAGE_KEY.WALLET, backupWalletString)
+  TempData.password = newPassword
   IncognitoInstance.wallet = wallet
   masterAccount = new MasterAccount(wallet)
   IncognitoInstance.masterAccount = masterAccount
