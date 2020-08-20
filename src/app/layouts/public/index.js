@@ -43,9 +43,9 @@ const PublicLayoutStyled = styled.div`
   }
   .ant-page-header-heading-sub-title {
     position: absolute;
-    left: 69px;
-    top: 47px;
-    font-size: 11px;
+    left: 78px;
+    top: 55px;
+    font-size: 12px;
   }
 `
 
@@ -64,7 +64,7 @@ const PublicLayout = ({ children }) => {
         //     Primary
         //   </Button>,
         // ]}
-        avatar={{ src: logoPNG }}>
+        avatar={{ src: logoPNG, size: 'large' }}>
         <Content>{children}</Content>
       </PageHeader>
     </PublicLayoutStyled>

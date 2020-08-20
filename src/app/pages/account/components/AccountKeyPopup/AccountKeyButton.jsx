@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Button, Tooltip } from 'antd'
+import LocalStorageServices from 'app/utils/localStorage'
 import KeyIcon from 'assets/keys.png'
 import styled from 'styled-components'
 
@@ -32,14 +33,22 @@ const ButtonStyled = styled(Button)`
   }
 `
 export const AccountKeyButton = ({ accountName }) => {
-  const [isVisible, setIsVisible] = React.useState(false)
+  const isReturn = LocalStorageServices.getItem('IS_RETURN')
+  const [isVisible, setIsVisible] = React.useState(!isReturn)
   return (
     <div>
       <Tooltip title={`Backup keys for Account: "${accountName}"`}>
         <ButtonStyled icon={<img src={KeyIcon} alt="Account Keys" />} onClick={() => setIsVisible(true)} />
       </Tooltip>
 
-      <AccountKeyPopup visible={isVisible} closeModal={() => setIsVisible(false)} accountName={accountName} />
+      <AccountKeyPopup
+        visible={isVisible}
+        closeModal={() => {
+          setIsVisible(false)
+          LocalStorageServices.setItem('IS_RETURN', true)
+        }}
+        accountName={accountName}
+      />
     </div>
   )
 }

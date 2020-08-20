@@ -16,18 +16,26 @@ import styled from 'styled-components'
 const OnboardingStyled = styled.div``
 
 const LogoImage = styled.img`
-  max-width: 200px;
+  max-width: 160px;
   margin: 2px;
 `
+
 const SoluganTextStyled = styled.p`
-  margin-top: -18px;
-  size: 12px;
+  margin-top: -12px;
+  margin-bottom: -2px;
+  font-size: 18px;
 `
+
 const StartButtonStyled = styled(Button)`
-  width: 249px;
-  height: 69px;
+  width: 240px;
+  height: 56px;
   border-radius: 15px;
-  font-size: 24px;
+  font-size: 18px;
+`
+
+const TextTip = styled(Typography.Paragraph)`
+  padding: 8px;
+  font-size: 12px;
 `
 
 const Onboarding = () => {
@@ -56,11 +64,34 @@ const Onboarding = () => {
             <SoluganTextStyled>Reclaim your crypto privacy</SoluganTextStyled>
           </Col>
         </Row>
-        <Row>
-          <Col className="text-center" span={24}>
-            <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
-              Get Started
-            </StartButtonStyled>
+        <Row className="text-center">
+          <Col sm={24} md={{ span: 12, offset: 6 }}>
+            <Row>
+              <Col className="text-center" md={12} sm={24}>
+                <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
+                  Get Started
+                </StartButtonStyled>
+
+                <TextTip>
+                  A newbie? <br />
+                  Create wallet now!
+                </TextTip>
+              </Col>
+              <Col className="text-center" md={12} sm={24}>
+                <StartButtonStyled
+                  type="default"
+                  className="btn"
+                  size="large"
+                  onClick={() => {
+                    window.location.replace(`https://old-incognito.vercel.app/migrate?callback=${window.location.origin}`)
+                  }}>
+                  Migrate Your Account
+                </StartButtonStyled>
+                <TextTip>
+                  1-click wallet migration from <br /> incwallet.app
+                </TextTip>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </div>
