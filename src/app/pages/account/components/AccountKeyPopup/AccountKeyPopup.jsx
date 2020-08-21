@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Alert, Button, Input, List, message, Modal, Tooltip } from 'antd'
-import { masterAccount } from 'app/services/incognito'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import styled from 'styled-components'
@@ -84,13 +83,15 @@ export const KeyListItem = ({ item }) => {
   )
 }
 
+const renderDownloadFile = ({ key, title }) => {
+  return `\n-------- ${title} ---------\n${key}\n-------------------------\n`
+}
 export const AccountKeyPopup = ({ visible, closeModal }) => {
   const [name, data] = useKeyListFromRedux()
   const downloadBackup = async () => {
     try {
-      const backupData = await masterAccount.getBackupData(name)
-      const data = new Blob([JSON.stringify(backupData, null, 2)], { type: 'text/txt' })
-      const csvURL = window.URL.createObjectURL(data)
+      const dataBlob = new Blob(data.map(renderDownloadFile), { type: 'text/txt' })
+      const csvURL = window.URL.createObjectURL(dataBlob)
       const tempLink = document.createElement('a')
       tempLink.href = csvURL
       tempLink.setAttribute('download', `backup_wallet__${name}.txt`)
