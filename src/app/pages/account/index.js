@@ -328,7 +328,7 @@ const Account = () => {
   return (
     <AccountStyled>
       <Helmet>
-        <title>Import account from private keys</title>
+        <title>LIGHT SHADOW BOX</title>
       </Helmet>
       <div className="wrap-header">
         <Row>
