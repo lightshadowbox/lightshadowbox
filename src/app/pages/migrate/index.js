@@ -9,6 +9,7 @@ import { updateWallet } from 'app/services/incognito'
 import loadWASM from 'app/services/wasm'
 import Logo from 'assets/logo.gif'
 import { Config } from 'configs'
+import createGuest from 'cross-domain-storage/guest'
 import { WalletInstance } from 'incognito-js'
 import { isEmpty } from 'lodash'
 import querystring from 'query-string'
@@ -216,23 +217,34 @@ const MigrateFinishStep = ({ value }) => {
 const MigrateWallet = () => {
   const { search } = useLocation()
   const query = querystring.parse(search)
+  const [backupToken, setBackupToken] = React.useState(null)
   const history = useHistory()
-
-  if (!query.token) {
-    history.push(RouterApp.rInitWallet)
-  }
+  const iframeRef = React.useRef()
 
   const [wallet, setWallet] = React.useState(null)
   const [isLoading, setIsLoadingWallet] = React.useState(true)
   const [error, setError] = React.useState(null)
 
   React.useLayoutEffect(() => {
+    const guest = createGuest(query.url)
+    guest.get('WALLET', (err, value) => {
+      if (!err) {
+        setBackupToken(value)
+      } else {
+        console.error(err)
+        history.push(RouterApp.rInitWallet)
+      }
+    })
+  }, [null])
+  React.useLayoutEffect(() => {
+    if (!backupToken) {
+      return
+    }
     const restoreWallet = async () => {
       try {
         await loadWASM()
-        console.log('restore wallet:', query.token)
-        const decode = window.atob(query.token)
-        const tempWallet = await WalletInstance.restore(decode, Config.WALLET_PASS)
+        console.log('restore wallet:', backupToken)
+        const tempWallet = await WalletInstance.restore(backupToken, Config.WALLET_PASS)
         setWallet(tempWallet)
         setIsLoadingWallet(false)
         console.log(tempWallet.name)
@@ -242,7 +254,7 @@ const MigrateWallet = () => {
       }
     }
     restoreWallet()
-  }, [query.token])
+  }, [backupToken, iframeRef.current])
 
   if (isLoading) {
     return (
