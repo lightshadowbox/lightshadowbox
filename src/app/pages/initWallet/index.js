@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Button, Col, Form, Input, message, Row, Steps, Typography } from 'antd'
 import { LOCAL_STORAGE_KEY, META_TITLE_PAGE } from 'app/consts'
 import { loadingClose, loadingOpen } from 'app/redux/common/actions'
-import { onIncognitoGetAccounts } from 'app/redux/incognito/actions'
+import { onIncognitoGetAccounts, onIncognitoGetPCustomeToken } from 'app/redux/incognito/actions'
 import RouterApp from 'app/routes/consts'
 import history from 'app/routes/history'
 import { createIncognito } from 'app/services/incognito'
@@ -190,6 +190,7 @@ const GetStartedStep = ({ value }) => {
         return
       }
       dispatch(loadingOpen())
+      dispatch(onIncognitoGetPCustomeToken())
       await createIncognito(walletName, passcode)
       dispatch(onIncognitoGetAccounts())
       dispatch(loadingClose())

@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Button, Col, Form, Input, message, Row, Steps, Typography } from 'antd'
 import { META_TITLE_PAGE } from 'app/consts'
 import { loadingClose, loadingOpen } from 'app/redux/common/actions'
-import { onIncognitoGetAccounts } from 'app/redux/incognito/actions'
+import { onIncognitoGetAccounts, onIncognitoGetPCustomeToken } from 'app/redux/incognito/actions'
 import RouterApp from 'app/routes/consts'
 import { updateWallet } from 'app/services/incognito'
 import loadWASM from 'app/services/wasm'
@@ -191,7 +191,7 @@ const MigrateFinishStep = ({ value }) => {
         message.error('Please complete step 1 and step 2 before.')
         return
       }
-
+      dispatch(onIncognitoGetPCustomeToken())
       dispatch(loadingOpen())
       await updateWallet(wallet, walletName, passcode)
       dispatch(onIncognitoGetAccounts())
