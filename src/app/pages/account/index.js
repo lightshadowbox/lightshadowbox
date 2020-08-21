@@ -334,8 +334,7 @@ const Account = () => {
         <Row>
           <Col span={12} className="text-left">
             <div className="logo-box">
-              <img src={Logo} alt="LIGHT SHADOW BOX" width="48" height="48" />
-              <TitleHeader className="no-margin">LIGHT SHADOW BOX</TitleHeader>
+              <img src={Logo} alt="LIGHT SHADOW BOX" width="100" height="48" />
             </div>
           </Col>
         </Row>

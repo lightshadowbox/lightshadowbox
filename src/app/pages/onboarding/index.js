@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Divider, Row, Typography } from 'antd'
 import { LOCAL_STORAGE_KEY, META_TITLE_PAGE } from 'app/consts'
 import { loadingClose, loadingOpen } from 'app/redux/common/actions'
 import { onIncognitoGetAccounts, onIncognitoGetPCustomeToken } from 'app/redux/incognito/actions'
@@ -33,9 +33,9 @@ const StartButtonStyled = styled(Button)`
   font-size: 18px;
 `
 
-const TextTip = styled(Typography.Paragraph)`
-  padding: 8px;
-  font-size: 12px;
+const TextTip = styled(Typography.Link)`
+  margin-top: -12px;
+  font-size: 16px;
 `
 
 const Onboarding = () => {
@@ -64,34 +64,16 @@ const Onboarding = () => {
             <SoluganTextStyled>Reclaim your crypto privacy</SoluganTextStyled>
           </Col>
         </Row>
-        <Row className="text-center">
-          <Col sm={24} md={{ span: 12, offset: 6 }}>
-            <Row>
-              <Col className="text-center" md={12} sm={24}>
-                <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
-                  Get Started
-                </StartButtonStyled>
+        <Row>
+          <Col className="text-center" md={{ span: 8, push: 8 }} sm={{ span: 24, push: 0 }} xs={{ span: 24, push: 0 }}>
+            <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
+              Get Started
+            </StartButtonStyled>
 
-                <TextTip>
-                  A newbie? <br />
-                  Create wallet now!
-                </TextTip>
-              </Col>
-              <Col className="text-center" md={12} sm={24}>
-                <StartButtonStyled
-                  type="default"
-                  className="btn"
-                  size="large"
-                  onClick={() => {
-                    window.location.replace(`https://old-incognito.vercel.app/migrate?callback=${window.location.origin}`)
-                  }}>
-                  Migrate Your Account
-                </StartButtonStyled>
-                <TextTip>
-                  1-click wallet migration from <br /> incwallet.app
-                </TextTip>
-              </Col>
-            </Row>
+            <Divider style={{ fontSize: 13 }}>or</Divider>
+            <TextTip href={`https://old-incognito.vercel.app/migrate?callback=${window.location.origin}`}>
+              Migrate your account from <b>incwallet.app</b>
+            </TextTip>
           </Col>
         </Row>
       </div>
