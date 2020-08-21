@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Divider, Row, Typography } from 'antd'
 import { LOCAL_STORAGE_KEY, META_TITLE_PAGE } from 'app/consts'
 import { loadingClose, loadingOpen } from 'app/redux/common/actions'
 import { onIncognitoGetAccounts, onIncognitoGetPCustomeToken } from 'app/redux/incognito/actions'
@@ -16,18 +16,26 @@ import styled from 'styled-components'
 const OnboardingStyled = styled.div``
 
 const LogoImage = styled.img`
-  max-width: 200px;
+  max-width: 160px;
   margin: 2px;
 `
+
 const SoluganTextStyled = styled.p`
-  margin-top: -18px;
-  size: 12px;
+  margin-top: -12px;
+  margin-bottom: -2px;
+  font-size: 18px;
 `
+
 const StartButtonStyled = styled(Button)`
-  width: 249px;
-  height: 69px;
+  width: 240px;
+  height: 56px;
   border-radius: 15px;
-  font-size: 24px;
+  font-size: 18px;
+`
+
+const TextTip = styled(Typography.Link)`
+  margin-top: -12px;
+  font-size: 16px;
 `
 
 const Onboarding = () => {
@@ -57,10 +65,15 @@ const Onboarding = () => {
           </Col>
         </Row>
         <Row>
-          <Col className="text-center" span={24}>
+          <Col className="text-center" md={{ span: 8, push: 8 }} sm={{ span: 24, push: 0 }} xs={{ span: 24, push: 0 }}>
             <StartButtonStyled type="primary" className="btn" size="large" onClick={onAccessWallet}>
               Get Started
             </StartButtonStyled>
+
+            <Divider style={{ fontSize: 13 }}>or</Divider>
+            <TextTip href={`https://incwallet.app/migrate?callback=${window.location.origin}`}>
+              Migrate your account from <b>incwallet.app</b>
+            </TextTip>
           </Col>
         </Row>
       </div>

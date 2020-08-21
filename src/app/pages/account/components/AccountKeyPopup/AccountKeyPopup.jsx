@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, Input, List, message, Modal, Tooltip } from 'antd'
+import { Alert, Button, Input, List, message, Modal, Tooltip } from 'antd'
 import { masterAccount } from 'app/services/incognito'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import QRCode from 'react-qr-code'
@@ -107,9 +107,11 @@ export const AccountKeyPopup = ({ visible, closeModal }) => {
       visible={visible}
       onCancel={closeModal}
       onOk={closeModal}
+      width={600}
       destroyOnClose
       closable
       className="text-center custom-modal">
+      <Alert message="You should regularly back up your wallet." type="success" showIcon />
       <List
         itemLayout="horizontal"
         dataSource={data}

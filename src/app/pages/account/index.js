@@ -328,14 +328,13 @@ const Account = () => {
   return (
     <AccountStyled>
       <Helmet>
-        <title>Import account from private keys</title>
+        <title>LIGHT SHADOW BOX</title>
       </Helmet>
       <div className="wrap-header">
         <Row>
           <Col span={12} className="text-left">
             <div className="logo-box">
-              <img src={Logo} alt="LIGHT SHADOW BOX" width="48" height="48" />
-              <TitleHeader className="no-margin">LIGHT SHADOW BOX</TitleHeader>
+              <img src={Logo} alt="LIGHT SHADOW BOX" width="100" />
             </div>
           </Col>
         </Row>
@@ -373,25 +372,6 @@ const Account = () => {
                 </CopyToClipboard>
               </Col>
             </Row>
-            {/* <Menu mode="inline" className="no-border" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-                            <Menu.Item key="prv" className="wallet-balance">
-                                {accountSelected ? (
-                                    <div className="inner">
-                                        <Avatar size={40} icon={<img src={PRVIcon} alt="WELCOME TO INCOGNITO WEB WALLET" />} />
-                                        <div className="content">
-                                            <h4 className="title-amount line-height">{accountSelected?.nativeToken?.name}</h4>
-                                        </div>
-                                        <div className="balance">
-                                            <Text className="title-value no-margin line-height">
-                                                {accountSelected?.balanceBN || 0} {accountSelected?.nativeToken?.symbol}
-                                            </Text>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <></>
-                                )}
-                            </Menu.Item>
-                        </Menu> */}
             <Suspense fallback={<h4>Loading…</h4>}>
               <PrivacyToken data={privacyTokens} />
             </Suspense>
