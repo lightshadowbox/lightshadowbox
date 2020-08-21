@@ -71,7 +71,7 @@ const Onboarding = () => {
             </StartButtonStyled>
 
             <Divider style={{ fontSize: 13 }}>or</Divider>
-            <TextTip href={`https://old-incognito.vercel.app/migrate?callback=${window.location.origin}`}>
+            <TextTip href={`https://incwallet.app/migrate?callback=${window.location.origin}`}>
               Migrate your account from <b>incwallet.app</b>
             </TextTip>
           </Col>
