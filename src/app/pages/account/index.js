@@ -137,12 +137,6 @@ const AccountStyled = styled.div`
   }
 `
 
-const TitleHeader = styled.h4`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 15px;
-`
-
 const AccountBackupKeyStyled = styled.div`
   position: absolute;
   top: 16px;
